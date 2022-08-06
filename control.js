@@ -11,8 +11,25 @@ const flags = ["Algeria", "Angola", "Burundi", "Benin", "Burkina Faso", "Botswan
 "Japan", "Kuwait", "Kyrgyzstan", "Laos", "Lebanon", "Macau", "Malaysia", "Maldives", "Mongolia", "Myanmar", "Nepal", "North Korea", "Oman", 
 "Pakistan", "Palestine", "Philippines", "Qatar", "Saudi Arabia", "South Korea", "Sri Lanka",
  "Syria", "Taiwan", "Tajikistan", "Thailand", "Turkmenistan", "United Arab Emirates", "Uzbekistan", "Vietnam", "Yemen",
- "Albania", "Andorra", "Armenia","Austria", "Azerbaijan",
- "Greenland", "Nicaragua", "Peru", "Singapore", "Tonga", ];
+ "Albania", "Andorra", "Armenia","Austria", "Azerbaijan", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia",
+ "Cyprus", "Czechia", "Denmark", "England", "Estonia", "Faroe Islands", "Finland", "France", "Georgia", 
+ "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kazakhstan", "Kosovo", "Liechtenstein", 
+ "Lithuania", "Latvia", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "Norway", "North Macedonia", 
+ "Northern Ireland", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Scotland", 
+ "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Turkey","Ukraine","Wales",
+ "American Samoa", "Australia", "Cook Islands", "Fiji", "Kiribati", "Micronesia", "New Caledonia", "New Zealand", 
+ "Northern Mariana Islands", "Papua New Guinea", "Samoa", "Solomon Islands", "Tahiti", "Tuvalu","Vanuatu",
+ "Argentina", "Bolivia", "Brazil", "Chile", "Colombia", "Ecuador",  "Paraguay", "Uruguay", "Venezuela",
+ "Anguilla", "Aruba", "Antigua and Barbuda", "Bahamas", "Barbados", "Belize", "Bermuda", "Bonaire", 
+ "British Virgin Islands",
+ "Saint Barthelemy", "Canada", "Cayman Islands", "Costa Rica", "Cuba", "Curacao", 
+ "Dominica", "Dominican Republic", "El Salvador", "French Guiana", "Grenada", "Guadeloupe", "Guatemala", "Guyana",
+ "Haiti", "Honduras", "Jamaica", "Martinique", "Mexico", "Montserrat", "Nicaragua", 
+ "Panama", "Puerto Rico", "Saint Kitts and Nevis", "Saint Lucia", "Saint Martin", "Saint Pierre and Miquelon",
+ "Saint Vincent and the Grenadines",
+ "Suriname", "Trinidad and Tobago", "Turks and Caicos", "United Kingdom", "United States",
+
+ "Greenland", "Nicaragua", "Peru", "Singapore", "Tonga",  "Wallis and Futuna"];
 console.log("how many flags", flags.length);
 let passed = 0; 
 let turns = 0; 
