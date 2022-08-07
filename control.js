@@ -75,7 +75,7 @@ function getInputValue(){
     turns +=1; };
     
     let scorePerTurn = score/turns; 
-    console.log("this section works");
+  
     document.querySelector(".stats").innerHTML = `You have guessed ${score} flag(s) correctly in ${turns} turn(s). Your guessing average per turn is ${scorePerTurn.toFixed(2)}.`;
    document.querySelector(".reset").innerHTML = "<button type = button class = \"reset\">Have Another Go</button>";
     document.querySelector(".answer").innerHTML = `The answer is ${flag}`;
@@ -83,8 +83,8 @@ function getInputValue(){
     document.querySelector(".instruction").innerHTML = "";
     resetButton.style['display'] = "inline-block";
     
-    const begin = document.querySelector(".start");
-    begin.style.display = 'none'; 
+    //const begin = document.querySelector(".start");
+    //begin.style.display = 'none'; 
     
 
     document.querySelector(".showFlag").innerHTML = "";
@@ -133,7 +133,7 @@ function displayFlag(){
       if (e.key === 'Enter') {
       console.log("enter");
       getInputValue()}});
-    document.querySelector(".stats").innerHTML = "Currently no stats available";
+    //document.querySelector(".stats").innerHTML = "Currently no stats available";
     document.querySelector(".start").style['display'] = "none";
     document.querySelector(".introduction").style['display'] = "none";
     document.querySelector(".instruction").style['display'] = "inline-block";
