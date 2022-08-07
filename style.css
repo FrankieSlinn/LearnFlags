@@ -61,7 +61,7 @@ h1, h2{
     color: #242424;
 }
 
-.intro, .answer{
+.introduction, .answer{
     font-size: 1.25rem;
     font-weight: 700;
    
@@ -72,7 +72,7 @@ h1, h2{
     margin-bottom: 2rem;
 }
 
-.start, .instruction{
+.start, .instruction, .intro, .introduction{
     color: #242424;
     font-size: 1.25rem;
     margin-top: 1.5rem;
@@ -91,6 +91,7 @@ button{
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     font-size: 1rem;
+    margin-top: 1rem;
  
 }
 
@@ -113,45 +114,61 @@ button:hover, button:active{
 
   
   /* Help Popup */
+
+
+.popupHeading{
+
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-align: center
+
+
+}
+
+.popup-Content{
+
+    margin: 0rem 10rem;
+    text-align: center;
+}
 .help-popup, .stats-popuptext{
     display: none;
     background-color: white;
     min-width: 100vw;
     min-height: 100vh;
-    text-align: center;
-    padding: 1.5rem; 
+    display: absolute; 
+    float: right; 
+    
+
+   
 }
 
   .help-popup:fullscreen, .stats-popuptext:fullscreen{
     display: none;
     background-color: white;
-    position: absolute;
-    text-align: center;
-    display: flex; 
-    flex-direction: column; 
-    align-items: center;
 
-    top: -30rem;
-    margin-top: -40rem;
-    right: 0%;
 
-  
   }
   .help-text, .stats{
     display: inline-block;
-    text-align: center;
-    font-size: 1.5rem;
+    line-height: 2rem;
+
+    font-size: 1.25rem;
+    
 
   }
   .popupCloseButton-help, .popupCloseButton{
-    display: flex; 
-    justify-content: right; 
+    text-align: right;
     font-size: 1.5rem;
     font-weight: 500;
     cursor: pointer;
-    margin-right: 5rem;
-    margin-top: -1rem;
-  
+    padding-left: 2.5rem; 
+   
+    margin-top: 1rem;
+    display: relative; 
+    display: inline-block; 
+    top: 0px;
+    right: 0px; 
    
   }
   

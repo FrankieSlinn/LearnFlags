@@ -10,15 +10,23 @@
 <body>
     <div class = "overall-container">
         <div class = "stats-popuptext">
-            
-            <div class = "stats">Currently no stats available</div>
             <btn class="popupCloseButton">X</btn>
+            <div class = "popup-Content">
+            <h2 class = "popupHeading">Statistics</h2>
+            
+            <p class = "stats">Currently no stats available</p>
+            </div>
             
             </div>
+
             <div class = "help-popup">
-                
-                <div class = "help-text">This is how the game works</div>
                 <btn class="popupCloseButton-help">X</btn>
+                <div class = "popup-Content">
+                <h2 class = "popupHeading">How the Game Works</h2>
+                
+                <p class = "help-text">Type in the name of the country in the box and click the submit button or press enter. The statistics will tell you what your average of correct guesses are. </p>
+                </div>
+               
                 
             </div>
     <div class = "container">
@@ -40,26 +48,28 @@
 <br>
 <br>
 <br>
-<div class = "instruction">Guess the name of the flag. You have to guess it in one go to be good. If you don't you're a fool!</div>
+<div class = "introduction">The Country Guessing Game</div>
+<div class = "instruction" hidden>What country does this flag belong to?</div>
 <div class = "message"></div>
 
 <br>
 <div class = "reset"></div>
 
-<button type="button", class ="start">Start this highly intelligent game</button>
+<button type="button", class ="start">Start the game</button>
 <br>
 
 <div class = "showFlag" ></div>
-<br>
+
 <div class = "intro"></div>
 <br>
-<div class = "country" ></div>
 <br>
+<div class = "country" ></div>
 <br>
 <div class ="answer"> </div>
 <br>
 <br>
-<div class = "subButton"></div>
+<!--<div class = "subButton"></div>-->
+<button type="button" tabindex = "0" class = "submitButton" onclick="getInputValue();" hidden>Submit Button</button>
 <br>
 
 

@@ -35,6 +35,9 @@ let passed = 0;
 let turns = 0; 
 let score = 0;
 
+let correctAnswer = "That was correct";
+let incorrectAnswer = "Unlucky. That was not correct."
+
 var resetButton = document.querySelector(".reset");
 
 function randomNumber() { 
@@ -50,18 +53,31 @@ function getInputValue(){
     console.log(inputVal);
     console.log("typeof inputVal", typeof inputVal);
     console.log("string flag", String(flag));
-    if(inputValLow == String(flagLow)){document.querySelector(".message").innerHTML = "You are no fool. You know your flags.";
+    if(inputValLow == String(flagLow)){document.querySelector(".message").innerHTML = correctAnswer;
     score +=1;
     turns +=1; 
+    document.querySelector(".submitButton").style['display'] = "none"; 
     }
-    else{document.querySelector(".message").innerHTML = "You need to study hard and then you will get better at knowing flags." ;
+    else if(String(flagLow) === "united states")
+        {if (inputValLow === "usa" || "us" || "united states of america" || "america"){document.querySelector(".message").innerHTML = correctAnswer;
+        score +=1;
+        turns +=1; 
+        document.querySelector(".submitButton").style['display'] = "none"; }}
+        else if(String(flagLow) === "united kingdom")
+        {if (inputValLow === "uk" || "britain" || "great britain"){document.querySelector(".message").innerHTML = correctAnswer;
+        score +=1;
+        turns +=1; 
+        document.querySelector(".submitButton").style['display'] = "none"; }}
     
+    
+    else{document.querySelector(".message").innerHTML = incorrectAnswer;
+    document.querySelector(".submitButton").style['display'] = "none"; 
     turns +=1; };
     
     let scorePerTurn = score/turns; 
     console.log("this section works");
-    document.querySelector(".stats").innerHTML = `STATS : You have guessed ${score} flag(s) correctly in ${turns} turn(s). Your guessing average per turn is ${scorePerTurn}.`;
-   document.querySelector(".reset").innerHTML = "<button type = button class = \"reset\">Reset this mentally stimulating game.</button>";
+    document.querySelector(".stats").innerHTML = `You have guessed ${score} flag(s) correctly in ${turns} turn(s). Your guessing average per turn is ${scorePerTurn.toFixed(2)}.`;
+   document.querySelector(".reset").innerHTML = "<button type = button class = \"reset\">Have Another Go</button>";
     document.querySelector(".answer").innerHTML = `The answer is ${flag}`;
     document.querySelector(".intro").innerHTML = "";
     document.querySelector(".instruction").innerHTML = "";
@@ -70,8 +86,6 @@ function getInputValue(){
     const begin = document.querySelector(".start");
     begin.style.display = 'none'; 
     
-    const sub = document.querySelector(".submit");
-    sub.style.display = 'none';
 
     document.querySelector(".showFlag").innerHTML = "";
 
@@ -82,7 +96,10 @@ function getInputValue(){
         document.querySelector(".startAgain").innerHTML = "";
        
         document.querySelector(".answer").innerHTML = "";
+        document.querySelector(".message").innerHTML = "";
         resetButton.style['display'] = "none";
+        document.querySelector(".instruction").innerHTML = "Which country does this flag belong to?";
+       
         
         
         displayFlag(); 
@@ -92,36 +109,40 @@ resetButton.addEventListener("click", startAgain);
 }
 
 
-
-
-
-
 function displayFlag(){
     console.log("Here is a flag. You need to guess it NOW");
-    document.querySelector(".intro").innerHTML = "<br>Here is a flag.You need to guess it NOW.";
+    document.querySelector(".intro").innerHTML = "<br>Type the answer below";
      
     flag = String(flags[randomNumber()]);
     flagLow = flag.toLowerCase(); 
-    flagWithUnderscore =flag.replace(" ", "_")
+    flagWithUnderscore =flag.replaceAll(" ", "_")
     console.log(flag);
     ;;console.log(typeof(flag));
-    pngName = ("<img src = "+flagWithUnderscore+".png style=\"width:400px;height:250px;\">");
+    pngName = ("<img src = Images/"+flagWithUnderscore+".png style=\"width:400px;height:250px;\">");
    
     let box ='<input type="text" id="cGuess" autocomplete = "off">'
-    let buttonValue = '<button type="button" class = "submit" onclick="getInputValue();">Submit My Answer</button>'
+   
     document.querySelector(".showFlag").innerHTML = pngName;
     
+    
     document.querySelector(".answer").innerHTML = box;
-
-    document.querySelector(".subButton").innerHTML = buttonValue;  
+ 
+    document.querySelector(".submitButton").style['display'] = "block"; 
+    document.getElementById("cGuess").addEventListener('keyup', function (e) {
+     e.preventDefault();
+      if (e.key === 'Enter') {
+      console.log("enter");
+      getInputValue()}});
     document.querySelector(".stats").innerHTML = "Currently no stats available";
     document.querySelector(".start").style['display'] = "none";
+    document.querySelector(".introduction").style['display'] = "none";
+    document.querySelector(".instruction").style['display'] = "inline-block";
    
 };
-function resetGame(){
-document.querySelector("reset")
+//function resetGame(){
+//document.querySelector("reset")
 
-};
+//};
 
 
 
