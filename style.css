@@ -24,7 +24,7 @@ letter-spacing: -0.005rem}
 nav{
     display: flex;
     align-items: center;
-    gap: 12rem;
+    gap: 5.5rem;
     justify-content: space-between;
     background-color: #fff;
     margin-top: 1.5rem;
@@ -38,6 +38,7 @@ nav{
     width: 2rem;
     height: 2rem;
 }
+
 
 .container{
     width: 100%;
@@ -77,10 +78,17 @@ h1, h2{
     font-size: 1.25rem;
     margin-top: 1.5rem;
 }
+.getGameScore{
+    text-align: center;
+  }
+
+
 
 #cGuess{
     font-size: 1.25rem;
     padding: 0.5rem 1rem;
+    text-align: center;
+    font-weight: 700;
 }
 
 button{
@@ -101,6 +109,35 @@ button:hover, button:active{
     border-color: #2E7B36;
     cursor: pointer;
 }
+
+/*Completion Message*/
+.wrapup{
+    display: inline-block; 
+    text-align: center;
+    margin-top: -35rem;
+    width: 100%;
+    position: relative; 
+    top: -5rem; 
+   
+}
+
+.finishGameMessage{
+    text-align: center;
+    font-size: 2rem; 
+    font-weight: 700; 
+
+}
+
+.startNewGame{
+    text-align: center;
+    margin-top: 6rem;
+}
+
+.finishGameInstruction{
+    position: relative; 
+
+    text-align: center; 
+  }
 
 /* Popup container */
 
@@ -171,5 +208,10 @@ button:hover, button:active{
     right: 0px; 
    
   }
+  .copyright{
+    text-align: center;
+    margin-top: 20rem;
+  }
+
   
 

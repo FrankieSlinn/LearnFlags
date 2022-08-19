@@ -9,6 +9,21 @@
 </head>
 <body>
     <div class = "overall-container">
+        <nav>
+    
+            <div class = "how-to nav-link"><svg xmlns="http://www.w3.org/2000/svg"  fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg></div>
+            <div class = "title">
+        <h1>FLAGL</h1>
+        </div>
+        <div class = "stat-icon nav-link"> <svg xmlns="http://www.w3.org/2000/svg"  fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg></div>
+        
+        </nav>
+        
+
         <div class = "stats-popuptext">
             <btn class="popupCloseButton">X</btn>
             <div class = "popup-Content">
@@ -26,24 +41,12 @@
                 
                 <p class = "help-text">Type in the name of the country in the box and click the submit button or press enter. The statistics will tell you what your average of correct guesses are. </p>
                 </div>
+                </div>
                
                 
-            </div>
-    <div class = "container">
-        
-    <nav>
+            
+<div class = "container">
     
-        <div class = "how-to nav-link"><svg xmlns="http://www.w3.org/2000/svg"  fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg></div>
-        <div class = "title">
-    <h1>FLAGL</h1>
-    </div>
-    <div class = "stat-icon nav-link"> <svg xmlns="http://www.w3.org/2000/svg"  fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-      </svg></div>
-    
-    </nav>
 <br>
 <br>
 <br>
@@ -55,7 +58,8 @@
 <br>
 <div class = "reset"></div>
 
-<button type="button", class ="start">Start the game</button>
+<button type="button" class ="start">Start the game</button>
+<button type = "button" class = "getGameScore"  hidden>Get Game Score</button>
 <br>
 
 <div class = "showFlag" ></div>
@@ -69,21 +73,40 @@
 <br>
 <br>
 <!--<div class = "subButton"></div>-->
-<button type="button" tabindex = "0" class = "submitButton" onclick="getInputValue();" hidden>Submit Button</button>
-<br>
-
-
+<button type="button" tabindex = "0" class = "submitButton" onclick="getInputValue();" hidden>Submit Answer</button>
 
 
 <br>
-<div class = "startAgain"></div>
+
+
+
 
 <br>
+
 <!--Should be end of container-->
 </div>
 
+<!-- Wrap Up Game-->
+<section class = "wrapup">
+    
+    <div class = "finishGameMessage"></div>
+    <br>
+    
+    <div class = "finishGameInstruction"></div>
+    
+    <button type="button" class ="startNewGame" hidden>Start new game</button>
+    </section>
+<div class = "otherdiv"></div>
+
+
     <!--Should be end of overall container-->
-    </div>
+
+</div>
+
+
+
+
+    <footer class = "copyright">@2022 F. Kissling</footer>
 
     
     
