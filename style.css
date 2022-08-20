@@ -24,10 +24,11 @@ letter-spacing: -0.005rem}
 nav{
     display: flex;
     align-items: center;
-    gap: 5.5rem;
+    gap: 3.5rem;
     justify-content: space-between;
     background-color: #fff;
     margin-top: 1.5rem;
+    padding: 3rem;
 }
 .title{
     display: inline-block;
@@ -110,6 +111,10 @@ button:hover, button:active{
     cursor: pointer;
 }
 
+a{
+    font-size: 1rem;
+}
+
 /*Completion Message*/
 .wrapup{
     display: inline-block; 
@@ -155,7 +160,7 @@ button:hover, button:active{
 
 .popupHeading{
 
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
     text-align: center
@@ -168,6 +173,9 @@ button:hover, button:active{
     margin: 0rem 10rem;
     text-align: center;
 }
+.statsContentNoClose{
+    text-align: center;
+}
 .help-popup, .stats-popuptext{
     display: none;
     background-color: white;
@@ -175,9 +183,6 @@ button:hover, button:active{
     min-height: 100vh;
     display: absolute; 
     float: right; 
-    
-
-   
 }
 
   .help-popup:fullscreen, .stats-popuptext:fullscreen{
@@ -196,7 +201,7 @@ button:hover, button:active{
   }
   .popupCloseButton-help, .popupCloseButton{
     text-align: right;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 500;
     cursor: pointer;
     padding-left: 2.5rem; 

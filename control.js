@@ -29,10 +29,13 @@ const flags = ["Algeria", "Angola", "Burundi", "Benin", "Burkina Faso", "Botswan
  "Saint Vincent and the Grenadines",
  "Suriname", "Trinidad and Tobago", "Turks and Caicos", "United Kingdom", "United States",
 
- "Greenland", "Nicaragua", "Peru", "Singapore", "Tonga",  "Wallis and Futuna"];
+ "Greenland", "Peru", "Singapore", "Tonga",  "Wallis and Futuna"];
 console.log("how many flags", flags.length);
 let passed = 0; 
 let turns = 0; 
+let countGames = 0;
+let gameScores =[];
+
 let score = 0;
 let numFlagGuesses = 0;
 let countryDisplayed = [];
@@ -44,6 +47,7 @@ let incorrectAnswer = "Unlucky. That was not correct."
 
  let resetButton = document.querySelector(".reset");
  let gameScore = document.querySelector(".getGameScore");
+ let averageScore = 0;
 
 
 
@@ -69,10 +73,11 @@ console.log("correct answer displayed");
 function getInputValue(){
     // Selecting the input element and get its value 
     inputVal = document.getElementById("cGuess").value;
-    inputValLow = inputVal.toLowerCase(); 
+    inputValLow = inputVal.toLowerCase().trim(); 
     console.log(inputVal);
     console.log("typeof inputVal", typeof inputVal);
     console.log("string flag", String(flag));
+    document.querySelector(".submitButton").style['display'] = "none";
     if(inputValLow == String(flagLow)){correct()
     }
     else if(String(flagLow) === "united states")
@@ -87,9 +92,11 @@ function getInputValue(){
         {if (inputValLow === "swaziland"){correct()}  }
         else if(String(flagLow) === "myanmar")
         {if (inputValLow === "burma"){correct()}  }
+        else if(String(flagLow) === "korea")
+        {if (inputValLow === "south korea"){correct()}  }
         
     else{document.querySelector(".message").innerHTML = incorrectAnswer;
-    document.querySelector(".submitButton").style['display'] = "none"; 
+     
     if(turns <=4){
         turns +=1; 
         console.log("score, turns", score, turns)}else{
@@ -101,7 +108,7 @@ function getInputValue(){
     
     let scorePerTurn = score/turns; 
   
-    document.querySelector(".stats").innerHTML = `You have guessed ${score} flag(s) correctly in ${turns} turn(s). Your guessing average per turn is ${scorePerTurn.toFixed(2)}.`;
+    //document.querySelector(".stats").innerHTML = `You have guessed ${score} flag(s) correctly in ${turns} turn(s). Your guessing average per turn is ${scorePerTurn.toFixed(2)}.`;
    
     document.querySelector(".answer").innerHTML = `The answer is ${flag}`;
     document.querySelector(".intro").innerHTML = "";
@@ -151,8 +158,7 @@ function displayFlag(){
     let box ='<input type="text" id="cGuess" autocomplete = "off">'
    
     document.querySelector(".showFlag").innerHTML = pngName;
-    
-    
+
     document.querySelector(".answer").innerHTML = box;
  
     document.querySelector(".submitButton").style['display'] = "block"; 
@@ -161,7 +167,7 @@ function displayFlag(){
       if (e.key === 'Enter') {
       console.log("enter");
       getInputValue()}});
-    document.querySelector(".stats").innerHTML = "Currently no stats available";
+    //document.querySelector(".stats").innerHTML = "Currently no stats available";
     document.querySelector(".start").style['display'] = "none";
     document.querySelector(".introduction").style['display'] = "none";
     document.querySelector(".instruction").style['display'] = "inline-block";
@@ -208,10 +214,22 @@ if(score ===0){
     document.querySelector(".finishGameMessage").innerHTML = `Unlucky, you scored 0%`;
 }
 console.log('messge displayed');
+
+let gameScore = Number(score*2*10);
+console.log("gameScore", gameScore);
+gameScores.push(gameScore);
+console.log("gameScores", gameScores)
+console.log("gameScores[0]", gameScores[0]);
+console.log("type of gameScores[0]", typeof(gameScores[0]))
+averageScore = (gameScores.reduce((numa, numb)=>(numa + numb), 0)/gameScores.length).toFixed(0);
+console.log("averageScore", averageScore);
+
+countGames +=1;
 turns = 0; 
 score = 0;
-//document.querySelector(".finishGameInstruction").style['display'] = "inline-block";
 
+//document.querySelector(".finishGameInstruction").style['display'] = "inline-block";
+document.querySelector(".stats").innerHTML = `Games: ${gameScores.length}<br>Average Score: ${averageScore}`
 document.querySelector(".startNewGame").style['display'] = "inline-block";
 document.querySelector(".getGameScore").style['display'] = "none";
 document.querySelector(".container").style['visibility'] = "hidden";
@@ -273,6 +291,20 @@ document.querySelector('.stat-icon').addEventListener('click', function(){
     if(document.querySelector(".stats-popuptext").style['display'] = "none")
     document.querySelector(".stats-popuptext").style['display'] = "inline-block"; 
     //document.querySelector(".container").style.visibility = "hidden";
+    let copyText = document.querySelector(".stats");
+    console.log("copyText", copyText.value)
+    console.log('popup content', copyText.value);
+    document.querySelector(".shareResults").addEventListener('click', function(){
+        {
+            var r = document.createRange();
+            r.selectNode(document.querySelector(".popup-Content"));
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(r);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            //alert("Results Copied");
+            }
+});
     
 });
 
@@ -289,6 +321,7 @@ document.querySelector('.how-to').addEventListener('click', function(){
     if(document.querySelector(".help-popup").style['display'] = "none")
     console.log("yes");
     document.querySelector(".help-popup").style['display'] = "inline-block"; 
+
     //document.querySelector(".container").style.visibility = "hidden";
     
 });
@@ -296,6 +329,7 @@ document.querySelector('.how-to').addEventListener('click', function(){
 document.querySelector('.popupCloseButton-help').addEventListener('click', function(){
     console.log("close Button");
     document.querySelector(".help-popup").style['display'] = "none";
+    
    // document.querySelector(".container").style.visibility = "visible";
     //document.querySelector(".wrapup").style.visibility = "visible";
 });

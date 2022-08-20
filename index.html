@@ -5,7 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>FLAGL</title>
     <link rel="stylesheet" href="style.css"> 
+    <link rel="shortcut icon"  type = "image/any-icon" href="/images/myfavicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
 </head>
 <body>
     <div class = "overall-container">
@@ -23,23 +25,30 @@
         
         </nav>
         
-
         <div class = "stats-popuptext">
             <btn class="popupCloseButton">X</btn>
+            <div class = "statsContentNoClose">
             <div class = "popup-Content">
-            <h2 class = "popupHeading">Statistics</h2>
+            <h2 class = "popupHeading">Flagl Game Stats</h2>
             
-            <p class = "stats">Currently no stats available</p>
+            <p class = "stats">Games: 0<br>Average Score: 0</p>
+            <br>
+            <a href = "https://www.flagl.net" alt = "flagl.net">flagl.net</a>
+            </div>
+            <br>
+            <button type = "button" class = "shareResults" label = "Share Results">Share Results</button>
             </div>
             
             </div>
-
+            
+ 
             <div class = "help-popup">
                 <btn class="popupCloseButton-help">X</btn>
                 <div class = "popup-Content">
                 <h2 class = "popupHeading">How the Game Works</h2>
                 
-                <p class = "help-text">Type in the name of the country in the box and click the submit button or press enter. The statistics will tell you what your average of correct guesses are. </p>
+                <p class = "help-text">Type in the name of the country in the box and click the submit button or press enter. Each game has five guesses. <br>At the end of the game you will see what percentage you got right. The statistics section on the right shows the average score per game. The statistics can be shared with others. </p>
+                
                 </div>
                 </div>
                
@@ -50,8 +59,7 @@
 <br>
 <br>
 <br>
-<br>
-<div class = "introduction">The Country Guessing Game</div>
+<div class = "introduction">The Flag Quiz</div>
 <div class = "instruction" hidden>What country does this flag belong to?</div>
 <div class = "message"></div>
 
