@@ -29,7 +29,7 @@ letter-spacing: -0.005rem}
 nav{
     display: flex;
     justify-content: center;
-    gap: 7rem;
+    gap: 3rem;
    
     background-color: #fff;
     margin-top: 1.5rem;
