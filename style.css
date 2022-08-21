@@ -17,15 +17,20 @@ background-color:white;
 font-family: Arial;
 color: #242424;
 letter-spacing: -0.005rem}
+
 .overall-container{
+
     display: absolute;
+    overflow: auto;
+    align-items: center;
+    
 }
 
 nav{
     display: flex;
-    align-items: center;
-    gap: 3.5rem;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 7rem;
+   
     background-color: #fff;
     margin-top: 1.5rem;
     padding: 3rem;
@@ -36,8 +41,8 @@ nav{
 
 .nav-link{
     display: inline-block;
-    width: 2rem;
-    height: 2rem;
+    width: 35px;
+    height: 35px;
 }
 
 
@@ -73,16 +78,39 @@ h1, h2{
     font-size: 1.25rem;
     margin-bottom: 2rem;
 }
-
+@-moz-document url-prefix() {
+    .instruction {
+        margin-top: 0rem;
+        margin-bottom: 1rem;
+    }
+}
 .start, .instruction, .intro, .introduction{
     color: #242424;
     font-size: 1.25rem;
     margin-top: 1.5rem;
 }
+
+@-moz-document url-prefix() {
+    .reset {
+        margin-top: 1rem;
+    }
+}
+
+@-moz-document url-prefix() {
+    .answer {
+        margin-top: 2.5rem;
+    }
+}
+
 .getGameScore{
     text-align: center;
   }
-
+  @-moz-document url-prefix() {
+    #cGuess {
+        margin-top: 1rem;
+        margin-bottom: 2.5rem;
+    }
+}
 
 
 #cGuess{
@@ -116,6 +144,8 @@ a{
 }
 
 /*Completion Message*/
+
+
 .wrapup{
     display: inline-block; 
     text-align: center;
@@ -124,6 +154,24 @@ a{
     position: relative; 
     top: -5rem; 
    
+}
+
+@-moz-document url-prefix() {
+    .wrapup {
+  
+      position: relative; 
+      top: -2rem;
+     
+     
+    }
+
+}
+
+@-moz-document url-prefix() {
+    .finishGameMessage {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
 }
 
 .finishGameMessage{
@@ -143,19 +191,6 @@ a{
 
     text-align: center; 
   }
-
-/* Popup container */
-
- 
-  /* The actual popup (appears on top) */
-
-
- 
-
-  /*Popup Close Button*/
-
-  
-  /* Help Popup */
 
 
 .popupHeading{
@@ -182,18 +217,16 @@ a{
     min-width: 100vw;
     min-height: 100vh;
     display: absolute; 
-    float: right; 
 }
 
   .help-popup:fullscreen, .stats-popuptext:fullscreen{
     display: none;
     background-color: white;
-
-
   }
   .help-text, .stats{
     display: inline-block;
     line-height: 2rem;
+    min-width: 90%;
 
     font-size: 1.25rem;
     
@@ -205,12 +238,13 @@ a{
     font-weight: 500;
     cursor: pointer;
     padding-left: 2.5rem; 
+
    
     margin-top: 1rem;
     display: relative; 
     display: inline-block; 
     top: 0px;
-    right: 0px; 
+   
    
   }
   .copyright{

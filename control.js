@@ -30,6 +30,8 @@ const flags = ["Algeria", "Angola", "Burundi", "Benin", "Burkina Faso", "Botswan
  "Suriname", "Trinidad and Tobago", "Turks and Caicos", "United Kingdom", "United States",
 
  "Greenland", "Peru", "Singapore", "Tonga",  "Wallis and Futuna"];
+ let flagsort = flags.sort(); 
+ console.log("flagsort", flagsort)
 console.log("how many flags", flags.length);
 let passed = 0; 
 let turns = 0; 
@@ -40,9 +42,9 @@ let score = 0;
 let numFlagGuesses = 0;
 let countryDisplayed = [];
 let flag = ""
-let flagCandidate = String(flags[randomNumber()]);
+//let flagCandidate = String(flags[randomNumber()]);
 
-let correctAnswer = "That was correct";
+let correctAnswer = "Congratulations. That was correct";
 let incorrectAnswer = "Unlucky. That was not correct."
 
  let resetButton = document.querySelector(".reset");
@@ -52,7 +54,7 @@ let incorrectAnswer = "Unlucky. That was not correct."
 
 
 function randomNumber() { 
-    return Math.floor(Math.random() * flags.length);
+    return Math.abs(Math.floor(Math.random() * flags.length));
 } ;
 console.log("yes");
 console.log(randomNumber());
@@ -94,6 +96,8 @@ function getInputValue(){
         {if (inputValLow === "burma"){correct()}  }
         else if(String(flagLow) === "korea")
         {if (inputValLow === "south korea"){correct()}  }
+        else if(String(flagLow) === "british virgin islands")
+        {if (inputValLow === "virgin islands"){correct()}  }
         
     else{document.querySelector(".message").innerHTML = incorrectAnswer;
      
@@ -135,7 +139,7 @@ function getInputValue(){
 
 
 function displayFlag(){
-    console.log("Here is a flag. You need to guess it NOW");
+    //console.log("Here is a flag. You need to guess it NOW");
     document.querySelector(".intro").innerHTML = "<br>Type the answer below";
     
      
@@ -153,7 +157,7 @@ function displayFlag(){
     console.log(flag);
     console.log(typeof(flag));
 
-    pngName = ("<img src = Images/"+flagWithUnderscore+".png style=\"width:400px;height:250px;\">");
+    pngName = ("<img src = Images/"+flagWithUnderscore+".png  style=\"width:400px;height:250px;\">");
    
     let box ='<input type="text" id="cGuess" autocomplete = "off">'
    
