@@ -232,6 +232,17 @@ let passed = 0;
 let turns = 0;
 let countGames = 0;
 let gameScores = [];
+let longGameScores = [];
+console.log("first longGameScores, variable", JSON.parse(localStorage.getItem("longGameScores")))
+//cater for first element
+console.log("get longGameScores, first Game", JSON.parse(localStorage.getItem("longGameScores")))
+let longGames = JSON.parse(localStorage.getItem("longGameScores"))!=null?JSON.parse(localStorage.getItem("longGameScores")).length:0;
+//console.log("is longGamesScores.length zero", JSON.parse(localStorage.getItem("longGameScores")).length==0)
+console.log("longgames", longGames)
+
+
+let longGameAverage = JSON.parse(localStorage.getItem("longGameScores"))!=null?((JSON.parse(localStorage.getItem("longGameScores")).reduce((numa, numb) => numa + numb, 0)) / JSON.parse(localStorage.getItem("longGameScores")).length).toFixed(0):0;
+
 
 let score = 0;
 let numFlagGuesses = 0;
@@ -244,23 +255,41 @@ let incorrectAnswer = "Unlucky. That was not correct.";
 
 let resetButton = document.querySelector(".reset");
 let gameScore = document.querySelector(".getGameScore");
+
 let averageScore = 0;
+//let longaverageScore = 0;
+let gamesPlayed = 0;
 let containervisible = 0;
 let wrapupvisible = 0; 
 let answervisible = 0;
 let resetvisible = 0;
 let messagevisible = 0;
+let statistics = document.querySelector('.stats');
+//sumLongCount needed for sum equation to add up items in array for average score
+let sumLongCount = 0;
+
+console.log("localStorageLongGameAverage", longGameAverage);
+
+  console.log("longGameScores", JSON.parse(localStorage.getItem("longGameScores")));
+
+  
+
+  document.querySelector(
+    ".stats"
+  ).innerHTML = `Games: ${longGames}<br>Average Score: ${longGameAverage}`;
+  console.log("stats message", statistics)
+
 function randomNumber() {
   return Math.abs(Math.floor(Math.random() * flags.length));
 }
-console.log("yes");
+
 console.log(randomNumber());
 
 function correct() {
     document.querySelector(".container").style["visibility"] = "visible";
     document.querySelector(".message").style["visibility"] = "visible";
   document.querySelector(".message").innerHTML = correctAnswer;
-  console.log("correct answer displayed");
+
   document.querySelector(".submitButton").style["display"] = "none";
   score += 1;
   if (turns <= 4) {
@@ -280,8 +309,9 @@ function getInputValue() {
   inputVal = document.getElementById("cGuess").value;
   inputValLow = inputVal.toLowerCase().trim();
   console.log(inputVal);
-  console.log("typeof inputVal", typeof inputVal);
+  
   console.log("string flag", String(flag));
+  console.log("longGames", longGames);
   document.querySelector(".answer").style["visibility"] = "visible";
  
   document.querySelector(".submitButton").style["display"] = "none";
@@ -324,7 +354,19 @@ function getInputValue() {
     if (inputValLow === "virgin islands") {
       correct();
     }
-  } else {
+  }
+    else if (String(flagLow) === "saint barthelemy") {
+      if (inputValLow === "st barths"|| "st barts"|| "st barthelemy" || "saint barts" || "saint barths") {
+        correct();
+      }
+    }
+    else if (String(flagLow) === "saint vincent and the grenadines") {
+      if (inputValLow === "st vincent and the grenadines" || "st vincent" || "saint vincent") {
+        correct();
+      }
+    }
+
+   else {
     document.querySelector(".container").style["visibility"] = "visible";
     document.querySelector(".message").innerHTML = incorrectAnswer;
 
@@ -354,7 +396,7 @@ function getInputValue() {
     
     resetButton.addEventListener("click", startAgain);
   } else {
-    console.log("4 turns displaying getGameScore");
+    
     document.querySelector(".getGameScore").style["display"] = "inline-block";
     document.querySelector(".reset").style["display"] = "none";
   }
@@ -364,7 +406,7 @@ function getInputValue() {
 }
 
 function displayFlag() {
-  //console.log("Here is a flag. You need to guess it NOW");
+  
   document.querySelector(".container").style["visibility"] = "visible";
   document.querySelector(".message").style["visibility"] = "visible";
   document.querySelector(".intro").innerHTML = "<br>Type the answer below";
@@ -382,7 +424,7 @@ function displayFlag() {
   flagLow = flag.toLowerCase();
   flagWithUnderscore = flag.replaceAll(" ", "_");
   console.log(flag);
-  console.log(typeof flag);
+  
 
   pngName =
     "<img src = Images/" +
@@ -403,7 +445,7 @@ function displayFlag() {
   document.getElementById("cGuess").addEventListener("keyup", function (e) {
     e.preventDefault();
     if (e.key === "Enter") {
-      console.log("enter");
+      
       getInputValue();
     }
   });
@@ -451,14 +493,24 @@ document.querySelector(".getGameScore").addEventListener("click", function () {
       ".finishGameMessage"
     ).innerHTML = `Unlucky, you scored 0%`;
   }
-  console.log("messge displayed");
+  
 
   let gameScore = Number(score * 2 * 10);
   console.log("gameScore", gameScore);
   gameScores.push(gameScore);
+  longGameScores = longGames ==0?gameScores:JSON.parse(localStorage.getItem("longGameScores")).concat(gameScores);
+  console.log("longGameScores after concat", longGameScores);
+  
+  window.localStorage.setItem("longGameScores", JSON.stringify(longGameScores));
+  console.log("longGames 1st part of formula, expected: true", JSON.parse(localStorage.getItem("longGameScores"))!=null)
+  
+ // statistics.innerHTML = `Games: ${longGames}<br>Average Score: ${JSON.parse(localStorage.getItem("longGameAverage"))}`;
+  console.log('statistics.innerHTML', statistics);
+  console.log("longGames after longGamesScores set", longGames)
+  console.log("longGameScores", longGameScores)
   console.log("gameScores", gameScores);
-  console.log("gameScores[0]", gameScores[0]);
-  console.log("type of gameScores[0]", typeof gameScores[0]);
+ 
+ 
   averageScore = (
     gameScores.reduce((numa, numb) => numa + numb, 0) / gameScores.length
   ).toFixed(0);
@@ -469,9 +521,39 @@ document.querySelector(".getGameScore").addEventListener("click", function () {
   score = 0;
 
   //document.querySelector(".finishGameInstruction").style['display'] = "inline-block";
-  document.querySelector(
-    ".stats"
-  ).innerHTML = `Games: ${gameScores.length}<br>Average Score: ${averageScore}`;
+ 
+ 
+  window.localStorage.setItem("averageScore", JSON.stringify(averageScore));
+
+  longGames = window.localStorage.getItem("longGameScores", JSON.stringify(longGameScores).length);
+  gamesPlayed = longGameScores.length; 
+  
+  sumLongGameScores = function(array){
+    for (let i=0; i<array.length; i++){
+       console.log(array[i])
+      sumLongCount+=array[i];
+      console.log(sumLongCount);
+
+    }
+    return sumLongCount;
+
+  };
+ 
+  console.log("gamePlayed", gamesPlayed);
+ 
+  let sumLongCount = 0;
+  statistics.innerHTML = `Games: ${gamesPlayed}<br>Average Score: ${((sumLongGameScores(JSON.parse(localStorage.getItem("longGameScores")))) / ((JSON.parse(localStorage.getItem("longGameScores"))).length)).toFixed(0)}`;
+  //console.log('statistics.innerHTML', statistics);
+  //console.log("longGames after longGamesScores set", longGames)
+  console.log("longGameScores", longGameScores)
+  //console.log("gameScores", gameScores);
+  //console.log("testaverageScore", JSON.parse(window.localStorage.getItem("averageScore")));
+  
+  //console.log("countGames", countGames, "averageScore", averageScore)
+  //console.log("localStorageScore", JSON.parse(localStorage.getItem("averageScore")));
+  //console.log("localStorageScore", JSON.parse(localStorage.getItem("gameScores")));
+
+
   document.querySelector(".startNewGame").style["display"] = "inline-block";
   document.querySelector(".getGameScore").style["display"] = "none";
   document.querySelector(".container").style["visibility"] = "hidden";
@@ -526,19 +608,19 @@ document.querySelector(".stat-icon").addEventListener("click", function () {
       //checks if container or wrapup section open so it can be closed and opened by close button
       if(document.querySelector(".container").offsetParent != null){
         containervisible = 1; 
-        console.log("container visible");
+      
         document.querySelector(".container").style["visibility"] = "hidden";
 
   }
   if(document.querySelector(".wrapup").offsetParent != null){
     wrapupvisible = 1; 
-    console.log("wrapup visible");
+  
     document.querySelector(".wrapup").style["visibility"] = "hidden";
 
 }
 if(document.querySelector(".answer").offsetParent != null){
     answervisible = 1; 
-    console.log("answer visible");
+   
     document.querySelector(".answer").style["visibility"] = "hidden";
 
 }
@@ -546,6 +628,12 @@ if(document.querySelector(".reset").offsetParent != null){
     resetvisible = 1; 
    
     document.querySelector(".reset").style["visibility"] = "hidden";
+
+}
+if(document.querySelector(".message").offsetParent != null){
+    messagevisible = 1; 
+   
+    document.querySelector(".message").style["visibility"] = "hidden";
 
 }
   //
@@ -570,8 +658,8 @@ if(document.querySelector(".reset").offsetParent != null){
 document
   .querySelector(".popupCloseButton")
   .addEventListener("click", function () {
-    console.log("close Button");
-    console.log("answervisible", answervisible)
+   
+    
    
    
   
@@ -588,6 +676,9 @@ document
     if(resetvisible ==1){
         document.querySelector(".reset").style["visibility"] = "visible";
             resetvisible = 0;}
+    if(messagevisible ==1){
+            document.querySelector(".message").style["visibility"] = "visible";
+            messagevisible = 0;}
     //document.querySelector(".container").style.visibility = "visible";
     //document.querySelector(".wrapup").style.visibility = "visible";
   });
@@ -596,30 +687,35 @@ document
 document.querySelector(".how-to").addEventListener("click", function () {
     if(document.querySelector(".container").offsetParent != null){
         containervisible = 1; 
-        console.log("container visible");
+   
         document.querySelector(".container").style["visibility"] = "hidden";
+        
   }
   if(document.querySelector(".wrapup").offsetParent != null){
     wrapupvisible = 1; 
-    console.log("wrapup visible");
+   
     document.querySelector(".wrapup").style["visibility"] = "hidden";
 }
 if(document.querySelector(".answer").offsetParent != null){
     answervisible = 1; 
-    console.log("answer visible");
+  
     document.querySelector(".answer").style["visibility"] = "hidden";
 
 }
 if(document.querySelector(".reset").offsetParent != null){
     resetvisible = 1; 
-    console.log("reset visible");
     document.querySelector(".reset").style["visibility"] = "hidden";
+}
+if(document.querySelector(".message").offsetParent != null){
+   messagevisible = 1; 
+    
+    document.querySelector(".message").style["visibility"] = "hidden";
 }
 
 
 
   if ((document.querySelector(".help-popup").style["display"] = "none"))
-    console.log("yes");
+  
   document.querySelector(".help-popup").style["display"] = "inline-block";
 
   //document.querySelector(".container").style.visibility = "hidden";
@@ -631,12 +727,12 @@ document
   .querySelector(".popupCloseButton-help")
   .addEventListener("click", function () {
     document.querySelector(".help-popup").style["display"] = "none";
-    console.log("close Button");
+
 
 
     //ensures elements previously open stay displayed
     if(containervisible ==1){
-        console.log("container visible 1 or 0", containervisible);
+       // console.log("container visible 1 or 0", containervisible);
  document.querySelector(".container").style["visibility"] = "visible";
     containervisible = 0;}
 
@@ -653,6 +749,10 @@ document
      if(resetvisible ==1){
             document.querySelector(".reset").style["visibility"] = "visible";
             resetvisible = 0;}
+
+    if(messagevisible ==1){
+         document.querySelector(".message").style["visibility"] = "visible";
+         messagevisible = 0;}
    // document.querySelector(".container")["visibility"] = "hidden";
     // document.querySelector(".container").style.visibility = "visible";
     //document.querySelector(".wrapup").style.visibility = "visible";
