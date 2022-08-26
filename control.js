@@ -268,7 +268,11 @@ let statistics = document.querySelector('.stats');
 //sumLongCount needed for sum equation to add up items in array for average score
 let sumLongCount = 0;
 
-console.log("localStorageLongGameAverage", longGameAverage);
+//timer function
+
+
+
+//console.log("localStorageLongGameAverage", longGameAverage);
 
   console.log("longGameScores", JSON.parse(localStorage.getItem("longGameScores")));
 
@@ -306,6 +310,7 @@ function correct() {
 function getInputValue() {
     document.querySelector(".container").style["visibility"] = "visible";
   // Selecting the input element and get its value
+  console.log("longGameScores", JSON.parse(localStorage.getItem("longGameScores")));
   inputVal = document.getElementById("cGuess").value;
   inputValLow = inputVal.toLowerCase().trim();
   console.log(inputVal);
@@ -498,7 +503,8 @@ document.querySelector(".getGameScore").addEventListener("click", function () {
   let gameScore = Number(score * 2 * 10);
   console.log("gameScore", gameScore);
   gameScores.push(gameScore);
-  longGameScores = longGames ==0?gameScores:JSON.parse(localStorage.getItem("longGameScores")).concat(gameScores);
+  console.log("longGameScores", JSON.parse(localStorage.getItem("longGameScores")));
+  longGameScores = longGames ==0?gameScores:JSON.parse(localStorage.getItem("longGameScores")).concat(gameScore);
   console.log("longGameScores after concat", longGameScores);
   
   window.localStorage.setItem("longGameScores", JSON.stringify(longGameScores));
