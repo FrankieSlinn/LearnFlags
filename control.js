@@ -1,4 +1,4 @@
-const flags = [
+let flags = [
   "Algeria",
   "Angola",
   "Burundi",
@@ -267,6 +267,9 @@ let messagevisible = 0;
 let statistics = document.querySelector('.stats');
 //sumLongCount needed for sum equation to add up items in array for average score
 let sumLongCount = 0;
+let letter = "";
+
+
 
 //timer function
 
@@ -306,12 +309,30 @@ function correct() {
     console.log("score, turns", score, turns);
   }
 }
+function incorrect(){
+  document.querySelector(".container").style["visibility"] = "visible";
+  document.querySelector(".message").innerHTML = incorrectAnswer;
+
+  if (turns <= 4) {
+    turns += 1;
+    console.log("score, turns", score, turns);
+  } else {
+    document.querySelector(".startNewGame").style["display"] = "inline-block";
+
+    console.log("score, turns", score, turns);
+  }
+}
 
 function getInputValue() {
     document.querySelector(".container").style["visibility"] = "visible";
   // Selecting the input element and get its value
   console.log("longGameScores", JSON.parse(localStorage.getItem("longGameScores")));
   inputVal = document.getElementById("cGuess").value;
+//check for predictive text
+for (letter of inputVal)
+{console.log("letter", letter)}
+
+
   inputValLow = inputVal.toLowerCase().trim();
   console.log(inputVal);
   
@@ -325,64 +346,82 @@ function getInputValue() {
   } else if (String(flagLow) === "united states") {
     if (
       inputValLow === "usa" ||
-      "us" ||
-      "united states of america" ||
-      "america"
+      inputValLow ==="us" ||
+      inputValLow ==="united states of america" ||
+      inputValLow ==="america"
     ) {
       correct();
     }
+    
   } else if (String(flagLow) === "united kingdom") {
-    if (inputValLow === "uk" || "britain" || "great britain") {
+    if (inputValLow === "uk" ||inputValLow === "britain" ||inputValLow === "great britain") {
+     
       correct();
-    }
+
+    }else{incorrect();
+    console.log("incorrect")};
+    
   } else if (String(flagLow) === "antigua and barbuda") {
-    if (inputValLow === "Antigua" || "Barbuda") {
+    if (inputValLow === "Antigua" ||inputValLow === "Barbuda") {
+      console.log("input value", inputValLow);
+      console.log("correct");
       correct();
-    }
+    }else{incorrect();
+      console.log("incorrect")};
+    
   } else if (String(flagLow) === "netherlands") {
-    if (inputValLow === "Holland" || "holland") {
+    if (inputValLow === "Holland" ||inputValLow === "holland") {
+    
       correct();
-    }
+    }else{incorrect();
+      console.log("incorrect")};
   } else if (String(flagLow) === "eswatini") {
     if (inputValLow === "swaziland") {
+      console.log("input value", inputValLow);
+      console.log("correct");
       correct();
-    }
+    }else{incorrect();
+      console.log("incorrect");};
   } else if (String(flagLow) === "myanmar") {
     if (inputValLow === "burma") {
+      console.log("input value", inputValLow);
+      console.log("correct");
       correct();
-    }
+      console.log("correct");
+    }else{incorrect();
+      console.log("incorrect");};
   } else if (String(flagLow) === "korea") {
     if (inputValLow === "south korea") {
+      console.log("input value", inputValLow);
+      console.log("correct");
       correct();
-    }
+    }else{incorrect();
+      console.log("incorrect");};
   } else if (String(flagLow) === "british virgin islands") {
     if (inputValLow === "virgin islands") {
+      console.log("correct");
       correct();
-    }
+    }else{incorrect();
+      console.log("incorrect");};
   }
     else if (String(flagLow) === "saint barthelemy") {
-      if (inputValLow === "st barths"|| "st barts"|| "st barthelemy" || "saint barts" || "saint barths") {
+      if (inputValLow === "st barths"|| inputValLow === "st barts"|| inputValLow === "st barthelemy" ||inputValLow ===  "saint barts" || inputValLow === "saint barths") {
+        console.log("correct");
         correct();
-      }
+      }else{incorrect();
+        console.log("incorrect");};
     }
     else if (String(flagLow) === "saint vincent and the grenadines") {
-      if (inputValLow === "st vincent and the grenadines" || "st vincent" || "saint vincent") {
+      if (inputValLow === "st vincent and the grenadines" ||inputValLow ===  "st vincent" || inputValLow === "saint vincent") {
+        console.log("correct");
         correct();
-      }
+      }else{incorrect();
+        console.log("incorrect");};
     }
 
    else {
-    document.querySelector(".container").style["visibility"] = "visible";
-    document.querySelector(".message").innerHTML = incorrectAnswer;
+    incorrect();
 
-    if (turns <= 4) {
-      turns += 1;
-      console.log("score, turns", score, turns);
-    } else {
-      document.querySelector(".startNewGame").style["display"] = "inline-block";
-
-      console.log("score, turns", score, turns);
-    }
   }
 
   let scorePerTurn = score / turns;
@@ -420,9 +459,12 @@ function displayFlag() {
   flagIndex = flags.indexOf(flag);
   console.log("flagIndex, flag", flagIndex, flag);
   if (turns < 5) {
-    countryDisplayed.push(flag);
+    console.log(flag);
+    console.log("countryDisplayed", countryDisplayed);
+    console.log("countryDisplayed", typeof countryDisplayed)
 
     flags.splice(flagIndex, 1);
+    countryDisplayed.push(flag);
   }
   console.log("How many Flags", flags.length);
 
@@ -437,13 +479,19 @@ function displayFlag() {
     '.png  style="width:400px;height:250px;">';
 
   let box = '<input type="text" id="cGuess" autocomplete = "off">';
+ /* for(letter of  getInputValue()){
+    console.log("letter", letter);
+  }*/
 
   document.querySelector(".showFlag").innerHTML = pngName;
 
   document.querySelector(".answer").innerHTML = box;
 
   document.querySelector(".answer").style["visibility"] = "visible";
- 
+ //check for autocomplete
+ document.getElementById("cGuess").addEventListener("keyup", function (e){
+  console.log()
+ });
  
 
   document.querySelector(".submitButton").style["display"] = "block";
@@ -536,9 +584,9 @@ document.querySelector(".getGameScore").addEventListener("click", function () {
   
   sumLongGameScores = function(array){
     for (let i=0; i<array.length; i++){
-       console.log(array[i])
+       //console.log(array[i])
       sumLongCount+=array[i];
-      console.log(sumLongCount);
+      //console.log(sumLongCount);
 
     }
     return sumLongCount;
@@ -565,7 +613,7 @@ document.querySelector(".getGameScore").addEventListener("click", function () {
   document.querySelector(".container").style["visibility"] = "hidden";
   resetButton.style["display"] = "";
 
-  flags.push(countryDisplayed);
+  
 });
 
 //Show next flag.
@@ -593,6 +641,11 @@ document.querySelector(".startNewGame").addEventListener("click", function () {
   document.querySelector(".finishGameInstruction").style["display"] = "none";
   document.querySelector(".finishGameMessage").style["display"] = "none";
   document.querySelector(".startNewGame").style["display"] = "none";
+
+  //get flags to original length
+  flags.push(...countryDisplayed);
+  countryDisplayed = [];
+  
 
   score = 0;
   turns = 0;
