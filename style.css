@@ -117,7 +117,8 @@ h1, h2{
     font-size: 1.25rem;
     padding: 0.5rem 1rem;
     text-align: center;
-    font-weight: 700;
+    border: 1px solid;
+    border-color: #242424;
 }
 
 button{
@@ -139,6 +140,15 @@ button:hover, button:active{
     cursor: pointer;
 }
 
+.radio-button input[type="radio"]:checked + label {
+    background-color: #76cf9f;
+
+  }
+
+.submitButton{
+    margin-bottom: 2rem;
+}
+
 a{
     font-size: 1rem;
 }
@@ -149,10 +159,10 @@ a{
 .wrapup{
     display: inline-block; 
     text-align: center;
-    margin-top: -35rem;
+    margin-top: -32rem;
     width: 100%;
     position: relative; 
-    top: -5rem; 
+    top: -2rem; 
    
 }
 
@@ -251,6 +261,46 @@ a{
     text-align: center;
     margin-top: 20rem;
   }
+  .selection{
+   display: inline-block;
+    margin-top: 1rem;
+    font-size: 1rem;
+    
+ 
+    gap: auto;
+  
+    justify-content: center; 
+    padding: 1rem; 
+    border-radius: 10px;
+    width: auto;
+   
+
+
+    font-weight: 700;
+  
+  
+    
+    text-align: center;
+    line-height: 1.75rem;
+  
+  }
+
+
+  li{
+    display: inline-block; 
+    list-style-type: none;
+    align-items: center;
+    text-align: center;
+  }
+
+  .option{
+    align-items: center; 
+    text-align: center;
+    margin: auto;
+    padding: auto; 
+    float: center;
+  }
+  
 
   
 

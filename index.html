@@ -47,7 +47,7 @@
                 <div class = "popup-Content">
                 <h2 class = "popupHeading">How the Game Works</h2>
                 
-                <p class = "help-text">Type in the name of the country in the box and click the submit button or press enter. Each game has five guesses. <br>At the end of the game you will see what percentage you got right. The statistics section on the right shows the average score per game. The statistics can be shared with others. </p>
+                <p class = "help-text">As you start typing a list of possible countries will appear. The more letters you type, the fewer the options become. Click a box to select your choice. <br>Each game has five guesses. At the end of the game you will see what percentage you got right. The statistics section on the right shows the average score per game. <br>The statistics are shareable. </p>
                 
                 </div>
                 </div>
@@ -63,6 +63,7 @@
 <div class = "instruction" hidden>What country does this flag belong to?</div>
 <div class = "message"></div>
 
+
 <br>
 <div class = "reset"></div>
 
@@ -72,40 +73,48 @@
 
 <div class = "showFlag" ></div>
 
+
 <div class = "intro"></div>
 <br>
 <br>
+
 <div class = "country" ></div>
 <br>
 <div class ="answer"> </div>
-<br>
-<br>
-<!--<div class = "subButton"></div>-->
-<button type="button" tabindex = "0" class = "submitButton" onclick="getInputValue();" hidden>Submit Answer</button>
-
-
-<br>
-
-
-
-
-<br>
-
-<!--Should be end of container-->
-</div>
-
-<!-- Wrap Up Game-->
-<section class = "wrapup">
+<div class = "selection"  autocomplete = "off" hidden>
     
+    <button type = button class="First  option" id = "firstLabel" ></button>
+  
+   &ensp;
+  
+   
+    <button type = button class="Second  option" id = "secondLabel"></button>
+   
+    &ensp;
+   
+    
+        <button type = button class="Third  option" id = "thirdLabel"></button>
+  
+   &ensp;
+  
+   
+    <button type = button class="Fourth  option" id = "fourthLabel"></button>
+   
+   &ensp;
+  
+   
+    <button type = button class="Fifth  option" id = "fifthLabel"></button>
+    
+    
+</div>
+<!--<button type = "button" class = "submitButton" >Select</button>-->
+</div>
+<div class = "wrapup" hidden>
     <div class = "finishGameMessage"></div>
     <br>
-    
-    <div class = "finishGameInstruction"></div>
-    
-    <button type="button" class ="startNewGame" hidden>Start new game</button>
-    </section>
-<div class = "otherdiv"></div>
-
+   
+    <button type = "button" class = "startNewGame">Start New Game</button>
+</div>
 
     <!--Should be end of overall container-->
 
