@@ -26,12 +26,15 @@
         </nav>
         
         <div class = "stats-popuptext">
+            <div class = "close">
             <btn type = "button" class="popupCloseButton">X</btn>
+            </div>
             <div class = "statsContentNoClose">
             <div class = "popup-Content">
             <h2 class = "popupHeading">Flagl Game Stats</h2>
             
-            <p class = "stats">Games: 0<br>Average Score: 0</p>
+            <p class = "stats">FLAGL Score: 0<br>Games: 0<br>Average Score</p>
+            <br>
             <br>
             <a href = "https://www.flagl.net" alt = "flagl.net">flagl.net</a>
             </div>
@@ -43,7 +46,9 @@
             
  
             <div class = "help-popup">
+                <div class = "close">
                 <btn type =  "button" class="popupCloseButton-help">X</btn>
+                </div>
                 <div class = "popup-Content">
                 <h2 class = "popupHeading">How the Game Works</h2>
                 
@@ -56,7 +61,7 @@
             
 <div class = "container">
     
-<br>
+
 
 
 <div class = "introduction">The Flag Quiz</div>
@@ -64,7 +69,7 @@
 <div class = "message"></div>
 
 
-<br>
+
 <div class = "reset"></div>
 
 <button type="button" class ="start">Start the game</button>
@@ -81,32 +86,18 @@
 <div class = "country" ></div>
 <br>
 <div class ="answer"> </div>
-<div class = "selection"  autocomplete = "off" hidden>
-    
-    <button type = button class="First  option" id = "firstLabel" ></button>
-  
-   &ensp;
-  
-   
-    <button type = button class="Second  option" id = "secondLabel"></button>
-   
-    &ensp;
-   
-    
+<!--<div class = "selection"  autocomplete = "off" hidden>-->
+    <span id = "spanBut">
+        <button type = button class="First  option" id = "firstLabel" ></button>
+        <button type = button class="Second  option" id = "secondLabel"></button>
         <button type = button class="Third  option" id = "thirdLabel"></button>
-  
-   &ensp;
-  
-   
-    <button type = button class="Fourth  option" id = "fourthLabel"></button>
-   
-   &ensp;
-  
-   
-    <button type = button class="Fifth  option" id = "fifthLabel"></button>
+        <button type = button class="Fourth  option" id = "fourthLabel"></button>
+        <button type = button class="Fifth  option" id = "fifthLabel"></button>
     
-    
-</div>
+        
+    </span>
+
+
 <!--<button type = "button" class = "submitButton" >Select</button>-->
 </div>
 <div class = "wrapup" hidden>
@@ -114,11 +105,12 @@
     <br>
    
     <button type = "button" class = "startNewGame">Start New Game</button>
-</div>
 
     <!--Should be end of overall container-->
 
 </div>
+</div>
+
 
 
 

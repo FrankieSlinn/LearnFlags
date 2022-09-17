@@ -301,7 +301,7 @@ let letter = "";
 //timer function
 
 //console.log("localStorageLongGameAverage", longGameAverage);
-selection.style["display"] = "none";
+//selection.style["display"] = "none";
 document.querySelector(".startNewGame").style["display"] = "none";
 document.querySelector(".startNewGame").style["visibility"] = "hidden";
 //document.querySelector(".submitButton").style["display"] = "none";
@@ -341,6 +341,7 @@ function fifthTurn() {
 function correct() {
   console.log("got correct");
   buttonClicked = 0;
+  document.getElementById("spanBut").style["display"] = "none";
   document.querySelector(".container").style["visibility"] = "visible";
   document.querySelector(".message").style["visibility"] = "visible";
   document.querySelector(".message").innerHTML = correctAnswer;
@@ -358,6 +359,7 @@ function incorrect() {
   console.log("buttonClicked", buttonClicked);
   buttonClicked = 0;
   console.log("got incorrect");
+  document.getElementById("spanBut").style["display"] = "none";
   document.querySelector(".container").style["visibility"] = "visible";
   document.querySelector(".message").innerHTML = incorrectAnswer;
 
@@ -374,8 +376,10 @@ function displayFlag() {
     "firstlabel first at=fter displayflag",
     document.getElementById("firstLabel")
   );
-  let selection = document.querySelector(".selection");
-  document.querySelector(".selection").style["visibility"] = "hidden";
+ // let selection = document.querySelector(".selection");
+  //document.querySelector(".selection").style["visibility"] = "hidden";
+  document.querySelector(".wrapup").style["z-index"] = "-1";
+  document.getElementById("spanBut").style["display"] = "none";
   startButton.style["visibility"] = "hidden";
   document.querySelector(".container").style["visibility"] = "visible";
   document.querySelector(".message").style["visibility"] = "visible";
@@ -422,7 +426,7 @@ function displayFlag() {
   document.getElementById("cGuess").addEventListener("keyup", function (e) {
     //e.preventDefault();
     //document.querySelector(".selection").innerHTML = "";
-
+    document.getElementById("spanBut").style["display"] = "inline";
     console.log("cGuessvalue", cGuess.value);
 
     let keysJoin = String(cGuess.value).toLowerCase();
@@ -459,12 +463,12 @@ function displayFlag() {
     }
 
     //Display Predictive text
-    document.querySelector(".selection").style["display"] = "inline-block";
-    document.querySelector(".selection").style["visibility"] = "visible";
-    console.log(
-      "selection displayed",
-      (document.querySelector(".selection").style["display"] = "inline-block")
-    );
+    //document.querySelector(".selection").style["display"] = "inline-block";
+    //document.querySelector(".selection").style["visibility"] = "visible";
+    //console.log(
+    //  "selection displayed",
+    //  (document.querySelector(".selection").style["display"] = "inline-block")
+   // );
 
     defineButtonText();
   });
@@ -526,10 +530,10 @@ function getInputValue() {
   document.querySelector(buttonClasses[buttonClicked - 1]).checked = false;
   document.getElementById(labelContent[buttonClicked - 1]).innerHTML == "";
 
-  document.querySelector(".selection").style["visibility"] = "hidden";
+  //document.querySelector(".selection").style["visibility"] = "hidden";
   //document.querySelector(".option").style["visibility"] = "hidden";
   document.querySelector(".container").style["visibility"] = "visible";
-  selection.style["display"] = "none";
+ // selection.style["display"] = "none";
   // Selecting the input element and get its value
   console.log(
     "longGameScores",
@@ -589,6 +593,7 @@ document.querySelector(".getGameScore").addEventListener("click", function () {
   document.querySelector(".wrapup").style["display"] = "inline-block";
   document.querySelector(".wrapup").style["visibility"] = "visible";
   document.querySelector(".wrapup").style["opacity"] = "100";
+  document.querySelector(".wrapup").style["z-index"] = "1";
 
   //document.querySelector(".container").style["visibility"] = "visible";
   document.querySelector(".finishGameMessage").style["display"] =
@@ -768,10 +773,10 @@ document.querySelector(".stat-icon").addEventListener("click", function () {
       {
         var r = document.createRange();
         r.selectNode(document.querySelector(".popup-Content"));
-        window.getSelection().removeAllRanges();
-        window.getSelection().addRange(r);
+       // window.getSelection().removeAllRanges();
+        //window.getSelection().addRange(r);
         document.execCommand("copy");
-        window.getSelection().removeAllRanges();
+        //window.getSelection().removeAllRanges();
         //alert("Results Copied");
       }
     });
