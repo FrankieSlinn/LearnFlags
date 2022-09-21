@@ -273,10 +273,13 @@ let longGameAverage =
       ).toFixed(0)
     : 0;
 
-let score = 0;
+    let statsScore = JSON.parse(localStorage.getItem("longGameScores")) != null
+? (JSON.parse((localStorage.getItem("longGameScores")))[((JSON.parse(localStorage.getItem("longGameScores"))).length)-1]):0;
+
 let numFlagGuesses = 0;
 let countryDisplayed = [];
 let flag = "";
+let score = 0;
 
 
 let correctAnswer = "Congratulations. That was correct.";
@@ -298,12 +301,88 @@ let statistics = document.querySelector(".stats");
 let sumLongCount = 0;
 let letter = "";
 
+/*******local storage 
+ * get local storage for turns and scores then commit
+ * get local storage for flag per turn
+ * could split flag generating function
+ * for each turn keep flag as is, then change
+ * run function for wrapup screen if wrapup screen time using local storage data
+ * run function for show Game Score if show Game Score using local storage data
+ */
+
 //timer function
+/*
+window.onbeforeunload = function(){
+  
+  localStorage.setItem("score", JSON.stringify(score));
+  localStorage.setItem("turns", JSON.stringify(turns));
+};
+
+window.unload = function(){
+  console.log("refreshed");
+  JSON.parse(localStorage.getItem("score", JSON.stringify(score)));
+  JSON.parse(localStorage.getItem("turns", JSON.stringify(turns)));
+  console.log("score, turns", JSON.parse(localStorage.getItem("score", JSON.stringify(score))), JSON.parse(localStorage.getItem("turns", JSON.stringify(turns))))
+}*/
+
+console.log("stored score turns", JSON.parse(localStorage.getItem("score", JSON.stringify(score))),
+JSON.parse(localStorage.getItem("turns", JSON.stringify(turns))))
+
+document.querySelector(".labelTimer").style["display"] = "none";
+//document.querySelector(".submitButton").style["display"] = "none";
+
+console.log(
+  "longGameScores",
+  JSON.parse(localStorage.getItem("longGameScores"))
+);
+
+
+
+  const tick  = function(){
+    //  window.onbeforeunload = function () {return null; 
+    // console.log("testwindow.beforeunload")};
+  
+
+    if (new Date().getSeconds() ==0 && (new Date().getMinutes()==30)){
+      
+      
+      startNewGame();
+      console.log("START NEW GAME");
+}
+  
+
+    let date = new Date(); 
+    //console.log("date.getMinutes ==", 60-new Date().getMinutes());
+   //console.log("date.getSeconds ==", 61-new Date().getSeconds());
+    //console.log("new Date()", date.getTime());
+    //get value of last hour and add an hour
+    //let countDown =  ((( new Date().getTime()/60000 -((new Date().getTime())/60000)%(1000*60*60))) +1000*60*60);
+    //let timeUntil = countDown - new Date().getTime()/60000;
+    
+    //console.log("countDown - new Date() in sec ---", (countDown- new Date())/1000/60/60);
+
+   // console.log("tick function working")
+   document.querySelector(".labelTimer").style['visibility'] = "visible";
+   //document.querySelector(".labelTimer").innerHTML = `This game restarts in ${secmin}`;
+   //console.log("get min and seconds", labelTimer.textContent);
+
+   document.querySelector(".labelTimer").innerHTML = `This Game Will Restart in <strong>${60-new Date().getMinutes()}</strong> Minutes <strong>${61-new Date().getSeconds()}</strong> Seconds`
+   //document.querySelector(".labelTimer")[0].innerHTML = `${60-new Date().getMinutes()} Minutes ${61-new Date().getSeconds()} Seconds`;
+ 
+    //if (time ===0){
+      time = 60;
+     // clearInterval(timer);
+   // }
+    time = time-1;
+  };
+  tick();
+
+  setInterval(tick, 1000);
 
 //console.log("localStorageLongGameAverage", longGameAverage);
 //selection.style["display"] = "none";
-document.querySelector(".startNewGame").style["display"] = "none";
-document.querySelector(".startNewGame").style["visibility"] = "hidden";
+//document.querySelector(".startNewGame").style["display"] = "none";
+//document.querySelector(".startNewGame").style["visibility"] = "hidden";
 //document.querySelector(".submitButton").style["display"] = "none";
 
 console.log(
@@ -313,7 +392,7 @@ console.log(
 
 document.querySelector(
   ".stats"
-).innerHTML = `Games: ${longGames}<br>Average Score: ${longGameAverage}`;
+).innerHTML = `FLAGL Score: <strong>${statsScore}</strong><br>Games: <strong>${longGames}</strong><br>Average Score: <strong>${longGameAverage}</strong>`;
 console.log("stats message", statistics);
 
 function randomNumber() {
@@ -323,8 +402,11 @@ function randomNumber() {
 console.log(randomNumber());
 
 function first4Turns() {
-  turns += 1;
-  console.log("score, turns", score, turns);
+  console.log((JSON.parse(localStorage.getItem("turns"))))
+  let turns = JSON.parse(localStorage.getItem("turns"))
+  let turns1 = turns += 1;
+  localStorage.setItem("turns", JSON.stringify(turns1));
+  console.log("score, turns in first 4",JSON.parse(localStorage.getItem("score")) , JSON.parse(localStorage.getItem("turns")));
   resetButton.style["display"] = "inline-block";
   document.querySelector(".reset").innerHTML =
     '<button type = button class = "reset">Have Another Go</button>';
@@ -335,7 +417,7 @@ function fifthTurn() {
   console.log("!!4 turns!!");
   document.querySelector(".getGameScore").style["display"] = "inline-block";
   resetButton.style["display"] = "none";
-  console.log("score, turns", score, turns);
+  console.log("score, turns in fifth Turn", JSON.parse(localStorage.getItem("score")), JSON.parse(localStorage.getItem("turns")));
 }
 
 function correct() {
@@ -347,11 +429,12 @@ function correct() {
   document.querySelector(".message").innerHTML = correctAnswer;
 
   //document.querySelector(".submitButton").style["display"] = "none";
-  score += 1;
-  if (turns < 4) {
+  score1 = score += 1;
+  localStorage.setItem("score", JSON.stringify(score1));
+  if (JSON.parse(localStorage.getItem("turns")) < 4) {
     first4Turns();
     inputValue = "";
-  } else if (turns == 4) {
+  } else if (JSON.parse(localStorage.getItem("turns")) == 4) {
     fifthTurn();
   }
 }
@@ -363,10 +446,10 @@ function incorrect() {
   document.querySelector(".container").style["visibility"] = "visible";
   document.querySelector(".message").innerHTML = incorrectAnswer;
 
-  if (turns < 4) {
+  if (JSON.parse(localStorage.getItem("turns")) < 4) {
     first4Turns();
     inputValue = "";
-  } else if (turns == 4) {
+  } else if (JSON.parse(localStorage.getItem("turns")) == 4) {
     fifthTurn();
   }
 }
@@ -388,7 +471,7 @@ function displayFlag() {
   flag = String(flags[randomNumber()]);
   flagIndex = flags.indexOf(flag);
   console.log("flagIndex, flag", flagIndex, flag);
-  if (turns < 4) {
+  if (JSON.parse(localStorage.getItem("turns")) < 4) {
     console.log(flag);
     console.log("countryDisplayed", countryDisplayed);
     console.log("countryDisplayed", typeof countryDisplayed);
@@ -560,7 +643,7 @@ function getInputValue() {
     inputValLow = "";
   }
 
-  let scorePerTurn = score / turns;
+  //let scorePerTurn = score / turns;
 
   //document.querySelector(".stats").innerHTML = `You have guessed ${score} flag(s) correctly in ${turns} turn(s). Your guessing average per turn is ${scorePerTurn.toFixed(2)}.`;
 
@@ -580,7 +663,7 @@ startButton.addEventListener("click", displayFlag);
 
 /****Played 5 Games****/
 
-console.log(turns, "turns");
+console.log(JSON.parse(localStorage.getItem("turns")), "turns");
 
 //After the user completed 5 rounds see overall score
 
@@ -589,11 +672,13 @@ document.querySelector(".getGameScore").addEventListener("click", function () {
 
   document.querySelector(".container").style["opacity"] = "0";
   //document.querySelector(".finishGameMessage").style['display'] = "none";
-  console.log("endScore, turns", score, turns);
+  console.log("endScore, turns", JSON.parse(localStorage.getItem("score")), JSON.parse(localStorage.getItem("turns")));
   document.querySelector(".wrapup").style["display"] = "inline-block";
   document.querySelector(".wrapup").style["visibility"] = "visible";
   document.querySelector(".wrapup").style["opacity"] = "100";
   document.querySelector(".wrapup").style["z-index"] = "1";
+  document.querySelector(".labelTimer").style["display"] =
+  "inline-block";
 
   //document.querySelector(".container").style["visibility"] = "visible";
   document.querySelector(".finishGameMessage").style["display"] =
@@ -603,18 +688,18 @@ document.querySelector(".getGameScore").addEventListener("click", function () {
     document.querySelector(".finishGameMessage").innerHTML =
       "Congratulations, you scored 100%!";
   }
-  if (1 <= score <= 4) {
+  if (1 <= JSON.parse(localStorage.getItem("score")) <= 4) {
     document.querySelector(".finishGameMessage").innerHTML = `You have scored ${
-      score * 2
+      JSON.parse(localStorage.getItem("score")) * 2
     }0%`;
   }
-  if (score === 0) {
+  if (JSON.parse(localStorage.getItem("score")) === 0) {
     document.querySelector(
       ".finishGameMessage"
     ).innerHTML = `Unlucky, you scored 0%`;
   }
 
-  let gameScore = Number(score * 2 * 10);
+  let gameScore = Number(JSON.parse(localStorage.getItem("score")) * 2 * 10);
   console.log("gameScore", gameScore);
   gameScores.push(gameScore);
   console.log(
@@ -645,8 +730,11 @@ document.querySelector(".getGameScore").addEventListener("click", function () {
   console.log("averageScore", averageScore);
 
   countGames += 1;
-  turns = 0;
-  score = 0;
+  turns0 = 0;
+  score0 = 0;
+
+  localStorage.setItem("turns", JSON.stringify(turns0));
+  localStorage.setItem("score", JSON.stringify(score0));
 
   //document.querySelector(".finishGameInstruction").style['display'] = "inline-block";
 
@@ -670,10 +758,10 @@ document.querySelector(".getGameScore").addEventListener("click", function () {
   console.log("gamePlayed", gamesPlayed);
 
   let sumLongCount = 0;
-  statistics.innerHTML = `Games: ${gamesPlayed}<br>Average Score: ${(
+  statistics.innerHTML = `FLAGL Score: <strong>${statsScore}</strong><br>Games: <strong>${gamesPlayed}</strong><br>Average Score: <strong>${(
     sumLongGameScores(JSON.parse(localStorage.getItem("longGameScores"))) /
     JSON.parse(localStorage.getItem("longGameScores")).length
-  ).toFixed(0)}`;
+  ).toFixed(0)}</strong>`;
   //console.log('statistics.innerHTML', statistics);
   //console.log("longGames after longGamesScores set", longGames)
   console.log("longGameScores", longGameScores);
@@ -682,8 +770,8 @@ document.querySelector(".getGameScore").addEventListener("click", function () {
 
   //console.log("countGames", countGames, "averageScore", averageScore)
 
-  document.querySelector(".startNewGame").style["display"] = "inline-block";
-  document.querySelector(".startNewGame").style["visibility"] = "visible";
+  //document.querySelector(".startNewGame").style["display"] = "inline-block";
+  //document.querySelector(".startNewGame").style["visibility"] = "visible";
   document.querySelector(".getGameScore").style["display"] = "none";
   document.querySelector(".container").style["visibility"] = "hidden";
   resetButton.style["display"] = "";
@@ -705,7 +793,7 @@ function startAgain() {
 }
 
 //starts new game from scratch
-document.querySelector(".startNewGame").addEventListener("click", function () {
+startNewGame =function() {
   console.log("start new game selected");
   document.querySelector(".container").style["opacity"] = "100";
   document.querySelector(".wrapup").style["opacity"] = "0";
@@ -719,8 +807,10 @@ document.querySelector(".startNewGame").addEventListener("click", function () {
   flags.push(...countryDisplayed);
   countryDisplayed = [];
 
-  score = 0;
-  turns = 0;
+  score0 = 0;
+  turns0 = 0;
+  localStorage.setItem("score", JSON.stringify(score0));
+  localStorage.setItem("score", JSON.stringify(turns0));
 
   resetButton.style["display"] = "none";
   document.querySelector(".instruction").innerHTML =
@@ -729,7 +819,7 @@ document.querySelector(".startNewGame").addEventListener("click", function () {
   // document.querySelector(".message").innerHTML = "";
   document.querySelector(".getGameScore").style["display"] = "none";
   displayFlag();
-});
+};
 
 /*****Stats Popup*****/
 document.querySelector(".stat-icon").addEventListener("click", function () {
@@ -878,14 +968,8 @@ document
       document.querySelector(".message").style["visibility"] = "visible";
       messagevisible = 0;
     }
-    // document.querySelector(".container")["visibility"] = "hidden";
-    // document.querySelector(".container").style.visibility = "visible";
-    //document.querySelector(".wrapup").style.visibility = "visible";
+  
   });
 
 /*********/
-/*
-capitalisation
-reveal answer
-share score on clipboard
-*/
+
