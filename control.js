@@ -275,7 +275,7 @@ let longGameAverage =
 
     let statsScore = JSON.parse(localStorage.getItem("longGameScores")) != null
 ? (JSON.parse((localStorage.getItem("longGameScores")))[((JSON.parse(localStorage.getItem("longGameScores"))).length)-1]):0;
-
+console.log("statsScorebeginning", statsScore)
 let numFlagGuesses = 0;
 let countryDisplayed = [];
 let flag = "";
@@ -300,12 +300,16 @@ let statistics = document.querySelector(".stats");
 //sumLongCount needed for sum equation to add up items in array for average score
 let sumLongCount = 0;
 let letter = "";
+let flagArray = [];
+let rndFlagRun = ""
+
 
 /*******local storage 
- * get local storage for turns and scores then commit
+ * get local storage for turns and scores then commit Done
  * get local storage for flag per turn
+ * Make sure one flag works
  * could split flag generating function
- * for each turn keep flag as is, then change
+ * for each turn keep flag as is, then change. Coudl do loop from 0 to 5.
  * run function for wrapup screen if wrapup screen time using local storage data
  * run function for show Game Score if show Game Score using local storage data
  */
@@ -343,7 +347,7 @@ console.log(
     // console.log("testwindow.beforeunload")};
   
 
-    if (new Date().getSeconds() ==0 && (new Date().getMinutes()==30)){
+    if (new Date().getSeconds() ==0 && (new Date().getMinutes()==28)){
       
       
       startNewGame();
@@ -414,6 +418,7 @@ function first4Turns() {
   resetButton.addEventListener("click", startAgain);
 }
 function fifthTurn() {
+  localStorage.setItem("rndFlagRun", JSON.stringify(false));
   console.log("!!4 turns!!");
   document.querySelector(".getGameScore").style["display"] = "inline-block";
   resetButton.style["display"] = "none";
@@ -453,8 +458,27 @@ function incorrect() {
     fifthTurn();
   }
 }
+function rndAndDisplay(){
+for (let i=0; i<=4; i++){
+if(JSON.parse(localStorage.getItem("turns")) ==i&&JSON.parse(localStorage.getItem("rndFlagRun"))==false){
+  console.log("rndFlagRunBefore", JSON.parse(localStorage.getItem("rndFlagRun")))
+  randomFlag(); 
+  displayFlag();
+  console.log("turns in loop for random flag with flag", JSON.parse(localStorage.getItem("turns")), JSON.parse(localStorage.getItem("flag0")))
+  localStorage.setItem("rndFlagRun", JSON.stringify(true));
+  console.log("rndFlagRunAfter", JSON.parse(localStorage.getItem("rndFlagRun")))
+}};
+}
+
+function randomFlag(){
+  flagTurn0 = String(flags[randomNumber()]); 
+ localStorage.setItem("flag0", JSON.stringify(flagTurn0));
+ console.log("in randomFlag JSON parse flag 0", JSON.parse(localStorage.getItem("flag0")))
+}
+
 
 function displayFlag() {
+
   console.log(
     "firstlabel first at=fter displayflag",
     document.getElementById("firstLabel")
@@ -463,26 +487,27 @@ function displayFlag() {
   //document.querySelector(".selection").style["visibility"] = "hidden";
   document.querySelector(".wrapup").style["z-index"] = "-1";
   document.getElementById("spanBut").style["display"] = "none";
-  startButton.style["visibility"] = "hidden";
+  //startButton.style["visibility"] = "hidden";
   document.querySelector(".container").style["visibility"] = "visible";
   document.querySelector(".message").style["visibility"] = "visible";
   document.querySelector(".intro").innerHTML = "<br>Type and Select a Country";
 
-  flag = String(flags[randomNumber()]);
-  flagIndex = flags.indexOf(flag);
-  console.log("flagIndex, flag", flagIndex, flag);
+
+  flagIndex = flags.indexOf(JSON.parse(localStorage.getItem("flag0")));
+  console.log("flagIndex, flag", flagIndex, JSON.parse(localStorage.getItem("flag0")));
   if (JSON.parse(localStorage.getItem("turns")) < 4) {
-    console.log(flag);
+    console.log(JSON.parse(localStorage.getItem("flag0")));
     console.log("countryDisplayed", countryDisplayed);
     console.log("countryDisplayed", typeof countryDisplayed);
 
-    countryDisplayed.push(flag);
+    countryDisplayed.push(JSON.parse(localStorage.getItem("flag0")));
   }
   console.log("How many Flags", flags.length);
+  console.log("flaglow JSON parse flag 0", JSON.parse(localStorage.getItem("flag0")))
 
-  flagLow = flag.toLowerCase();
-  flagWithUnderscore = flag.replaceAll(" ", "_");
-  console.log(flag);
+  flagLow = (JSON.parse(localStorage.getItem("flag0"))).toLowerCase();
+  flagWithUnderscore = JSON.parse(localStorage.getItem("flag0")).replaceAll(" ", "_");
+  console.log(JSON.parse(localStorage.getItem("flag0")));
 
   pngName =
     "<img src = Images/" +
@@ -647,7 +672,7 @@ function getInputValue() {
 
   //document.querySelector(".stats").innerHTML = `You have guessed ${score} flag(s) correctly in ${turns} turn(s). Your guessing average per turn is ${scorePerTurn.toFixed(2)}.`;
 
-  document.querySelector(".answer").innerHTML = `The answer is ${flag}`;
+  document.querySelector(".answer").innerHTML = `The answer is ${JSON.parse(localStorage.getItem("flag0"))}`;
   document.querySelector(".intro").innerHTML = "";
   document.querySelector(".instruction").innerHTML = "";
   document.querySelector(".showFlag").innerHTML = "";
@@ -659,7 +684,7 @@ function getInputValue() {
 
 var startButton = document.querySelector(".start");
 //startButton.style.color = "blue";
-startButton.addEventListener("click", displayFlag);
+startButton.addEventListener("click", displayFlag());
 
 /****Played 5 Games****/
 
@@ -758,6 +783,8 @@ document.querySelector(".getGameScore").addEventListener("click", function () {
   console.log("gamePlayed", gamesPlayed);
 
   let sumLongCount = 0;
+  let statsScore = JSON.parse(localStorage.getItem("longGameScores")) != null
+  ? (JSON.parse((localStorage.getItem("longGameScores")))[((JSON.parse(localStorage.getItem("longGameScores"))).length)-1]):0;
   statistics.innerHTML = `FLAGL Score: <strong>${statsScore}</strong><br>Games: <strong>${gamesPlayed}</strong><br>Average Score: <strong>${(
     sumLongGameScores(JSON.parse(localStorage.getItem("longGameScores"))) /
     JSON.parse(localStorage.getItem("longGameScores")).length
@@ -778,6 +805,8 @@ document.querySelector(".getGameScore").addEventListener("click", function () {
 });
 
 function startAgain() {
+  localStorage.setItem("rndFlagRun", JSON.stringify(false));
+  flag0=""; 
   console.log("started again");
   document.querySelector(".container").style["opacity"] = "100";
   //document.querySelector(".startAgain").innerHTML = "";
@@ -789,11 +818,17 @@ function startAgain() {
     "Which country does this flag belong to?";
   document.querySelector(".message").innerHTML = "";
   document.querySelector(".getGameScore").style["display"] = "none";
-  displayFlag();
+  rndAndDisplay();
 }
 
 //starts new game from scratch
 startNewGame =function() {
+  score0 = 0;
+  turns0 = 0;
+  localStorage.setItem("score", JSON.stringify(score0));
+  localStorage.setItem("score", JSON.stringify(turns0));
+  localStorage.setItem("rndFlagRun", JSON.stringify(false));
+  flag0="";
   console.log("start new game selected");
   document.querySelector(".container").style["opacity"] = "100";
   document.querySelector(".wrapup").style["opacity"] = "0";
@@ -801,16 +836,13 @@ startNewGame =function() {
   document.querySelector(".container").style["visibility"] = "visible";
   document.querySelector(".wrapup").style["visibility"] = "hidden";
   document.querySelector(".finishGameMessage").style["visibility"] = "hidden";
-  document.querySelector(".startNewGame").style["visibility"] = "hidden";
+  //document.querySelector(".startNewGame").style["visibility"] = "hidden";
 
   //get flags to original length
   flags.push(...countryDisplayed);
   countryDisplayed = [];
 
-  score0 = 0;
-  turns0 = 0;
-  localStorage.setItem("score", JSON.stringify(score0));
-  localStorage.setItem("score", JSON.stringify(turns0));
+
 
   resetButton.style["display"] = "none";
   document.querySelector(".instruction").innerHTML =
@@ -818,7 +850,7 @@ startNewGame =function() {
   document.querySelector(".message").innerHTML = "";
   // document.querySelector(".message").innerHTML = "";
   document.querySelector(".getGameScore").style["display"] = "none";
-  displayFlag();
+  rndAndDisplay();
 };
 
 /*****Stats Popup*****/
