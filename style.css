@@ -219,7 +219,7 @@ a {
   text-align: center;
 }
 
-.popup-Content {
+.popup-Content, .statsContent {
   margin: 0rem 5rem;
   text-align: center;
 }
