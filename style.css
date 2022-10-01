@@ -33,16 +33,18 @@ nav {
   gap: 3rem;
 
   background-color: #fff;
-  margin-top: 0.25rem;
-  padding: 3rem;
+  margin-top: 0.5rem;
+  padding: 2rem;
+ 
 }
+
 
 span {
   display: flex;
   justify-content: center;
   gap: 3rem;
   background-color: #fff;
-  padding: 1.25rem;
+  padding: 0.25rem;
 }
 .title {
   display: inline-block;
@@ -53,6 +55,18 @@ span {
   width: 35px;
   height: 35px;
 }
+.star{
+  display: inline-block;
+  width: 35px;
+  height: 35px;
+  fill: none;
+  margin-top: -0.5rem;
+
+}
+/*#star1{
+fill: yellow;
+
+}*/
 
 .container {
   width: auto;
@@ -75,12 +89,23 @@ h2 {
   color: #242424;
 }
 .introduction {
+  margin-top: -1.5rem;
   margin-bottom: 1rem;
+  color: #242424;
+ 
+  font-size: 1.25rem;
+  width: auto;
+  padding: 0.5rem;
 }
 .introduction,
 .answer {
   font-size: 1.25rem;
   font-weight: 700;
+}
+.instruction{
+  padding-top: 3.5rem;
+  margin-bottom: 0rem;
+  
 }
 
 
@@ -90,17 +115,46 @@ h2 {
 }
 @-moz-document url-prefix() {
   .instruction {
-    margin-top: 0rem;
+    margin-top: 0.5rem;
     margin-bottom: 1rem;
   }
 }
-.start,
+.flagName,
 .instruction,
 .intro,
-.introduction {
+.feedback
+ {
   color: #242424;
   font-size: 1.25rem;
-  margin-top: 0.5rem;
+  margin-top: -1rem;
+}
+
+.practice{
+  color: #242424;
+  font-size: 1.25rem;
+  margin-top: 3rem;
+}
+
+.flagName{
+  margin-top: 0rem;
+}
+@-moz-document url-prefix() {
+  .flagName{
+    margin-bottom: 2rem;
+  }
+}
+.feedback{
+  margin-top: 2.5rem;
+}
+.intro{
+  margin-top: -0.5rem;
+}
+.showFlag{
+  margin-top: -1.5rem;
+}
+
+.newFlag{
+  margin-top: 1rem;
 }
 
 @-moz-document url-prefix() {
@@ -120,18 +174,19 @@ h2 {
 }
 @-moz-document url-prefix() {
   #cGuess {
-    margin-top: 1rem;
+
     margin-bottom: 2.5rem;
   }
 }
 
 #cGuess {
   font-size: 1.25rem;
-  padding: 0.5rem 1rem;
   text-align: center;
   border: 1px solid;
   border-color: #242424;
   display: absolute;
+  margin-top: -1.5rem;
+  padding: 0.5rem;
 }
 
 button {
@@ -153,9 +208,11 @@ button:active {
   cursor: pointer;
 }
 
+
+
 .radio-button input[type="radio"]:checked + label {
   background-color: #76cf9f;
-}
+}displayflag
 
 .submitButton {
   margin-bottom: 2rem;
@@ -165,17 +222,6 @@ a {
   font-size: 1rem;
 }
 
-/*Completion Message*/
-
-.wrapup {
-  display: inline-block;
-  text-align: center;
-  margin-top: -11rem;
-  width: 100%;
-  position: relative;
-  top: -4.5rem;
-  z-index: -1;
-}
 
 @-moz-document url-prefix() {
   .wrapup {
@@ -186,20 +232,34 @@ a {
 
 .labelTimer{
     font-size: 1.25rem;
+    margin-top: 2.25rem;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+   
+    border: solid #242424 0.5px;
+ 
+
 }
 
 @-moz-document url-prefix() {
   .finishGameMessage {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-top: 3rem;
+    margin-bottom: 0rem;
   }
 }
 
 .finishGameMessage {
+
   text-align: center;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
+  margin-top: 0.5rem;
+  
+  padding-bottom: 0rem;
+  color:#242424;
+ 
 }
+
 
 .startNewGame {
   text-align: center;
@@ -267,13 +327,35 @@ a {
 }
 .copyright {
   text-align: center;
-  margin-top: 20rem;
+  margin-top: 1rem;
 }
 
 .option {
   visibility: hidden;
+  padding: 0.5rem;
+}
+#spanBut{
+  margin-top: 0.5rem;
+}
+
+@-moz-document url-prefix(){
+  #spanBut{
+    margin-top: -2rem;
+  }
 }
 
 a {
   font-size: 1.25rem;
+  color: #6d6875;
+}
+a:hover, a:active{
+  color:#b5838d;
+}
+
+.coffee{
+  font-size: 1rem;
+  margin-top: 6.5rem;
+}
+.coffee a{
+  font-size: 1rem;
 }
