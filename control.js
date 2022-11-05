@@ -242,7 +242,7 @@ let keysJoin = "";
 let selection = document.querySelector(".selection");
 //let inputVal = "";
 let flagsort = flags.sort();
-console.log("flagsort", flagsort);
+//console.log("flagsort", flagsort);
 console.log("how many flags", flags.length);
 let passed = 0;
 let turns = 0;
@@ -312,6 +312,12 @@ let flagNum3 = "";
 let flagNum4 = ""; 
 let flagNum5 = ""; 
 let flagsToday = [];
+if(JSON.parse(localStorage.getItem("longGameScores")) == null&&JSON.parse(localStorage.getItem("firstTurn"))!=false){
+  localStorage.setItem("firstTurn", JSON.stringify(true))
+}
+else{localStorage.setItem("firstTurn", JSON.stringify(false))}
+
+
 //makes sure score not null so in first turn flag can be matched to score. 
 if(JSON.parse(localStorage.getItem("score"))==null){
   localStorage.setItem("score", JSON.stringify(0));
@@ -374,8 +380,21 @@ let generate_seed = MurmurHash3(dateNumber);
     console.log("run random seed before local storage", SimpleFastCounter32(generate_seed(), generate_seed()));
     console.log("print random number not full function", localStorage.getItem("random_number"));
 
-    if(String(dateNumber) !== String(JSON.parse(localStorage.getItem("dateNumber")))||(fullDate.getHours()==0&&fullDate.getMinutes()==0&&fullDate.getSeconds()==0)||gamesPlayed==0){
+    if(String(dateNumber) !== String(JSON.parse(localStorage.getItem("dateNumber")))||(fullDate.getHours()==0&&fullDate.getMinutes()==0&&fullDate.getSeconds()==0)||JSON.parse(localStorage.getItem("firstTurn"))==true){
+      localStorage.setItem("firstTurn", JSON.stringify(false))
+      localStorage.setItem("valueSubmitted", JSON.stringify(false))
+      console.log("gamesplayed", gamesPlayed);
+      localStorage.setItem("isCorrect", JSON.stringify(false));
+      localStorage.setItem("isIncorrect", JSON.stringify(false));
+      localStorage.setItem("turns", JSON.stringify(0));
+      localStorage.setItem("score", JSON.stringify(0));
+      localStorage.setItem(
+        "flagsShownToday",
+       JSON.stringify(false));
+       console.log("string dateNumber, typeof", String(dateNumber), typeof String(dateNumber));
+       console.log("string localstorage dateNumber, typeof", String(JSON.parse(localStorage.getItem("dateNumber"))), typeof String(JSON.parse(localStorage.getItem("dateNumber"))))
       console.log("gamesplayed to start", gamesPlayed);
+      
       console.log("datenumber !== localStorage DateNumber?", String(dateNumber) !== String(JSON.parse(localStorage.getItem("dateNumber"))));
       console.log("new game started based on date difference");
       localStorage.setItem("dateNumber", JSON.stringify(dateNumber));
@@ -396,25 +415,23 @@ let generate_seed = MurmurHash3(dateNumber);
       console.log("times = 0?", fullDate.getHours()==0&&fullDate.getMinutes()==0&&fullDate.getSeconds()==0)
 
 
-   
-
-
-
-
 };   
 
 
 
-
-//console.log("flag", JSON.parse(localStorage.getItem("flag")));
-console.log("isCorrect", JSON.parse(localStorage.getItem("isCorrect")));
-console.log("isIncorrect", JSON.parse(localStorage.getItem("isIncorrect")));
-
-if (JSON.parse(localStorage.getItem("turns")) == "4") {
-  console.log("4 turns after refresh");
+//ensure fifthturn messages show up at the end
+if (JSON.parse(localStorage.getItem("turns")) == "4"&&JSON.parse(localStorage.getItem("valueSubmitted"))==true) {
+  console.log("4 turns after refreshk, fifthTurn should run");
   //document.querySelector(".finishGameMessage").style["display"] = "inline-block";
+  
   starFill();
   fifthTurn();
+}
+else if(JSON.parse(localStorage.getItem("turns")) == "4"&&JSON.parse(localStorage.getItem("valueSubmitted"))==false){
+    console.log("SHOULD BE FIFTH TURN BUT DISPLAY FLAG CHECK VALUESUBMITTED ")
+
+  displayFlag();
+
 }
 
 starFill();
@@ -425,12 +442,11 @@ console.log(
   "turns are less than 4",
   JSON.parse(localStorage.getItem("turns")) <= "3"
 );
+
 if (JSON.parse(localStorage.getItem("turns")) <= "3") {
-  console.log("display flag at beginning as turns less than 4");
+  console.log("display flag at beginning as turns less than 3");
   displayFlag();
-} else {
-  feedbackScreenLayout();
-}
+} 
 
 console.log(
   "stored score turns",
@@ -496,6 +512,7 @@ function randomNumber() {
 
 
 function first4Turns() {
+  localStorage.setItem("valueSubmitted", JSON.stringify(false))
   buttonClicked = 0;
   console.log("first4Turns, flagsToday", JSON.parse(localStorage.getItem("flagsToday")))
   rightFlag = flags[JSON.parse(JSON.parse(localStorage.getItem("flagsToday"))[JSON.parse(localStorage.getItem("turns"))])];
@@ -527,12 +544,14 @@ function first4Turns() {
   console.log(
     "score, turns in first 4",
     JSON.parse(localStorage.getItem("score")),
-    JSON.parse(localStorage.getItem("turns"))
-  )
+    JSON.parse(localStorage.getItem("turns")))
+  
+  
 }
 
 function fifthTurn() {
   console.log("fifthturn running");
+  localStorage.setItem("valueSubmitted", JSON.stringify(true))
 
   //answer = JSON.parse(localStorage.getItem("flag"))
   document.querySelector(
@@ -547,6 +566,7 @@ function fifthTurn() {
   document.querySelector(".reset").style["display"] = "none";
   document.querySelector(".answer").style["display"] = "none";
   document.querySelector(".intro").style["display"] = "none";
+  document.getElementById("spanBut").style["display"] = "none";
   document.querySelector(".feedback").style["display"] = "inline-block";
   document.querySelector(".practice").style["display"] = "inline-block";
  
@@ -586,6 +606,7 @@ function fifthTurn() {
     JSON.parse(localStorage.getItem("turns"))
   );
 
+
 }
 
 function starFill() {
@@ -616,29 +637,25 @@ function displayFlagScreen(){
   document.querySelector(".finishGameMessage").style["display"] = "none";
   document.querySelector(".answer").style["display"] = "inline-block";
   document.querySelector(".showFlag").style["display"] = "inline-block";
+  document.querySelector(".showFlag").style["visibility"] = "visible";
   document.querySelector(".message").style["visibility"] = "visible";
-  document.querySelector(".intro").innerHTML = "<br>Type and Select a Country";
+  document.querySelector(".intro").innerHTML = "<br>Type and Select a Country or Territory";
   document.querySelector(".intro").style["display"] = "inline-block";
   document.querySelector(".feedback").style["display"] = "none";
   document.querySelector(".labelTimer").style["display"] = "none";
   document.querySelector(".flagName").style["display"] = "none";
   document.querySelector(".practice").style["display"] = "none";
   document.querySelector(".instruction").innerHTML =
-    "Which country or territory does this flag belong to?";
+    "Which Country or Territory Does this Flag Belong to?";
 
 }
 
 function displayFlag() {
-  //in displayFlag so doesn't set if user doesn't do anything. 
-  //localStorage.setItem("dateNumber", JSON.stringify(dateNumber));
+  localStorage.setItem("valueSubmitted", JSON.stringify(false));
 
 
   console.log("displayflag running");
-  displayFlagScreen();
-  //generate flag
-  console.log(
-    "flag before randomRun"
-  );
+  
 
 
   //generate flag one by one today
@@ -656,7 +673,7 @@ function displayFlag() {
     }
     console.log("flag for today", JSON.parse(localStorage.getItem("flag")), flags.indexOf(JSON.parse(localStorage.getItem("flag"))));
   };
-
+  
   flagIndex = flags.indexOf(JSON.parse(localStorage.getItem("flag")));
   console.log(
     "flagIndex, flag",
@@ -665,7 +682,7 @@ function displayFlag() {
   );
   console.log("flagsToday", flagsToday);
   console.log("flagstoday countries", flagsToday.map((item)=>flags[item]));
-  if (JSON.parse(localStorage.getItem("turns")) < 4) {
+  if (JSON.parse(localStorage.getItem("turns")) <= 4) {
     console.log(JSON.parse(localStorage.getItem("flag")));
     console.log("countrydisplayed", countryDisplayed);
     console.log("countryDisplayed", typeof countryDisplayed);
@@ -679,17 +696,19 @@ function displayFlag() {
     " ",
     "_"
   );
+  localStorage.setItem("flagWithUnderscore",JSON.stringify(flagWithUnderscore))
   console.log(JSON.parse(localStorage.getItem("flag")));
 
-  pngName =
+  let pngName =
     "<img src = Images/" +
     flagWithUnderscore +
     '.png  style="width:400px;height:250px;">';
 
   let box =
-    '<input type="text" id="cGuess" autocomplete="autocomplete_off_randString">';
+    '<input type="text" id="cGuess" name="number" autocomplete="one-time-code">';
 
   document.querySelector(".showFlag").innerHTML = pngName;
+  document.querySelector(".showFlag").style["display"] = "inline-block";
 
   document.querySelector(".answer").innerHTML = box;
 
@@ -697,6 +716,7 @@ function displayFlag() {
   //document.querySelector(".submitButton").style["display"] = "inline-block";
 
   console.log("flagWithLetter", flagWithLetter);
+  displayFlagScreen();
 
   /**** PREDICTIVE TEXT *****/
 
@@ -738,6 +758,9 @@ function displayFlag() {
         return true;
       }
     }
+  
+  
+
     defineButtonText();
   });
   ///end predictive text
@@ -751,8 +774,10 @@ if (JSON.parse(localStorage.getItem("flag")) == "") {
   console.log("noflag");
   localStorage.setItem("randomRun", JSON.stringify(false));
 }
-submitValue();
+
 console.log("outside function what flag", JSON.parse(localStorage.getItem("flag")))
+submitValue();
+
 function defineButtonText() {
   for (i = 0; i < buttonClasses.length; i++) {
     document.getElementById(labelContent[i]).style["visibility"] = "visible";
@@ -768,9 +793,14 @@ function defineButtonText() {
       document.querySelector(buttonClasses[i]).style["display"] = "none";
     }
   }
+
 }
 
 function submitValue() {
+  
+  
+
+
   console.log("Submit value what flag", JSON.parse(localStorage.getItem("flag")))
   //console.log("get input value what flag", JSON.parse(localStorage.getItem("flag")))
   for (let i = 0; i < buttonClasses.length; i++) {
@@ -787,6 +817,7 @@ function submitValue() {
 }
 
 function getInputValue() {
+  localStorage.setItem("valueSubmitted", JSON.stringify(true));
   console.log("get input value what flag", JSON.parse(localStorage.getItem("flag")))
   console.log("getinputval started");
   console.log("buttonClicked in beg input value is", buttonClicked);
@@ -818,11 +849,12 @@ function getInputValue() {
   flagWithLetter = [];
 
   //reset values
-  flags.splice(flagIndex, 1);
+ // flags.splice(flagIndex, 1);
 }
 
 function feedbackScreenLayout() {
-  console.log("longGames", longGames);
+  if (turns<4){
+  console.log("feedbackScreenLayout screen running", longGames);
   document.querySelector(".answer").style["visibility"] = "visible";
   document.querySelector(".flagName").style["visibility"] = "visible";
   document.querySelector(".showFlag").style["display"] = "none";
@@ -830,6 +862,7 @@ function feedbackScreenLayout() {
   document.getElementById("spanBut").style["display"] = "none";
   document.querySelector(".flagName").style["display"] = "inline-block";
   document.querySelector(".feedback").style["display"] = "inline-block";
+}
 }
 
 function whichFeedbackScreen() {
@@ -854,7 +887,7 @@ function whichFeedbackScreen() {
   }
   if (JSON.parse(localStorage.getItem("turns")) < 4) {
     first4Turns();
-  } else if (JSON.parse(localStorage.getItem("turns")) == 4) {
+  } else if (JSON.parse(localStorage.getItem("turns")) == 4&&JSON.parse(localStorage.getItem("valueSubmitted"))==true) {
     longGameStats();
     fifthTurn();
   }
@@ -945,10 +978,8 @@ function gameWrapup() {
   turns0 = 0;
   score0 = 0;
 
-  localStorage.setItem("turns", JSON.stringify(0));
-  localStorage.setItem("score", JSON.stringify(0));
-  localStorage.setItem("isCorrect", JSON.stringify(false));
-  localStorage.setItem("isIncorrect", JSON.stringify(false));
+
+
   starFill();
 
   //console.log('statistics.innerHTML', statistics);
@@ -991,8 +1022,7 @@ function startNewGame () {
   flags.push(...countryDisplayed);
   countryDisplayed = [];
  
-  localStorage.setItem("score", JSON.stringify(0));
-  localStorage.setItem("turns", JSON.stringify(0));
+
   console.log(
     "in startNewGames score, turns",
     JSON.parse(localStorage.getItem("score")),

@@ -105,6 +105,8 @@ h2 {
 .instruction{
   padding-top: 3.5rem;
   margin-bottom: 0rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
   
 }
 
@@ -133,7 +135,10 @@ h2 {
   color: #242424;
   font-size: 1.25rem;
   margin-top: 3rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
 }
+
 
 .flagName{
   margin-top: 0rem;
@@ -151,6 +156,8 @@ h2 {
 }
 .showFlag{
   margin-top: -1.5rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
 }
 
 .newFlag{
@@ -237,6 +244,8 @@ a {
     border-radius: 0.5rem;
    
     border: solid #242424 0.5px;
+    margin-left: 2rem;
+    margin-right: 2rem;
  
 
 }

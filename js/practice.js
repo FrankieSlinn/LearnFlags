@@ -246,32 +246,11 @@ let flags = [
   let turns = 0;
   let countGames = 0;
   let gameScores = [];
-  let longGameScores = [];
-  console.log(
-    "first longGameScores, variable",
-    JSON.parse(localStorage.getItem("longGameScores"))
-  );
+
+
   //cater for first element
-  console.log(
-    "get longGameScores, first Game",
-    JSON.parse(localStorage.getItem("longGameScores"))
-  );
-  let longGames =
-    JSON.parse(localStorage.getItem("longGameScores")) != null
-      ? JSON.parse(localStorage.getItem("longGameScores")).length
-      : 0;
-  //console.log("is longGamesScores.length zero", JSON.parse(localStorage.getItem("longGameScores")).length==0)
-  console.log("longgames", longGames);
-  
-  let longGameAverage =
-    JSON.parse(localStorage.getItem("longGameScores")) != null
-      ? (
-          JSON.parse(localStorage.getItem("longGameScores")).reduce(
-            (numa, numb) => numa + numb,
-            0
-          ) / JSON.parse(localStorage.getItem("longGameScores")).length
-        ).toFixed(0)
-      : 0;
+
+
   
   let score = 0;
   let numFlagGuesses = 0;
@@ -307,10 +286,7 @@ let flags = [
   document.querySelector(".gameMode").style["display"] = "none";
   //document.querySelector(".submitButton").style["display"] = "none";
   
-  console.log(
-    "longGameScores",
-    JSON.parse(localStorage.getItem("longGameScores"))
-  );
+
   
 
   function randomNumber() {
@@ -382,7 +358,7 @@ let flags = [
     startButton.style["visibility"] = "hidden";
     document.querySelector(".container").style["visibility"] = "visible";
     document.querySelector(".message").style["visibility"] = "visible";
-    document.querySelector(".intro").innerHTML = "<br>Type and Select a Country";
+    document.querySelector(".intro").innerHTML = "<br>Type and Select a Country or Territory";
   
     flag = String(flags[randomNumber()]);
     flagIndex = flags.indexOf(flag);
@@ -403,10 +379,10 @@ let flags = [
     pngName =
       "<img src = ../Images/" +
       flagWithUnderscore +
-      '.png  style="width:400px;height:250px;">';
+      '.png  style="width:25rem;height:15rem;">';
   
     let box =
-      '<input type="text" id="cGuess" autocomplete="autocomplete_off_randString">';
+      '<input type="text" id="cGuess" name="number" autocomplete="one-time-code">';
     /* for(letter of  getInputValue()){
       console.log("letter", letter);
     }*/
@@ -532,19 +508,11 @@ let flags = [
     //document.querySelector(".selection").style["visibility"] = "hidden";
     //document.querySelector(".option").style["visibility"] = "hidden";
     document.querySelector(".container").style["visibility"] = "visible";
-   // selection.style["display"] = "none";
-    // Selecting the input element and get its value
-    console.log(
-      "longGameScores",
-      JSON.parse(localStorage.getItem("longGameScores"))
-    );
+
   
     inputValLow = inputValue.toLowerCase();
     inputValue = "";
-    //console.log("inputValLow", inputValLow);
-  
-    //console.log("string flag", String(flag));
-    console.log("longGames", longGames);
+
     document.querySelector(".answer").style["visibility"] = "visible";
   
     if (inputValLow == String(flagLow)) {
