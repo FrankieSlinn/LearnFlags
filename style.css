@@ -1,10 +1,4 @@
-/*Preparation
-#B4ECB6,#258F2B #2EB435 #E4801B #C86400 #242424 #1F5124 #27662D
 
-Font size: 10; 20; 32; 48
-
-Font: Arial
-*/
 * {
   margin: 0px;
   padding: 0px;
@@ -31,7 +25,6 @@ nav {
   display: flex;
   justify-content: center;
   gap: 3rem;
-
   background-color: #fff;
   margin-top: 0.5rem;
   padding: 2rem;

@@ -311,6 +311,7 @@ let flagNum2 = "";
 let flagNum3 = ""; 
 let flagNum4 = ""; 
 let flagNum5 = ""; 
+let dailyMode=true;
 let flagsToday = [];
 if(JSON.parse(localStorage.getItem("longGameScores")) == null&&JSON.parse(localStorage.getItem("firstTurn"))!=false){
   localStorage.setItem("firstTurn", JSON.stringify(true))
