@@ -446,13 +446,13 @@ function displayFlag() {
     JSON.parse(localStorage.getItem("flagWithUnderscore")) +
     '.png  style="width:400px;height:250px;">';
 
-  let box =
-    '<input type="text" class="cGuess" name="number" autocomplete="one-time-code">';
+  // let box =
+  //   '<input type="text" class="cGuess" name="number" autocomplete="one-time-code">';
 
   showFlag.innerHTML = pngName;
   showFlag.style["display"] = "inline-block";
 
-  answer.innerHTML = box;
+  // answer.innerHTML = box;
 
   answer.style["visibility"] = "visible";
   //document.querySelector(".submitButton").style["display"] = "inline-block";
