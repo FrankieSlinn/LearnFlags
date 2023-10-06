@@ -1,5 +1,5 @@
 import { flags } from "./flags.js";
-console.log("flags", flags)
+console.log("flags", flags);
 
 let flagsCopy = [...flags];
 let buttonClasses = [".First", ".Second", ".Third", ".Fourth", ".Fifth"];
@@ -16,7 +16,7 @@ let countryMatchingPredText = [];
 let lowerCasePredText = "";
 let selection = document.querySelector(".selection");
 let turns = 0;
-let countryDisplayed = [];
+let flagsDisplayedInRound = [];
 let flag = "";
 let flagLow = "";
 let correctAnswer = "Congratulations, That Was Correct";
@@ -37,17 +37,17 @@ let flagNum2 = "";
 let flagNum3 = "";
 let flagNum4 = "";
 let flagNum5 = "";
-let inputValLow="";
+let inputValLow = "";
 let dailyMode = true;
 let arrayDailyFlags = [];
-const container=document.querySelector(".container");
-const showFlag=document.querySelector(".showFlag");
-const countryOptionButtons=document.querySelector(".countryOptionButtons");
-const intro=document.querySelector(".intro");
-const answer=document.querySelector(".answer");
-const feedback=document.querySelector(".feedback");
-const practice=document.querySelector(".practice");
-const labelTimer=document.querySelector(".labelTimer");
+const container = document.querySelector(".container");
+const showFlag = document.querySelector(".showFlag");
+const countryOptionButtons = document.querySelector(".countryOptionButtons");
+const intro = document.querySelector(".intro");
+const answer = document.querySelector(".answer");
+const feedback = document.querySelector(".feedback");
+const practice = document.querySelector(".practice");
+const labelTimer = document.querySelector(".labelTimer");
 const message = document.querySelector(".message");
 const flagName = document.querySelector(".flagName");
 const instruction = document.querySelector(".instruction");
@@ -177,21 +177,21 @@ localStorage.setItem("random_number", JSON.stringify(random_number()));
 
 //if new day for English Time handle new game
 if (
-  dailyMode===true &&
+  dailyMode === true &&
   (String(dateNumberSeed) !==
     String(JSON.parse(localStorage.getItem("dateNumberSeed"))) ||
-  (fullDate.getHours() == 0 &&
-    fullDate.getMinutes() == 0 &&
-    fullDate.getSeconds() == 0) ||
-  JSON.parse(localStorage.getItem("firstTurn")) == true)
+    (fullDate.getHours() == 0 &&
+      fullDate.getMinutes() == 0 &&
+      fullDate.getSeconds() == 0) ||
+    JSON.parse(localStorage.getItem("firstTurn")) == true)
 ) {
   setNewGameParameters();
-  populateArrayDailyFlags(); 
+  populateArrayDailyFlags();
   startNewGame();
 }
 
 //adds flags to the array of 5 flags for that day via random number and set to local storage
-function populateArrayDailyFlags(){
+function populateArrayDailyFlags() {
   for (let flagNum = 0; flagNum <= 4; flagNum++) {
     //random_number needs to be a function to generate number
     arrayDailyFlags.push(Math.abs(Math.floor(random_number() * 225)));
@@ -201,14 +201,14 @@ function populateArrayDailyFlags(){
 //set up parameters for new game to local storage
 function setNewGameParameters() {
   const parameters = {
-    "firstTurn": false,
-    "countrySelected": false,
-    "isCorrect": false,
-    "isIncorrect": false,
-    "turns": 0,
-    "score": 0,
-    "flagsShownToday": false,
-    "dateNumberSeed": dateNumberSeed,
+    firstTurn: false,
+    countrySelected: false,
+    isCorrect: false,
+    isIncorrect: false,
+    turns: 0,
+    score: 0,
+    flagsShownToday: false,
+    dateNumberSeed: dateNumberSeed,
   };
 
   for (const key in parameters) {
@@ -218,39 +218,36 @@ function setNewGameParameters() {
 
 //ensure completedFlagsRound messages show up at the end
 const fourTurnsCompleted = JSON.parse(localStorage.getItem("turns")) === 4;
-console.log("fourTurnsCompleted", fourTurnsCompleted)
-const guessSubmitted =  JSON.parse(localStorage.getItem("countrySelected"));
-console.log("guessSubmitted", guessSubmitted)
-
+console.log("fourTurnsCompleted", fourTurnsCompleted);
+const guessSubmitted = JSON.parse(localStorage.getItem("countrySelected"));
+console.log("guessSubmitted", guessSubmitted);
 
 if (
   //fifth turn completed
-  fourTurnsCompleted
-  &&
- guessSubmitted === true
+  fourTurnsCompleted &&
+  guessSubmitted === true
 ) {
   //finish up activites
   starFill();
   completedFlagsRound();
-  console.log("run finish up activities")
+  console.log("run finish up activities");
 } else if (
   //fifth turn pending
-  fourTurnsCompleted
-   &&
+  fourTurnsCompleted &&
   guessSubmitted === false
 ) {
-  console.log("start fifth turn")
+  console.log("start fifth turn");
   //start the fifth turn
-  displayFlag();
+  newQuizItem();
 }
 //populate stars
 starFill();
 
 //ensure that the correct screen is shown with the right score
 if (JSON.parse(localStorage.getItem("turns")) <= "3") {
-  displayFlag();
+  newQuizItem();
 }
-console.log("new Date", new Date())
+console.log("new Date", new Date());
 //display Timer
 const displayTimer = function () {
   //date is current date
@@ -270,8 +267,8 @@ const displayTimer = function () {
 //run timer function every second so that it will count down
 setInterval(displayTimer, 1000);
 
-//if score wrong, reset. 
-//score and turns should never be over five. If this happens set back to first turn / score as a safety measure. 
+//if score wrong, reset.
+//score and turns should never be over five. If this happens set back to first turn / score as a safety measure.
 if (
   JSON.parse(localStorage.getItem("score") > 5) ||
   JSON.parse(localStorage.getItem("turns") > 5)
@@ -280,39 +277,40 @@ if (
   localStorage.setItem("turns", JSON.stringify(0));
 }
 
-
 //handle changes after first four turns
 function first4Turns() {
-//reset country chosen
+  //reset country chosen
   buttonClicked = 0;
-  displayChangesAfterTurn();  
+  displayChangesAfterTurn();
   let turns = JSON.parse(localStorage.getItem("turns"));
- let turns1 = (turns += 1);
- console.log("turns after turn", turns1)
+  let turns1 = (turns += 1);
+  console.log("turns after turn", turns1);
   //set incremented number of turns
   localStorage.setItem("turns", JSON.stringify(turns1));
   //reset country selected
   localStorage.setItem("countrySelected", JSON.stringify(false));
 }
 
-function getCountryForFeedbackDisplay(){
-   //get flag to be displayed from the number of turns. Using that number to retrieve the flag from the array
-  const  rightFlag =
-  flags[
-    JSON.parse(
-      JSON.parse(localStorage.getItem("arrayDailyFlags"))[
-        JSON.parse(localStorage.getItem("turns"))
-      ]
-    )
-  ];
-    console.log("rightFlag", rightFlag)
-    flagName.innerHTML = `The Answer Is <strong>${rightFlag}</strong>`;
+function getCountryForFeedbackDisplay() {
+  //get flag to be displayed from the number of turns. Using that number to retrieve the flag from the array
+  const rightFlag =
+    flags[
+      JSON.parse(
+        JSON.parse(localStorage.getItem("arrayDailyFlags"))[
+          JSON.parse(localStorage.getItem("turns"))
+        ]
+      )
+    ];
+  console.log("rightFlag", rightFlag);
+  flagName.innerHTML = `The Answer Is <strong>${rightFlag}</strong>`;
 }
-function getAnswerFeedback(){
-  JSON.parse(localStorage.getItem("isCorrect")) === true?feedback.innerHTML = `${correctAnswer}`:feedback.innerHTML = `${incorrectAnswer}`;
+function getAnswerFeedback() {
+  JSON.parse(localStorage.getItem("isCorrect")) === true
+    ? (feedback.innerHTML = `${correctAnswer}`)
+    : (feedback.innerHTML = `${incorrectAnswer}`);
 }
 
-function displayChangesAfterTurn(){
+function displayChangesAfterTurn() {
   getCountryForFeedbackDisplay();
   countryOptionButtons.style["display"] = "none";
   resetButton.style["display"] = "inline-block";
@@ -320,35 +318,33 @@ function displayChangesAfterTurn(){
     '<button type = button class = "newFlag">Have Another Go</button>';
   intro.style["display"] = "none";
   answer.style["display"] = "none";
-  answer.value="";
-  getAnswerFeedback(); 
+  answer.value = "";
+  getAnswerFeedback();
 }
 
-function getFinishGameMessage(){
+function getFinishGameMessage() {
   if (score === 5) {
-    finishGameMessage.innerHTML =
-      "Congratulations, Your FLAGL Score Is 100%!";
+    finishGameMessage.innerHTML = "Congratulations, Your FLAGL Score Is 100%!";
   }
   if (1 <= JSON.parse(localStorage.getItem("score")) <= 4) {
- finishGameMessage.innerHTML = `Your FLAGL Score Is ${
+    finishGameMessage.innerHTML = `Your FLAGL Score Is ${
       JSON.parse(localStorage.getItem("score")) * 2
     }0%`;
   }
   if (JSON.parse(localStorage.getItem("score")) === 0) {
     finishGameMessage.innerHTML = `Better Luck Next Time, Your FLAGL Score is 0%`;
   }
-  finishGameMessage.style["display"] =
-    "inline-block";
+  finishGameMessage.style["display"] = "inline-block";
 }
 
-function getFlagName(){
+function getFlagName() {
   flagName.innerHTML = `The answer is <strong>${JSON.parse(
     localStorage.getItem("flag")
   )}</strong>`;
   flagName.style["display"] = "inline-block";
 }
 
-function completedFlagsRoundDisplayChanges(){
+function completedFlagsRoundDisplayChanges() {
   container.style["visibility"] = "visible";
   showFlag.style["display"] = "none";
   resetButton.style["display"] = "none";
@@ -361,11 +357,11 @@ function completedFlagsRoundDisplayChanges(){
 }
 
 function completedFlagsRound() {
-  console.log("completedFlagsRound started")
+  console.log("completedFlagsRound started");
   localStorage.setItem("countrySelected", JSON.stringify(true));
   getFlagName();
   completedFlagsRoundDisplayChanges();
-  getAnswerFeedback(); 
+  getAnswerFeedback();
   getFinishGameMessage();
 }
 
@@ -376,23 +372,26 @@ function starFill() {
     JSON.parse(localStorage.getItem("score")) <= "5"
   ) {
     //ensure filled stars match the score
-    for (let starNum = 0; starNum <= JSON.parse(localStorage.getItem("score")) - 1; starNum++) {
+    for (
+      let starNum = 0;
+      starNum <= JSON.parse(localStorage.getItem("score")) - 1;
+      starNum++
+    ) {
       document.getElementById(`${starArray[starNum]}`).style["fill"] = "yellow";
     }
   }
-  allStarsNotFilledIfReset()
+  allStarsNotFilledIfReset();
 }
-function allStarsNotFilledIfReset(){
+function allStarsNotFilledIfReset() {
   if (JSON.parse(localStorage.getItem("score")) === "0") {
     const allStars = document.querySelectorAll(".star");
     allStars.forEach((star) => (star.style.fill = "white"));
   }
-
 }
 
 //listener for display new flag
 resetButton.addEventListener("click", function () {
-  console.log("display new flag = change name?")
+  console.log("display new flag = change name?");
   startAgain();
 });
 
@@ -408,12 +407,13 @@ function displayFlagScreen() {
   showFlag.style["display"] = "inline-block";
   showFlag.style["visibility"] = "visible";
   message.style["visibility"] = "visible";
-  intro.innerHTML =
-    "<br>Type and Select a Country or Territory";
+  answer.style["visibility"] = "visible";
+  instruction.style["display"] = "inline-block";
+  intro.innerHTML = "<br>Type and Select a Country or Territory";
   instruction.innerHTML =
     "Which Country or Territory Does this Flag Belong to?";
 }
-function formatFlagNameToCompare(){
+function formatFlagNameToCompare() {
   flagLow = JSON.parse(localStorage.getItem("flag")).toLowerCase();
   let flagWithUnderscore = JSON.parse(localStorage.getItem("flag")).replaceAll(
     " ",
@@ -425,101 +425,103 @@ function formatFlagNameToCompare(){
   );
 }
 
-function displayFlag() {
+function newQuizItem() {
+  //resets quiz item
   localStorage.setItem("countrySelected", JSON.stringify(false));
-
-  console.log("displayflag running");
-  //generate flag one by one today
-
-    let turns = JSON.parse(localStorage.getItem("turns"))
-      let getFlag = flags[JSON.parse(localStorage.getItem("arrayDailyFlags"))[turns]];
-      localStorage.setItem("flag", JSON.stringify(getFlag));
-  let flagIndex = flags.indexOf(JSON.parse(localStorage.getItem("flag")));
-
-  if (JSON.parse(localStorage.getItem("turns")) <= 4) {
-    console.log(JSON.parse(localStorage.getItem("flag")));
-    countryDisplayed.push(JSON.parse(localStorage.getItem("flag")));
-  }
+  placeFlagNameIntoflagsDisplayedInRound();
   formatFlagNameToCompare();
+  displayFlag();
+  displayFlagScreen();
+  predictiveText();
+}
+
+function placeFlagNameIntoflagsDisplayedInRound() {
+  //generate flag one by one today
+  //find current flag name
+  let turns = JSON.parse(localStorage.getItem("turns"));
+  let getFlag =
+    flags[JSON.parse(localStorage.getItem("arrayDailyFlags"))[turns]];
+  //put current flag name into local storage
+  localStorage.setItem("flag", JSON.stringify(getFlag));
+  //check right amount of turns(shouldn't exceed 4)
+  if (JSON.parse(localStorage.getItem("turns")) <= 4) {
+    //put flag in array of all flags displayed in round so this can be added to total flags array after
+    //so no flag goes missing after a round
+    flagsDisplayedInRound.push(JSON.parse(localStorage.getItem("flag")));
+  }
+}
+
+function displayFlag() {
   let imageHTML =
     "<img src = ../Images/" +
     JSON.parse(localStorage.getItem("flagWithUnderscore")) +
     '.png  style="width:400px;height:250px;">';
-
   showFlag.innerHTML = imageHTML;
   showFlag.style["display"] = "inline-block";
-  answer.style["visibility"] = "visible";
-  instruction.style["display"] = "inline-block";
-  displayFlagScreen();
-
-  /**** PREDICTIVE TEXT *****/
-  predictiveText();
-
-  //ensure current flag only removed last
 }
 
-function predictiveText(){
+function predictiveText() {
   //listener for when a user types a letter
   answer.addEventListener("keyup", function (e) {
     //ensures country buttons are displayed
     countryOptionButtons.style["display"] = "inline";
     //get input text in lower case
-    let lowerCasePredText = String(document.querySelector(".answer").value).toLowerCase();
+    let lowerCasePredText = String(
+      document.querySelector(".answer").value
+    ).toLowerCase();
     //If predictive text matches add country to  countryMatchingPredText array
     ifPredTextMatchesCountryAddToArray();
-    //if input text is equal to those letters in a country return that country in next filter function 
-    countryMatchingPredText = countryMatchingPredText.filter((item) => matchLowerCasePredTextToCountryInArray(item, lowerCasePredText)); //
+    //if input text is equal to those letters in a country return that country in next filter function
+    countryMatchingPredText = countryMatchingPredText.filter((item) =>
+      matchLowerCasePredTextToCountryInArray(item, lowerCasePredText)
+    ); //
     defineButtonText();
   });
 }
 
-function matchLowerCasePredTextToCountryInArray(predictedCountry, lowerCasePredText){
+function matchLowerCasePredTextToCountryInArray(
+  predictedCountry,
+  lowerCasePredText
+) {
   if (
     lowerCasePredText ===
     String(predictedCountry.slice(0, lowerCasePredText.length)).toLowerCase()
   ) {
     return predictedCountry;
   }
-
 }
 
-function ifPredTextMatchesCountryAddToArray(){
-      //flagsCopy used to ensure all answer options stay(no flag was removed from list). 
-    //To avoid duplicates a country is removed from array "flags" after displayed.
-    for (let i = 0; i < flagsCopy.length; i++) {
-      if (
-        //if predictive text is typed equals the beginning of a country
-        //slice used to ensure equal number of characters are compared
-        String(lowerCasePredText).toLowerCase() ===
-          String(flagsCopy[i].slice(0, lowerCasePredText.length)).toLowerCase() &&
-        countryMatchingPredText.indexOf(flagsCopy[i] === -1)
-      ) {
-        //First check that country isn't already included in the array from which predictive text is generated
-        if (!countryMatchingPredText.includes(flagsCopy[i])) {
-          //push countries that share letters into the array
-          countryMatchingPredText.push(flagsCopy[i]);
-        }
+function ifPredTextMatchesCountryAddToArray() {
+  //flagsCopy used to ensure all answer options stay(no flag was removed from list).
+  //To avoid duplicates a country is removed from array "flags" after displayed.
+  for (let i = 0; i < flagsCopy.length; i++) {
+    if (
+      //if predictive text is typed equals the beginning of a country
+      //slice used to ensure equal number of characters are compared
+      String(lowerCasePredText).toLowerCase() ===
+        String(flagsCopy[i].slice(0, lowerCasePredText.length)).toLowerCase() &&
+      countryMatchingPredText.indexOf(flagsCopy[i] === -1)
+    ) {
+      //First check that country isn't already included in the array from which predictive text is generated
+      if (!countryMatchingPredText.includes(flagsCopy[i])) {
+        //push countries that share letters into the array
+        countryMatchingPredText.push(flagsCopy[i]);
       }
     }
-
+  }
 }
 
-if (JSON.parse(localStorage.getItem("flag")) == "") {
-  console.log("noflag");
-  localStorage.setItem("randomRun", JSON.stringify(false));
-}
-
+//event listener for country button clicked
 submitValue();
 
 function defineButtonText() {
-  for (let i = 0; i < buttonClasses.length; i++) {
-    document.getElementById(labelContent[i]).style["visibility"] = "visible";
-    if (countryMatchingPredText[i]) {
+  //for each predictive text button listen if pressed
+  for (let button = 0; button < buttonClasses.length; button++) {
+    document.getElementById(labelContent[button]).style["visibility"] = "visible";
+    if (countryMatchingPredText[button]) {
       document.getElementById(
-        labelContent[i]
-      ).innerHTML = `${countryMatchingPredText[i]}`;
-      //console.log("is first element checked?", document.querySelector('.First').checked);
-      //document.querySelector(".First").style["display"] = "inline-block";
+        labelContent[button]
+      ).innerHTML = `${countryMatchingPredText[button]}`;
       document.getElementById(labelContent[i]).style["display"] =
         "inline-block";
     } else {
@@ -529,7 +531,6 @@ function defineButtonText() {
 }
 
 function submitValue() {
-
   for (let i = 0; i < buttonClasses.length; i++) {
     document
       .querySelector(buttonClasses[i])
@@ -562,20 +563,20 @@ function feedbackScreenLayout() {
     showFlag.style["display"] = "none";
     instruction.style["display"] = "none";
     countryOptionButtons.style["display"] = "none";
-  flagName.style["display"] = "inline-block";
+    flagName.style["display"] = "inline-block";
     feedback.style["display"] = "inline-block";
   }
 }
 
 function whichFeedbackScreen() {
-  console.log("inputValLow", inputValLow, "flagLow", flagLow)
+  console.log("inputValLow", inputValLow, "flagLow", flagLow);
   if (inputValLow === String(flagLow)) {
     localStorage.setItem("isCorrect", JSON.stringify(true));
     localStorage.setItem("isIncorrect", JSON.stringify(false));
     buttonClicked = 0;
     inputValLow = "";
     score = JSON.parse(localStorage.getItem("score"));
-    const score1 = score += 1;
+    const score1 = (score += 1);
     localStorage.setItem("score", JSON.stringify(score1));
     starFill();
   } else {
@@ -659,7 +660,7 @@ function startAgain() {
 
   message.innerHTML = "";
 
-  displayFlag();
+  newQuizItem();
 }
 
 //starts new game from scratch
@@ -672,18 +673,17 @@ function startNewGame() {
   container.style["visibility"] = "visible";
 
   //get flags to original length
-  flags.push(...countryDisplayed);
-  countryDisplayed = [];
+  flags.push(...flagsDisplayedInRound);
+  flagsDisplayedInRound = [];
 
   resetButton.style["display"] = "none";
   finishGameMessage.style["display"] = "none";
   labelTimer.style["display"] = "none";
 
-  instruction.innerHTML =
-    "Which country does this flag belong to?";
+  instruction.innerHTML = "Which country does this flag belong to?";
   message.innerHTML = "";
   starFill();
-  displayFlag();
+  newQuizItem();
 }
 
 /*****Stats Popup*****/
@@ -787,7 +787,6 @@ document
 
     //ensures elements previously open stay displayed
     if (containervisible == 1) {
-
       container.style["visibility"] = "visible";
       containervisible = 0;
     }
@@ -807,5 +806,3 @@ document
       messagevisible = 0;
     }
   });
-
-
