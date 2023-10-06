@@ -1,4 +1,5 @@
 import { flags } from "./flags.js";
+console.log("flags", flags)
 
 let flagsCopy = [...flags];
 let buttonClasses = [".First", ".Second", ".Third", ".Fourth", ".Fifth"];
@@ -17,6 +18,7 @@ let selection = document.querySelector(".selection");
 let turns = 0;
 let countryDisplayed = [];
 let flag = "";
+const flagName = document.querySelector(".flagName");
 let flagLow = "";
 let correctAnswer = "Congratulations, That Was Correct";
 let incorrectAnswer = "Unlucky, That Was Not Correct";
@@ -38,6 +40,7 @@ let flagNum5 = "";
 let inputValLow="";
 let dailyMode = true;
 let arrayDailyFlags = [];
+
 //Score Variables
 let score = 0;
 let countGames = 0;
@@ -187,7 +190,7 @@ function populateArrayDailyFlags(){
 //set up parameters for new game to local storage
 function setNewGameParameters(){
   localStorage.setItem("firstTurn", JSON.stringify(false));
-  localStorage.setItem("valueSubmitted", JSON.stringify(false));
+  localStorage.setItem("countrySelected", JSON.stringify(false));
   localStorage.setItem("isCorrect", JSON.stringify(false));
   localStorage.setItem("isIncorrect", JSON.stringify(false));
   localStorage.setItem("turns", JSON.stringify(0));
@@ -196,9 +199,13 @@ function setNewGameParameters(){
   localStorage.setItem("dateNumberSeed", JSON.stringify(dateNumberSeed));
 }
 
-//ensure fifthturn messages show up at the end
-const fourTurnsCompleted = JSON.parse(localStorage.getItem("turns")) == "4";
-const guessSubmitted =  JSON.parse(localStorage.getItem("valueSubmitted"));
+//ensure completedFlagsRound messages show up at the end
+const fourTurnsCompleted = JSON.parse(localStorage.getItem("turns")) === 4;
+console.log("fourTurnsCompleted", fourTurnsCompleted)
+const guessSubmitted =  JSON.parse(localStorage.getItem("countrySelected"));
+console.log("guessSubmitted", guessSubmitted)
+
+
 if (
   //fifth turn completed
   fourTurnsCompleted
@@ -207,13 +214,15 @@ if (
 ) {
   //finish up activites
   starFill();
-  fifthTurn();
+  completedFlagsRound();
+  console.log("run finish up activities")
 } else if (
   //fifth turn pending
   fourTurnsCompleted
    &&
-  guessSubmitted == false
+  guessSubmitted === false
 ) {
+  console.log("start fifth turn")
   //start the fifth turn
   displayFlag();
 }
@@ -254,7 +263,23 @@ if (
   localStorage.setItem("turns", JSON.stringify(0));
 }
 
-//get flag to be displayed from the number of turns. Using that number to retrieve the flag from the array
+
+//handle changes after first four turns
+function first4Turns() {
+//reset country chosen
+  buttonClicked = 0;
+  displayChangesAfterTurn();  
+  let turns = JSON.parse(localStorage.getItem("turns"));
+ let turns1 = (turns += 1);
+ console.log("turns after turn", turns1)
+  //set incremented number of turns
+  localStorage.setItem("turns", JSON.stringify(turns1));
+  //reset country selected
+  localStorage.setItem("countrySelected", JSON.stringify(false));
+}
+
+function displayChangesAfterTurn(){
+  //get flag to be displayed from the number of turns. Using that number to retrieve the flag from the array
 const  rightFlag =
 flags[
   JSON.parse(
@@ -263,62 +288,39 @@ flags[
     ]
   )
 ];
-
-function first4Turns() {
-  localStorage.setItem("valueSubmitted", JSON.stringify(false));
-  buttonClicked = 0;
-  document.querySelector(
-    ".flagName"
-  ).innerHTML = `The Answer Is <strong>${rightFlag}</strong>`;
-
-  document.getElementById("spanBut").style["display"] = "none";
+  console.log("rightFlag", rightFlag)
+  flagName.innerHTML = `The Answer Is <strong>${rightFlag}</strong>`;
+  document.querySelector(".countryOptionButton").style["display"] = "none";
   resetButton.style["display"] = "inline-block";
   document.querySelector(".reset").innerHTML =
     '<button type = button class = "newFlag">Have Another Go</button>';
   document.querySelector(".intro").style["display"] = "none";
   document.querySelector(".answer").style["display"] = "none";
-
-  if (JSON.parse(localStorage.getItem("isCorrect")) == true) {
-   
-    document.querySelector(".feedback").innerHTML = `${correctAnswer}`;
-  }
-  if (JSON.parse(localStorage.getItem("isIncorrect")) == true) {
-
-    document.querySelector(".feedback").innerHTML = `${incorrectAnswer}`;
-  }
-
-  let turns = JSON.parse(localStorage.getItem("turns"));
-  let turns1 = (turns += 1);
-  localStorage.setItem("turns", JSON.stringify(turns1));
-
+  JSON.parse(localStorage.getItem("isCorrect")) === true?document.querySelector(".feedback").innerHTML = `${correctAnswer}`:document.querySelector(".feedback").innerHTML = `${incorrectAnswer}`;
 }
 
-function fifthTurn() {
-  console.log("fifthturn running");
-  localStorage.setItem("valueSubmitted", JSON.stringify(true));
-
-  //answer = JSON.parse(localStorage.getItem("flag"))
-  document.querySelector(
-    ".flagName"
-  ).innerHTML = `The answer is <strong>${JSON.parse(
+function completedFlagsRound() {
+  console.log("completedFlagsRound started")
+  localStorage.setItem("countrySelected", JSON.stringify(true));
+ flagName.innerHTML = `The answer is <strong>${JSON.parse(
     localStorage.getItem("flag")
   )}</strong>`;
-  document.querySelector(".flagName").style["display"] = "inline-block";
+  flagName.style["display"] = "inline-block";
   document.querySelector(".container").style["visibility"] = "visible";
 
   document.querySelector(".showFlag").style["display"] = "none";
   document.querySelector(".reset").style["display"] = "none";
   document.querySelector(".answer").style["display"] = "none";
   document.querySelector(".intro").style["display"] = "none";
-  document.getElementById("spanBut").style["display"] = "none";
+  document.querySelector(".countryOptionButton").style["display"] = "none";
   document.querySelector(".feedback").style["display"] = "inline-block";
   document.querySelector(".practice").style["display"] = "inline-block";
 
-  if (JSON.parse(localStorage.getItem("isCorrect")) == true) {
+  if (JSON.parse(localStorage.getItem("isCorrect")) === true) {
     console.log("fifth turn is correct");
     document.querySelector(".feedback").innerHTML = `${correctAnswer}`;
   }
-  if (JSON.parse(localStorage.getItem("isIncorrect")) == true) {
+  if (JSON.parse(localStorage.getItem("isIncorrect")) === true) {
     console.log("fifth turn is incorrect");
     document.querySelector(".feedback").innerHTML = `${incorrectAnswer}`;
   }
@@ -381,7 +383,7 @@ document.querySelector(".reset").addEventListener("click", function () {
 });
 
 function displayFlagScreen() {
-  document.getElementById("spanBut").style["display"] = "none";
+  document.querySelector(".countryOptionButton").style["display"] = "none";
   document.querySelector(".finishGameMessage").style["display"] = "none";
   document.querySelector(".answer").style["display"] = "inline-block";
   document.querySelector(".showFlag").style["display"] = "inline-block";
@@ -399,7 +401,7 @@ function displayFlagScreen() {
 }
 
 function displayFlag() {
-  localStorage.setItem("valueSubmitted", JSON.stringify(false));
+  localStorage.setItem("countrySelected", JSON.stringify(false));
 
   console.log("displayflag running");
 
@@ -483,7 +485,7 @@ function displayFlag() {
 
   document.getElementById("cGuess").addEventListener("keyup", function (e) {
     //e.preventDefault();
-    document.getElementById("spanBut").style["display"] = "inline";
+    document.querySelector(".countryOptionButton").style["display"] = "inline";
     console.log("cGuessvalue", cGuess.value);
 
     let keysJoin = String(cGuess.value).toLowerCase();
@@ -579,7 +581,7 @@ function submitValue() {
 }
 
 function getInputValue() {
-  localStorage.setItem("valueSubmitted", JSON.stringify(true));
+  localStorage.setItem("countrySelected", JSON.stringify(true));
   let inputValue = document.getElementById(
     labelContent[buttonClicked - 1]
   ).innerHTML;
@@ -599,18 +601,17 @@ function feedbackScreenLayout() {
     document.querySelector(".flagName").style["visibility"] = "visible";
     document.querySelector(".showFlag").style["display"] = "none";
     document.querySelector(".instruction").style["display"] = "none";
-    document.getElementById("spanBut").style["display"] = "none";
-    document.querySelector(".flagName").style["display"] = "inline-block";
+    document.querySelector(".countryOptionButton").style["display"] = "none";
+  document.querySelector(".flagName").style["display"] = "inline-block";
     document.querySelector(".feedback").style["display"] = "inline-block";
   }
 }
 
 function whichFeedbackScreen() {
-  if (inputValLow == String(flagLow)) {
+  console.log("inputValLow", inputValLow, "flagLow", flagLow)
+  if (inputValLow === String(flagLow)) {
     localStorage.setItem("isCorrect", JSON.stringify(true));
     localStorage.setItem("isIncorrect", JSON.stringify(false));
-    //correct();
-    console.log("correct answer should lead to one more turn");
     buttonClicked = 0;
     inputValLow = "";
     score = JSON.parse(localStorage.getItem("score"));
@@ -620,8 +621,6 @@ function whichFeedbackScreen() {
   } else {
     localStorage.setItem("isIncorrect", JSON.stringify(true));
     localStorage.setItem("isCorrect", JSON.stringify(false));
-    // incorrect();
-
     buttonClicked = 0;
     inputValLow = "";
   }
@@ -629,10 +628,10 @@ function whichFeedbackScreen() {
     first4Turns();
   } else if (
     JSON.parse(localStorage.getItem("turns")) == 4 &&
-    JSON.parse(localStorage.getItem("valueSubmitted")) == true
+    JSON.parse(localStorage.getItem("countrySelected")) == true
   ) {
     numGamestats();
-    fifthTurn();
+    completedFlagsRound();
   }
 }
 
