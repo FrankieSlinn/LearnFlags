@@ -18,11 +18,11 @@ let selection = document.querySelector(".selection");
 let turns = 0;
 let countryDisplayed = [];
 let flag = "";
-const flagName = document.querySelector(".flagName");
+
 let flagLow = "";
 let correctAnswer = "Congratulations, That Was Correct";
 let incorrectAnswer = "Unlucky, That Was Not Correct";
-let finishGameMessage = document.querySelector(".finishGameMessage");
+const finishGameMessage = document.querySelector(".finishGameMessage");
 let resetButton = document.querySelector(".reset");
 let containervisible = 0;
 let answervisible = 0;
@@ -49,6 +49,9 @@ const answer=document.querySelector(".answer");
 const feedback=document.querySelector(".feedback");
 const practice=document.querySelector(".practice");
 const labelTimer=document.querySelector(".labelTimer");
+const message = document.querySelector(".message");
+const flagName = document.querySelector(".flagName");
+const instruction = document.querySelector(".instruction");
 
 //Score Variables
 let score = 0;
@@ -376,87 +379,41 @@ function starFill() {
     for (let starNum = 0; starNum <= JSON.parse(localStorage.getItem("score")) - 1; starNum++) {
       document.getElementById(`${starArray[starNum]}`).style["fill"] = "yellow";
     }
-    // if (JSON.parse(localStorage.getItem("score")) === "0") {
-    //   const allStars = document.querySelectorAll(".star");
-    //   allStars.forEach((j) => (j.style.fill = "white"));
-    // }
   }
+  allStarsNotFilledIfReset()
+}
+function allStarsNotFilledIfReset(){
+  if (JSON.parse(localStorage.getItem("score")) === "0") {
+    const allStars = document.querySelectorAll(".star");
+    allStars.forEach((star) => (star.style.fill = "white"));
+  }
+
 }
 
 //listener for display new flag
 resetButton.addEventListener("click", function () {
+  console.log("display new flag = change name?")
   startAgain();
 });
 
 function displayFlagScreen() {
   countryOptionButton.style["display"] = "none";
-  document.querySelector(".finishGameMessage").style["display"] = "none";
-  answer.style["display"] = "inline-block";
-  showFlag.style["display"] = "inline-block";
-  showFlag.style["visibility"] = "visible";
-  document.querySelector(".message").style["visibility"] = "visible";
-  intro.innerHTML =
-    "<br>Type and Select a Country or Territory";
+  finishGameMessage.style["display"] = "none";
   intro.style["display"] = "inline-block";
   feedback.style["display"] = "none";
   labelTimer.style["display"] = "none";
-  document.querySelector(".flagName").style["display"] = "none";
+  flagName.style["display"] = "none";
   practice.style["display"] = "none";
-  document.querySelector(".instruction").innerHTML =
+  answer.style["display"] = "inline-block";
+  showFlag.style["display"] = "inline-block";
+  showFlag.style["visibility"] = "visible";
+  message.style["visibility"] = "visible";
+  intro.innerHTML =
+    "<br>Type and Select a Country or Territory";
+  instruction.innerHTML =
     "Which Country or Territory Does this Flag Belong to?";
 }
-
-function displayFlag() {
-  localStorage.setItem("countrySelected", JSON.stringify(false));
-
-  console.log("displayflag running");
-
-  //generate flag one by one today
-
-  for (let i = 0; i <= 4; i++) {
-    console.log("generating flags for today running");
-    console.log(
-      "flags today in display flag",
-      JSON.parse(localStorage.getItem("arrayDailyFlags"))
-    );
-
-    if (JSON.parse(localStorage.getItem("turns")) == i) {
-      let getFlag = flags[JSON.parse(localStorage.getItem("arrayDailyFlags"))[i]];
-      console.log("getFlag", getFlag);
-      localStorage.setItem("flag", JSON.stringify(getFlag));
-      console.log(
-        "flag for today",
-        JSON.parse(localStorage.getItem("flag")),
-        flags.indexOf(JSON.parse(localStorage.getItem("flag")))
-      );
-    }
-    console.log(
-      "flag for today",
-      JSON.parse(localStorage.getItem("flag")),
-      flags.indexOf(JSON.parse(localStorage.getItem("flag")))
-    );
-  }
-
-  let flagIndex = flags.indexOf(JSON.parse(localStorage.getItem("flag")));
-  console.log(
-    "flagIndex, flag",
-    flagIndex,
-    JSON.parse(localStorage.getItem("flag"))
-  );
-  console.log("arrayDailyFlags", arrayDailyFlags);
-  console.log(
-    "arrayDailyFlags countries",
-    arrayDailyFlags.map((item) => flags[item])
-  );
-  if (JSON.parse(localStorage.getItem("turns")) <= 4) {
-    console.log(JSON.parse(localStorage.getItem("flag")));
-    console.log("countrydisplayed", countryDisplayed);
-    console.log("countryDisplayed", typeof countryDisplayed);
-
-    countryDisplayed.push(JSON.parse(localStorage.getItem("flag")));
-  }
-  console.log("How many Flags", flags.length);
-
+function formatFlagNameToCompare(){
   flagLow = JSON.parse(localStorage.getItem("flag")).toLowerCase();
   let flagWithUnderscore = JSON.parse(localStorage.getItem("flag")).replaceAll(
     " ",
@@ -466,15 +423,31 @@ function displayFlag() {
     "flagWithUnderscore",
     JSON.stringify(flagWithUnderscore)
   );
-  console.log(JSON.parse(localStorage.getItem("flag")));
+}
 
+function displayFlag() {
+  localStorage.setItem("countrySelected", JSON.stringify(false));
+
+  console.log("displayflag running");
+  //generate flag one by one today
+
+    let turns = JSON.parse(localStorage.getItem("turns"))
+      let getFlag = flags[JSON.parse(localStorage.getItem("arrayDailyFlags"))[turns]];
+      localStorage.setItem("flag", JSON.stringify(getFlag));
+  let flagIndex = flags.indexOf(JSON.parse(localStorage.getItem("flag")));
+
+  if (JSON.parse(localStorage.getItem("turns")) <= 4) {
+    console.log(JSON.parse(localStorage.getItem("flag")));
+    countryDisplayed.push(JSON.parse(localStorage.getItem("flag")));
+  }
+  formatFlagNameToCompare();
   let pngName =
     "<img src = ../Images/" +
-    flagWithUnderscore +
+    JSON.parse(localStorage.getItem("flagWithUnderscore")) +
     '.png  style="width:400px;height:250px;">';
 
   let box =
-    '<input type="text" id="cGuess" name="number" autocomplete="one-time-code">';
+    '<input type="text" class="cGuess" name="number" autocomplete="one-time-code">';
 
   showFlag.innerHTML = pngName;
   showFlag.style["display"] = "inline-block";
@@ -483,19 +456,17 @@ function displayFlag() {
 
   answer.style["visibility"] = "visible";
   //document.querySelector(".submitButton").style["display"] = "inline-block";
-
-  console.log("flagWithLetter", flagWithLetter);
   displayFlagScreen();
 
   /**** PREDICTIVE TEXT *****/
 
-  document.getElementById("cGuess").addEventListener("keyup", function (e) {
+  document.querySelector(".cGuess").addEventListener("keyup", function (e) {
     //e.preventDefault();
     countryOptionButton.style["display"] = "inline";
-    console.log("cGuessvalue", cGuess.value);
+  
 
-    let keysJoin = String(cGuess.value).toLowerCase();
-    console.log("keysjoin", keysJoin);
+    let keysJoin = String(document.querySelector(".cGuess").value).toLowerCase();
+
     //flagsCopy used to ensure all answer options stay. To avoid duplicates a country is removed from array "flags" after displayed.
     for (let i = 0; i < flagsCopy.length; i++) {
       if (
@@ -508,7 +479,8 @@ function displayFlag() {
         }
       }
     }
-    console.log("flagwithLetter after first push", flagWithLetter);
+
+
     let filterFunct = function (a) {
       if (
         keysJoin.toLowerCase() ==
@@ -531,9 +503,11 @@ function displayFlag() {
   });
   ///end predictive text
 
-  document.querySelector(".instruction").style["display"] = "inline-block";
+  instruction.style["display"] = "inline-block";
   //ensure current flag only removed last
 }
+
+
 console.log(
   "arrayDailyFlags countries",
   arrayDailyFlags.map((item) => flags[item])
@@ -604,11 +578,11 @@ function getInputValue() {
 function feedbackScreenLayout() {
   if (turns < 4) {
     answer.style["visibility"] = "visible";
-    document.querySelector(".flagName").style["visibility"] = "visible";
+    flagName.style["visibility"] = "visible";
     showFlag.style["display"] = "none";
-    document.querySelector(".instruction").style["display"] = "none";
+    instruction.style["display"] = "none";
     countryOptionButton.style["display"] = "none";
-  document.querySelector(".flagName").style["display"] = "inline-block";
+  flagName.style["display"] = "inline-block";
     feedback.style["display"] = "inline-block";
   }
 }
@@ -703,7 +677,7 @@ function startAgain() {
 
   resetButton.style["display"] = "none";
 
-  document.querySelector(".message").innerHTML = "";
+  message.innerHTML = "";
 
   displayFlag();
 }
@@ -722,12 +696,12 @@ function startNewGame() {
   countryDisplayed = [];
 
   resetButton.style["display"] = "none";
-  document.querySelector(".finishGameMessage").style["display"] = "none";
+  finishGameMessage.style["display"] = "none";
   labelTimer.style["display"] = "none";
 
-  document.querySelector(".instruction").innerHTML =
+  instruction.innerHTML =
     "Which country does this flag belong to?";
-  document.querySelector(".message").innerHTML = "";
+  message.innerHTML = "";
   starFill();
   displayFlag();
 }
@@ -755,10 +729,10 @@ document.querySelector(".stat-icon").addEventListener("click", function () {
 
     resetButton.style["visibility"] = "hidden";
   }
-  if (document.querySelector(".message").offsetParent != null) {
+  if (message.offsetParent != null) {
     messagevisible = 1;
 
-    document.querySelector(".message").style["visibility"] = "hidden";
+    message.style["visibility"] = "hidden";
   }
 });
 
@@ -792,7 +766,7 @@ document
       resetvisible = 0;
     }
     if (messagevisible == 1) {
-      document.querySelector(".message").style["visibility"] = "visible";
+      message.style["visibility"] = "visible";
       messagevisible = 0;
     }
   });
@@ -814,10 +788,10 @@ document.querySelector(".how-to").addEventListener("click", function () {
     resetvisible = 1;
     resetButton.style["visibility"] = "hidden";
   }
-  if (document.querySelector(".message").offsetParent != null) {
+  if (message.offsetParent != null) {
     messagevisible = 1;
 
-    document.querySelector(".message").style["visibility"] = "hidden";
+    message.style["visibility"] = "hidden";
   }
 
   if ((document.querySelector(".help-popup").style["display"] = "none"))
@@ -849,7 +823,7 @@ document
     }
 
     if (messagevisible == 1) {
-      document.querySelector(".message").style["visibility"] = "visible";
+      message.style["visibility"] = "visible";
       messagevisible = 0;
     }
   });
