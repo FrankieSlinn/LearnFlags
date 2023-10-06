@@ -336,12 +336,12 @@ a {
   visibility: hidden;
   padding: 0.5rem;
 }
-#spanBut{
+.countryButtonClasses{
   margin-top: 0.5rem;
 }
 
 @-moz-document url-prefix(){
-  #spanBut{
+  .countryButtonClasses{
     margin-top: -2rem;
   }
 }

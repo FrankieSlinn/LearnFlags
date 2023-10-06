@@ -3,12 +3,12 @@ console.log("flags", flags);
 
 let flagsCopy = [...flags];
 let buttonClasses = [".First", ".Second", ".Third", ".Fourth", ".Fifth"];
-let labelContent = [
-  "firstLabel",
-  "secondLabel",
-  "thirdLabel",
-  "fourthLabel",
-  "fifthLabel",
+let countryButtonClasses = [
+  ".firstLabel",
+  ".secondLabel",
+  ".thirdLabel",
+  ".fourthLabel",
+  ".fifthLabel",
 ];
 let buttonClicked = 0;
 let letterOnly = /^[a-zA-Z]+$/g;
@@ -426,12 +426,18 @@ function formatFlagNameToCompare() {
 }
 
 function newQuizItem() {
+  countryMatchingPredText=[];
   //resets quiz item
   localStorage.setItem("countrySelected", JSON.stringify(false));
+  //places country name into array of flags displayed in round
   placeFlagNameIntoflagsDisplayedInRound();
+  //formats flag name to lower case removes underscores for comparison 
   formatFlagNameToCompare();
+  //gets flag image and sets html for flag display
   displayFlag();
+  //changes for screen when new flag displayed
   displayFlagScreen();
+  //carries out filtering based on input text
   predictiveText();
 }
 
@@ -449,6 +455,7 @@ function placeFlagNameIntoflagsDisplayedInRound() {
     //so no flag goes missing after a round
     flagsDisplayedInRound.push(JSON.parse(localStorage.getItem("flag")));
   }
+  console.log("flagsDisplayedInRound: ", flagsDisplayedInRound); 
 }
 
 function displayFlag() {
@@ -470,11 +477,12 @@ function predictiveText() {
       document.querySelector(".answer").value
     ).toLowerCase();
     //If predictive text matches add country to  countryMatchingPredText array
-    ifPredTextMatchesCountryAddToArray();
+    ifPredTextMatchesCountryAddToArray(lowerCasePredText);
     //if input text is equal to those letters in a country return that country in next filter function
     countryMatchingPredText = countryMatchingPredText.filter((item) =>
       matchLowerCasePredTextToCountryInArray(item, lowerCasePredText)
-    ); //
+    ); 
+    console.log("countryMatchingPredText: " + countryMatchingPredText)
     defineButtonText();
   });
 }
@@ -491,21 +499,24 @@ function matchLowerCasePredTextToCountryInArray(
   }
 }
 
-function ifPredTextMatchesCountryAddToArray() {
+function ifPredTextMatchesCountryAddToArray(lowerCasePredText) {
   //flagsCopy used to ensure all answer options stay(no flag was removed from list).
   //To avoid duplicates a country is removed from array "flags" after displayed.
+  console.log("lowerCasePredText).toLowerCase() ", lowerCasePredText.toLowerCase() )
   for (let i = 0; i < flagsCopy.length; i++) {
     if (
       //if predictive text is typed equals the beginning of a country
       //slice used to ensure equal number of characters are compared
-      String(lowerCasePredText).toLowerCase() ===
+      String(lowerCasePredText) ===
         String(flagsCopy[i].slice(0, lowerCasePredText.length)).toLowerCase() &&
       countryMatchingPredText.indexOf(flagsCopy[i] === -1)
     ) {
       //First check that country isn't already included in the array from which predictive text is generated
       if (!countryMatchingPredText.includes(flagsCopy[i])) {
         //push countries that share letters into the array
+        console.log("flag to be inserted in matching countries", flagsCopy[i]);
         countryMatchingPredText.push(flagsCopy[i]);
+        console.log("countryMatchingPredText", countryMatchingPredText)
       }
     }
   }
@@ -515,19 +526,31 @@ function ifPredTextMatchesCountryAddToArray() {
 submitValue();
 
 function defineButtonText() {
+  console.log("defineButtonText running")
+  console.log("countryButtonClasses", countryButtonClasses.length);
+  
   //for each predictive text button listen if pressed
-  for (let button = 0; button < buttonClasses.length; button++) {
-    document.getElementById(labelContent[button]).style["visibility"] = "visible";
-    if (countryMatchingPredText[button]) {
-      document.getElementById(
-        labelContent[button]
-      ).innerHTML = `${countryMatchingPredText[button]}`;
-      document.getElementById(labelContent[i]).style["display"] =
-        "inline-block";
+  for (let buttonNum = 0; buttonNum < countryButtonClasses.length; buttonNum++) {
+    console.log("buttonNum", buttonNum);
+    const buttonElement = document.querySelector(countryButtonClasses[buttonNum]);
+    
+    if (buttonElement) {
+      buttonElement.style["visibility"] = "visible";
+      console.log("countryMatchingPredText[buttonNum]", countryMatchingPredText[buttonNum]);
+  
+      if (countryMatchingPredText[buttonNum]) {
+        console.log("predictive text matches");
+        buttonElement.innerHTML = `${countryMatchingPredText[buttonNum]}`;
+        buttonElement.style["display"] = "inline-block";
+      } else {
+        buttonElement.style["display"] = "none";
+      }
     } else {
-      document.querySelector(buttonClasses[i]).style["display"] = "none";
+      console.log(`Element with class ${countryButtonClasses[buttonNum]} not found.`);
     }
   }
+
+  
 }
 
 function submitValue() {
@@ -544,10 +567,10 @@ function submitValue() {
 function getInputValue() {
   localStorage.setItem("countrySelected", JSON.stringify(true));
   let inputValue = document.getElementById(
-    labelContent[buttonClicked - 1]
+    countryButtonClasses[buttonClicked - 1]
   ).innerHTML;
   document.querySelector(buttonClasses[buttonClicked - 1]).checked = false;
-  document.getElementById(labelContent[buttonClicked - 1]).innerHTML == "";
+  document.getElementById(countryButtonClasses[buttonClicked - 1]).innerHTML == "";
   container.style["visibility"] = "visible";
   inputValLow = inputValue.toLowerCase();
   inputValue = "";
