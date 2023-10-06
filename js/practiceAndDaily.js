@@ -526,12 +526,10 @@ function ifPredTextMatchesCountryAddToArray(lowerCasePredText) {
 submitValue();
 
 function defineButtonText() {
-  console.log("defineButtonText running")
-  console.log("countryButtonClasses", countryButtonClasses.length);
-  
+
   //for each predictive text button listen if pressed
   for (let buttonNum = 0; buttonNum < countryButtonClasses.length; buttonNum++) {
-    console.log("buttonNum", buttonNum);
+    //button element is each of the button classes
     const buttonElement = document.querySelector(countryButtonClasses[buttonNum]);
     
     if (buttonElement) {

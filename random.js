@@ -226,6 +226,7 @@ let flags = [
     "Wallis and Futuna",
   ];
   fullDate = new Date();
+
   console.log(fullDate);
  let year = String(fullDate.getFullYear());
  let month = String(fullDate.getMonth()+1);
@@ -248,7 +249,7 @@ console.log(dateNumber);
     }
   }
   
-  MurmurHash3(dateNumber);
+  //MurmurHash3(dateNumber);
   
   function SimpleFastCounter32(seed_1, seed_2, seed_3, seed_4) {
     return () => {
@@ -262,7 +263,7 @@ console.log(dateNumber);
       seed_3 = seed_3 + cast32 | 0;
       return (cast32 >>> 0) / 4294967296;}}
   
-      let generate_seed = MurmurHash3("String for the Seed Key");
+      let generate_seed = MurmurHash3(dateNumber);
       let random_number = SimpleFastCounter32(generate_seed(), generate_seed());
       console.log("run random seed before local storage", SimpleFastCounter32(generate_seed(), generate_seed()));
       console.log("print random number not full function", random_number());
