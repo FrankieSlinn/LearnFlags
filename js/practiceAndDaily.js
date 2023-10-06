@@ -41,6 +41,11 @@ let flagNum5 = "";
 let inputValLow="";
 let dailyMode = true;
 let arrayDailyFlags = [];
+const container=document.querySelector(".container");
+const showFlag=document.querySelector(".showFlag");
+const countryOptionButton=document.querySelector(".countryOptionButton");
+const intro=document.querySelector(".intro");
+const answer=document.querySelector(".answer");
 
 //Score Variables
 let score = 0;
@@ -189,15 +194,21 @@ function populateArrayDailyFlags(){
   }
 }
 //set up parameters for new game to local storage
-function setNewGameParameters(){
-  localStorage.setItem("firstTurn", JSON.stringify(false));
-  localStorage.setItem("countrySelected", JSON.stringify(false));
-  localStorage.setItem("isCorrect", JSON.stringify(false));
-  localStorage.setItem("isIncorrect", JSON.stringify(false));
-  localStorage.setItem("turns", JSON.stringify(0));
-  localStorage.setItem("score", JSON.stringify(0));
-  localStorage.setItem("flagsShownToday", JSON.stringify(false));
-  localStorage.setItem("dateNumberSeed", JSON.stringify(dateNumberSeed));
+function setNewGameParameters() {
+  const parameters = {
+    "firstTurn": false,
+    "countrySelected": false,
+    "isCorrect": false,
+    "isIncorrect": false,
+    "turns": 0,
+    "score": 0,
+    "flagsShownToday": false,
+    "dateNumberSeed": dateNumberSeed,
+  };
+
+  for (const key in parameters) {
+    localStorage.setItem(key, JSON.stringify(parameters[key]));
+  }
 }
 
 //ensure completedFlagsRound messages show up at the end
@@ -298,12 +309,12 @@ function getAnswerFeedback(){
 
 function displayChangesAfterTurn(){
   getCountryForFeedbackDisplay();
-  document.querySelector(".countryOptionButton").style["display"] = "none";
+  countryOptionButton.style["display"] = "none";
   resetButton.style["display"] = "inline-block";
-  document.querySelector(".reset").innerHTML =
+  resetButton.innerHTML =
     '<button type = button class = "newFlag">Have Another Go</button>';
-  document.querySelector(".intro").style["display"] = "none";
-  document.querySelector(".answer").style["display"] = "none";
+  intro.style["display"] = "none";
+  answer.style["display"] = "none";
   getAnswerFeedback(); 
 }
 
@@ -331,19 +342,23 @@ function getFlagName(){
   flagName.style["display"] = "inline-block";
 }
 
+function completedFlagsRoundDisplayChanges(){
+  container.style["visibility"] = "visible";
+  showFlag.style["display"] = "none";
+  resetButton.style["display"] = "none";
+  answer.style["display"] = "none";
+  intro.style["display"] = "none";
+  countryOptionButton.style["display"] = "none";
+  document.querySelector(".feedback").style["display"] = "inline-block";
+  document.querySelector(".practice").style["display"] = "inline-block";
+  document.querySelector(".labelTimer").style["display"] = "inline-block";
+}
+
 function completedFlagsRound() {
   console.log("completedFlagsRound started")
   localStorage.setItem("countrySelected", JSON.stringify(true));
   getFlagName();
-  document.querySelector(".container").style["visibility"] = "visible";
-  document.querySelector(".showFlag").style["display"] = "none";
-  document.querySelector(".reset").style["display"] = "none";
-  document.querySelector(".answer").style["display"] = "none";
-  document.querySelector(".intro").style["display"] = "none";
-  document.querySelector(".countryOptionButton").style["display"] = "none";
-  document.querySelector(".feedback").style["display"] = "inline-block";
-  document.querySelector(".practice").style["display"] = "inline-block";
-  document.querySelector(".labelTimer").style["display"] = "inline-block";
+  completedFlagsRoundDisplayChanges();
   getAnswerFeedback(); 
   getFinishGameMessage();
 }
@@ -369,21 +384,21 @@ function starFill() {
 }
 
 //listener for display new flag
-document.querySelector(".reset").addEventListener("click", function () {
+resetButton.addEventListener("click", function () {
   console.log("resetButton clicked");
   startAgain();
 });
 
 function displayFlagScreen() {
-  document.querySelector(".countryOptionButton").style["display"] = "none";
+  countryOptionButton.style["display"] = "none";
   document.querySelector(".finishGameMessage").style["display"] = "none";
-  document.querySelector(".answer").style["display"] = "inline-block";
-  document.querySelector(".showFlag").style["display"] = "inline-block";
-  document.querySelector(".showFlag").style["visibility"] = "visible";
+  answer.style["display"] = "inline-block";
+  showFlag.style["display"] = "inline-block";
+  showFlag.style["visibility"] = "visible";
   document.querySelector(".message").style["visibility"] = "visible";
-  document.querySelector(".intro").innerHTML =
+  intro.innerHTML =
     "<br>Type and Select a Country or Territory";
-  document.querySelector(".intro").style["display"] = "inline-block";
+  intro.style["display"] = "inline-block";
   document.querySelector(".feedback").style["display"] = "none";
   document.querySelector(".labelTimer").style["display"] = "none";
   document.querySelector(".flagName").style["display"] = "none";
@@ -462,12 +477,12 @@ function displayFlag() {
   let box =
     '<input type="text" id="cGuess" name="number" autocomplete="one-time-code">';
 
-  document.querySelector(".showFlag").innerHTML = pngName;
-  document.querySelector(".showFlag").style["display"] = "inline-block";
+  showFlag.innerHTML = pngName;
+  showFlag.style["display"] = "inline-block";
 
-  document.querySelector(".answer").innerHTML = box;
+  answer.innerHTML = box;
 
-  document.querySelector(".answer").style["visibility"] = "visible";
+  answer.style["visibility"] = "visible";
   //document.querySelector(".submitButton").style["display"] = "inline-block";
 
   console.log("flagWithLetter", flagWithLetter);
@@ -477,7 +492,7 @@ function displayFlag() {
 
   document.getElementById("cGuess").addEventListener("keyup", function (e) {
     //e.preventDefault();
-    document.querySelector(".countryOptionButton").style["display"] = "inline";
+    countryOptionButton.style["display"] = "inline";
     console.log("cGuessvalue", cGuess.value);
 
     let keysJoin = String(cGuess.value).toLowerCase();
@@ -579,7 +594,7 @@ function getInputValue() {
   ).innerHTML;
   document.querySelector(buttonClasses[buttonClicked - 1]).checked = false;
   document.getElementById(labelContent[buttonClicked - 1]).innerHTML == "";
-  document.querySelector(".container").style["visibility"] = "visible";
+  container.style["visibility"] = "visible";
   inputValLow = inputValue.toLowerCase();
   inputValue = "";
   feedbackScreenLayout();
@@ -589,11 +604,11 @@ function getInputValue() {
 
 function feedbackScreenLayout() {
   if (turns < 4) {
-    document.querySelector(".answer").style["visibility"] = "visible";
+    answer.style["visibility"] = "visible";
     document.querySelector(".flagName").style["visibility"] = "visible";
-    document.querySelector(".showFlag").style["display"] = "none";
+    showFlag.style["display"] = "none";
     document.querySelector(".instruction").style["display"] = "none";
-    document.querySelector(".countryOptionButton").style["display"] = "none";
+    countryOptionButton.style["display"] = "none";
   document.querySelector(".flagName").style["display"] = "inline-block";
     document.querySelector(".feedback").style["display"] = "inline-block";
   }
@@ -683,9 +698,9 @@ function gameWrapup() {
 //displays new flag
 function startAgain() {
   console.log("displayNewFlag");
-  document.querySelector(".container").style["opacity"] = "100";
+  container.style["opacity"] = "100";
 
-  document.querySelector(".answer").innerHTML = "";
+  answer.innerHTML = "";
 
   resetButton.style["display"] = "none";
 
@@ -699,9 +714,9 @@ function startNewGame() {
   gameWrapup();
 
   //generate random number
-  document.querySelector(".container").style["opacity"] = "100";
+  container.style["opacity"] = "100";
 
-  document.querySelector(".container").style["visibility"] = "visible";
+  container.style["visibility"] = "visible";
 
   //get flags to original length
   flags.push(...countryDisplayed);
@@ -725,21 +740,21 @@ document.querySelector(".stat-icon").addEventListener("click", function () {
       "inline-block";
 
   //checks if container or wrapup section open so it can be closed and opened by close button
-  if (document.querySelector(".container").offsetParent != null) {
+  if (container.offsetParent != null) {
     containervisible = 1;
 
-    document.querySelector(".container").style["visibility"] = "hidden";
+    container.style["visibility"] = "hidden";
   }
 
-  if (document.querySelector(".answer").offsetParent != null) {
+  if (answer.offsetParent != null) {
     answervisible = 1;
 
-    document.querySelector(".answer").style["visibility"] = "hidden";
+    answer.style["visibility"] = "hidden";
   }
-  if (document.querySelector(".reset").offsetParent != null) {
+  if (resetButton.offsetParent != null) {
     resetvisible = 1;
 
-    document.querySelector(".reset").style["visibility"] = "hidden";
+    resetButton.style["visibility"] = "hidden";
   }
   if (document.querySelector(".message").offsetParent != null) {
     messagevisible = 1;
@@ -766,15 +781,15 @@ document
   .addEventListener("click", function () {
     document.querySelector(".stats-popuptext").style["display"] = "none";
     if (containervisible == 1) {
-      document.querySelector(".container").style["visibility"] = "visible";
+      container.style["visibility"] = "visible";
       containervisible = 0;
     }
     if (answervisible == 1) {
-      document.querySelector(".answer").style["visibility"] = "visible";
+      answer.style["visibility"] = "visible";
       answervisible = 0;
     }
     if (resetvisible == 1) {
-      document.querySelector(".reset").style["visibility"] = "visible";
+      resetButton.style["visibility"] = "visible";
       resetvisible = 0;
     }
     if (messagevisible == 1) {
@@ -785,20 +800,20 @@ document
 
 /***********Help Popup******** */
 document.querySelector(".how-to").addEventListener("click", function () {
-  if (document.querySelector(".container").offsetParent != null) {
+  if (container.offsetParent != null) {
     containervisible = 1;
 
-    document.querySelector(".container").style["visibility"] = "hidden";
+    container.style["visibility"] = "hidden";
   }
 
-  if (document.querySelector(".answer").offsetParent != null) {
+  if (answer.offsetParent != null) {
     answervisible = 1;
 
-    document.querySelector(".answer").style["visibility"] = "hidden";
+    answer.style["visibility"] = "hidden";
   }
-  if (document.querySelector(".reset").offsetParent != null) {
+  if (resetButton.offsetParent != null) {
     resetvisible = 1;
-    document.querySelector(".reset").style["visibility"] = "hidden";
+    resetButton.style["visibility"] = "hidden";
   }
   if (document.querySelector(".message").offsetParent != null) {
     messagevisible = 1;
@@ -820,17 +835,17 @@ document
     //ensures elements previously open stay displayed
     if (containervisible == 1) {
 
-      document.querySelector(".container").style["visibility"] = "visible";
+      container.style["visibility"] = "visible";
       containervisible = 0;
     }
 
     if (answervisible == 1) {
-      document.querySelector(".answer").style["visibility"] = "visible";
+      answer.style["visibility"] = "visible";
       answervisible = 0;
     }
 
     if (resetvisible == 1) {
-      document.querySelector(".reset").style["visibility"] = "visible";
+      resetButton.style["visibility"] = "visible";
       resetvisible = 0;
     }
 
