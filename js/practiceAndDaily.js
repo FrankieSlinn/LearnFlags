@@ -12,13 +12,12 @@ let labelContent = [
 ];
 let buttonClicked = 0;
 let letterOnly = /^[a-zA-Z]+$/g;
-let flagWithLetter = [];
-let keysJoin = "";
+let countryMatchingPredText = [];
+let lowerCasePredText = "";
 let selection = document.querySelector(".selection");
 let turns = 0;
 let countryDisplayed = [];
 let flag = "";
-
 let flagLow = "";
 let correctAnswer = "Congratulations, That Was Correct";
 let incorrectAnswer = "Unlucky, That Was Not Correct";
@@ -43,7 +42,7 @@ let dailyMode = true;
 let arrayDailyFlags = [];
 const container=document.querySelector(".container");
 const showFlag=document.querySelector(".showFlag");
-const countryOptionButton=document.querySelector(".countryOptionButton");
+const countryOptionButtons=document.querySelector(".countryOptionButtons");
 const intro=document.querySelector(".intro");
 const answer=document.querySelector(".answer");
 const feedback=document.querySelector(".feedback");
@@ -315,12 +314,13 @@ function getAnswerFeedback(){
 
 function displayChangesAfterTurn(){
   getCountryForFeedbackDisplay();
-  countryOptionButton.style["display"] = "none";
+  countryOptionButtons.style["display"] = "none";
   resetButton.style["display"] = "inline-block";
   resetButton.innerHTML =
     '<button type = button class = "newFlag">Have Another Go</button>';
   intro.style["display"] = "none";
   answer.style["display"] = "none";
+  answer.value="";
   getAnswerFeedback(); 
 }
 
@@ -354,7 +354,7 @@ function completedFlagsRoundDisplayChanges(){
   resetButton.style["display"] = "none";
   answer.style["display"] = "none";
   intro.style["display"] = "none";
-  countryOptionButton.style["display"] = "none";
+  countryOptionButtons.style["display"] = "none";
   feedback.style["display"] = "inline-block";
   practice.style["display"] = "inline-block";
   labelTimer.style["display"] = "inline-block";
@@ -397,7 +397,7 @@ resetButton.addEventListener("click", function () {
 });
 
 function displayFlagScreen() {
-  countryOptionButton.style["display"] = "none";
+  countryOptionButtons.style["display"] = "none";
   finishGameMessage.style["display"] = "none";
   intro.style["display"] = "inline-block";
   feedback.style["display"] = "none";
@@ -441,96 +441,83 @@ function displayFlag() {
     countryDisplayed.push(JSON.parse(localStorage.getItem("flag")));
   }
   formatFlagNameToCompare();
-  let pngName =
+  let imageHTML =
     "<img src = ../Images/" +
     JSON.parse(localStorage.getItem("flagWithUnderscore")) +
     '.png  style="width:400px;height:250px;">';
 
-  // let box =
-  //   '<input type="text" class="cGuess" name="number" autocomplete="one-time-code">';
-
-  showFlag.innerHTML = pngName;
+  showFlag.innerHTML = imageHTML;
   showFlag.style["display"] = "inline-block";
-
-  // answer.innerHTML = box;
-
   answer.style["visibility"] = "visible";
-  //document.querySelector(".submitButton").style["display"] = "inline-block";
+  instruction.style["display"] = "inline-block";
   displayFlagScreen();
 
   /**** PREDICTIVE TEXT *****/
+  predictiveText();
 
-  document.querySelector(".cGuess").addEventListener("keyup", function (e) {
-    //e.preventDefault();
-    countryOptionButton.style["display"] = "inline";
-  
+  //ensure current flag only removed last
+}
 
-    let keysJoin = String(document.querySelector(".cGuess").value).toLowerCase();
+function predictiveText(){
+  //listener for when a user types a letter
+  answer.addEventListener("keyup", function (e) {
+    //ensures country buttons are displayed
+    countryOptionButtons.style["display"] = "inline";
+    //get input text in lower case
+    let lowerCasePredText = String(document.querySelector(".answer").value).toLowerCase();
+    //If predictive text matches add country to  countryMatchingPredText array
+    ifPredTextMatchesCountryAddToArray();
+    //if input text is equal to those letters in a country return that country in next filter function 
+    countryMatchingPredText = countryMatchingPredText.filter((item) => matchLowerCasePredTextToCountryInArray(item, lowerCasePredText)); //
+    defineButtonText();
+  });
+}
 
-    //flagsCopy used to ensure all answer options stay. To avoid duplicates a country is removed from array "flags" after displayed.
+function matchLowerCasePredTextToCountryInArray(predictedCountry, lowerCasePredText){
+  if (
+    lowerCasePredText ===
+    String(predictedCountry.slice(0, lowerCasePredText.length)).toLowerCase()
+  ) {
+    return predictedCountry;
+  }
+
+}
+
+function ifPredTextMatchesCountryAddToArray(){
+      //flagsCopy used to ensure all answer options stay(no flag was removed from list). 
+    //To avoid duplicates a country is removed from array "flags" after displayed.
     for (let i = 0; i < flagsCopy.length; i++) {
       if (
-        String(keysJoin).toLowerCase() ===
-          String(flagsCopy[i].slice(0, keysJoin.length)).toLowerCase() &&
-        flagWithLetter.indexOf(flagsCopy[i] == -1)
+        //if predictive text is typed equals the beginning of a country
+        //slice used to ensure equal number of characters are compared
+        String(lowerCasePredText).toLowerCase() ===
+          String(flagsCopy[i].slice(0, lowerCasePredText.length)).toLowerCase() &&
+        countryMatchingPredText.indexOf(flagsCopy[i] === -1)
       ) {
-        if (!flagWithLetter.includes(flagsCopy[i])) {
-          flagWithLetter.push(flagsCopy[i]);
+        //First check that country isn't already included in the array from which predictive text is generated
+        if (!countryMatchingPredText.includes(flagsCopy[i])) {
+          //push countries that share letters into the array
+          countryMatchingPredText.push(flagsCopy[i]);
         }
       }
     }
 
-
-    let filterFunct = function (a) {
-      if (
-        keysJoin.toLowerCase() ==
-        String(a.slice(0, keysJoin.length)).toLowerCase()
-      ) {
-        return a;
-      }
-    };
-    flagWithLetter = flagWithLetter.filter((item) => filterFunct(item));
-
-    console.log("flagWithLetter", flagWithLetter);
-    //checkonly alphabetical characters
-    function alphabet(inputtxt) {
-      if (inputtxt.match(letterOnly)) {
-        return true;
-      }
-    }
-
-    defineButtonText();
-  });
-  ///end predictive text
-
-  instruction.style["display"] = "inline-block";
-  //ensure current flag only removed last
 }
-
-
-console.log(
-  "arrayDailyFlags countries",
-  arrayDailyFlags.map((item) => flags[item])
-);
 
 if (JSON.parse(localStorage.getItem("flag")) == "") {
   console.log("noflag");
   localStorage.setItem("randomRun", JSON.stringify(false));
 }
 
-console.log(
-  "outside function what flag",
-  JSON.parse(localStorage.getItem("flag"))
-);
 submitValue();
 
 function defineButtonText() {
   for (let i = 0; i < buttonClasses.length; i++) {
     document.getElementById(labelContent[i]).style["visibility"] = "visible";
-    if (flagWithLetter[i]) {
+    if (countryMatchingPredText[i]) {
       document.getElementById(
         labelContent[i]
-      ).innerHTML = `${flagWithLetter[i]}`;
+      ).innerHTML = `${countryMatchingPredText[i]}`;
       //console.log("is first element checked?", document.querySelector('.First').checked);
       //document.querySelector(".First").style["display"] = "inline-block";
       document.getElementById(labelContent[i]).style["display"] =
@@ -542,19 +529,12 @@ function defineButtonText() {
 }
 
 function submitValue() {
-  console.log(
-    "Submit value what flag",
-    JSON.parse(localStorage.getItem("flag"))
-  );
-  //console.log("get input value what flag", JSON.parse(localStorage.getItem("flag")))
+
   for (let i = 0; i < buttonClasses.length; i++) {
     document
       .querySelector(buttonClasses[i])
       .addEventListener("click", function () {
-        //console.log("submitting value", document.querySelector(buttonClasses[i]))
-
         buttonClicked = i + 1;
-
         getInputValue();
       });
   }
@@ -572,7 +552,7 @@ function getInputValue() {
   inputValue = "";
   feedbackScreenLayout();
   whichFeedbackScreen();
-  flagWithLetter = [];
+  countryMatchingPredText = [];
 }
 
 function feedbackScreenLayout() {
@@ -581,7 +561,7 @@ function feedbackScreenLayout() {
     flagName.style["visibility"] = "visible";
     showFlag.style["display"] = "none";
     instruction.style["display"] = "none";
-    countryOptionButton.style["display"] = "none";
+    countryOptionButtons.style["display"] = "none";
   flagName.style["display"] = "inline-block";
     feedback.style["display"] = "inline-block";
   }
