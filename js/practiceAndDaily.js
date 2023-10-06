@@ -46,6 +46,9 @@ const showFlag=document.querySelector(".showFlag");
 const countryOptionButton=document.querySelector(".countryOptionButton");
 const intro=document.querySelector(".intro");
 const answer=document.querySelector(".answer");
+const feedback=document.querySelector(".feedback");
+const practice=document.querySelector(".practice");
+const labelTimer=document.querySelector(".labelTimer");
 
 //Score Variables
 let score = 0;
@@ -251,7 +254,7 @@ const displayTimer = function () {
   //date is current date
   let date = new Date();
   //showTimer
-  document.querySelector(".labelTimer").style["visibility"] = "visible";
+  labelTimer.style["visibility"] = "visible";
   document.querySelector(
     ".labelTimer"
   ).innerHTML = `FLAGL Will Restart in <strong>
@@ -304,7 +307,7 @@ function getCountryForFeedbackDisplay(){
     flagName.innerHTML = `The Answer Is <strong>${rightFlag}</strong>`;
 }
 function getAnswerFeedback(){
-  JSON.parse(localStorage.getItem("isCorrect")) === true?document.querySelector(".feedback").innerHTML = `${correctAnswer}`:document.querySelector(".feedback").innerHTML = `${incorrectAnswer}`;
+  JSON.parse(localStorage.getItem("isCorrect")) === true?feedback.innerHTML = `${correctAnswer}`:feedback.innerHTML = `${incorrectAnswer}`;
 }
 
 function displayChangesAfterTurn(){
@@ -349,9 +352,9 @@ function completedFlagsRoundDisplayChanges(){
   answer.style["display"] = "none";
   intro.style["display"] = "none";
   countryOptionButton.style["display"] = "none";
-  document.querySelector(".feedback").style["display"] = "inline-block";
-  document.querySelector(".practice").style["display"] = "inline-block";
-  document.querySelector(".labelTimer").style["display"] = "inline-block";
+  feedback.style["display"] = "inline-block";
+  practice.style["display"] = "inline-block";
+  labelTimer.style["display"] = "inline-block";
 }
 
 function completedFlagsRound() {
@@ -364,28 +367,24 @@ function completedFlagsRound() {
 }
 
 function starFill() {
-  console.log("starFill Running");
+  //check that score is valid for star fill
   if (
     JSON.parse(localStorage.getItem("score")) !== "0" &&
     JSON.parse(localStorage.getItem("score")) <= "5"
   ) {
-    console.log("score not null can do starfill");
-    for (let i = 0; i <= JSON.parse(localStorage.getItem("score")) - 1; i++) {
-      console.log("starfilli");
-      document.getElementById(`${starArray[i]}`).style["fill"] = "yellow";
-      console.log(`star i is star${i}`);
+    //ensure filled stars match the score
+    for (let starNum = 0; starNum <= JSON.parse(localStorage.getItem("score")) - 1; starNum++) {
+      document.getElementById(`${starArray[starNum]}`).style["fill"] = "yellow";
     }
-    if (JSON.parse(localStorage.getItem("score")) == "0") {
-      console.log("starFill 0 score");
-      const allStars = document.querySelectorAll(".star");
-      allStars.forEach((j) => (j.style.fill = "white"));
-    }
+    // if (JSON.parse(localStorage.getItem("score")) === "0") {
+    //   const allStars = document.querySelectorAll(".star");
+    //   allStars.forEach((j) => (j.style.fill = "white"));
+    // }
   }
 }
 
 //listener for display new flag
 resetButton.addEventListener("click", function () {
-  console.log("resetButton clicked");
   startAgain();
 });
 
@@ -399,10 +398,10 @@ function displayFlagScreen() {
   intro.innerHTML =
     "<br>Type and Select a Country or Territory";
   intro.style["display"] = "inline-block";
-  document.querySelector(".feedback").style["display"] = "none";
-  document.querySelector(".labelTimer").style["display"] = "none";
+  feedback.style["display"] = "none";
+  labelTimer.style["display"] = "none";
   document.querySelector(".flagName").style["display"] = "none";
-  document.querySelector(".practice").style["display"] = "none";
+  practice.style["display"] = "none";
   document.querySelector(".instruction").innerHTML =
     "Which Country or Territory Does this Flag Belong to?";
 }
@@ -610,7 +609,7 @@ function feedbackScreenLayout() {
     document.querySelector(".instruction").style["display"] = "none";
     countryOptionButton.style["display"] = "none";
   document.querySelector(".flagName").style["display"] = "inline-block";
-    document.querySelector(".feedback").style["display"] = "inline-block";
+    feedback.style["display"] = "inline-block";
   }
 }
 
@@ -724,7 +723,7 @@ function startNewGame() {
 
   resetButton.style["display"] = "none";
   document.querySelector(".finishGameMessage").style["display"] = "none";
-  document.querySelector(".labelTimer").style["display"] = "none";
+  labelTimer.style["display"] = "none";
 
   document.querySelector(".instruction").innerHTML =
     "Which country does this flag belong to?";
