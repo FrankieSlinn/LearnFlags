@@ -37,7 +37,7 @@ let flagNum2 = "";
 let flagNum3 = "";
 let flagNum4 = "";
 let flagNum5 = "";
-let inputValLow = "";
+let countrySelectedLow = "";
 let dailyMode = true;
 let arrayDailyFlags = [];
 const container = document.querySelector(".container");
@@ -457,7 +457,7 @@ function placeFlagNameIntoflagsDisplayedInRound() {
   }
   console.log("flagsDisplayedInRound: ", flagsDisplayedInRound); 
 }
-
+//get HTML for flag display
 function displayFlag() {
   let imageHTML =
     "<img src = ../Images/" +
@@ -486,7 +486,7 @@ function predictiveText() {
     defineButtonText();
   });
 }
-
+//checks if text typed matches country for filtering
 function matchLowerCasePredTextToCountryInArray(
   predictedCountry,
   lowerCasePredText
@@ -526,18 +526,14 @@ function ifPredTextMatchesCountryAddToArray(lowerCasePredText) {
 submitValue();
 
 function defineButtonText() {
-
   //for each predictive text button listen if pressed
   for (let buttonNum = 0; buttonNum < countryButtonClasses.length; buttonNum++) {
     //button element is each of the button classes
-    const buttonElement = document.querySelector(countryButtonClasses[buttonNum]);
-    
+    const buttonElement = document.querySelector(countryButtonClasses[buttonNum]); 
     if (buttonElement) {
       buttonElement.style["visibility"] = "visible";
-      console.log("countryMatchingPredText[buttonNum]", countryMatchingPredText[buttonNum]);
-  
+      //if a country matching the input text exists populate the country name on the button
       if (countryMatchingPredText[buttonNum]) {
-        console.log("predictive text matches");
         buttonElement.innerHTML = `${countryMatchingPredText[buttonNum]}`;
         buttonElement.style["display"] = "inline-block";
       } else {
@@ -551,31 +547,39 @@ function defineButtonText() {
   
 }
 
+//event listener for the country button that is clicked
+//passes the button numebr that is clicked to the next function
 function submitValue() {
   for (let i = 0; i < buttonClasses.length; i++) {
     document
       .querySelector(buttonClasses[i])
       .addEventListener("click", function () {
-        buttonClicked = i + 1;
-        getInputValue();
+        buttonClicked = i;
+        processAnswerSubmission();
       });
   }
 }
 
-function getInputValue() {
+function processAnswerSubmission() {
+  //flag for going to the answer screen
   localStorage.setItem("countrySelected", JSON.stringify(true));
-  let inputValue = document.getElementById(
-    countryButtonClasses[buttonClicked - 1]
+  //get name for selected country
+  let countrySelectedName = document.querySelector(
+    countryButtonClasses[buttonClicked]
   ).innerHTML;
-  document.querySelector(buttonClasses[buttonClicked - 1]).checked = false;
-  document.getElementById(countryButtonClasses[buttonClicked - 1]).innerHTML == "";
-  container.style["visibility"] = "visible";
-  inputValLow = inputValue.toLowerCase();
-  inputValue = "";
+  resetQuizParameters(countrySelectedName);
   feedbackScreenLayout();
   whichFeedbackScreen();
-  countryMatchingPredText = [];
 }
+function resetQuizParameters(countrySelectedName){
+  countrySelectedLow = countrySelectedName.toLowerCase();
+  countrySelectedName = "";
+  document.querySelector(countryButtonClasses[buttonClicked]).innerHTML == "";
+    //empty array of countries that match predictive text
+    countryMatchingPredText = [];
+
+}
+
 
 function feedbackScreenLayout() {
   if (turns < 4) {
@@ -590,12 +594,11 @@ function feedbackScreenLayout() {
 }
 
 function whichFeedbackScreen() {
-  console.log("inputValLow", inputValLow, "flagLow", flagLow);
-  if (inputValLow === String(flagLow)) {
+//if input matches the right answer
+  if (countrySelectedLow === String(flagLow)) {
     localStorage.setItem("isCorrect", JSON.stringify(true));
     localStorage.setItem("isIncorrect", JSON.stringify(false));
-    buttonClicked = 0;
-    inputValLow = "";
+  resetInputParameters();
     score = JSON.parse(localStorage.getItem("score"));
     const score1 = (score += 1);
     localStorage.setItem("score", JSON.stringify(score1));
@@ -603,9 +606,12 @@ function whichFeedbackScreen() {
   } else {
     localStorage.setItem("isIncorrect", JSON.stringify(true));
     localStorage.setItem("isCorrect", JSON.stringify(false));
-    buttonClicked = 0;
-    inputValLow = "";
+    resetInputParameters();
   }
+  handleNextScreenBasedOnTurn();
+}
+//determines screen based on the turn
+function handleNextScreenBasedOnTurn(){
   if (JSON.parse(localStorage.getItem("turns")) < 4) {
     first4Turns();
   } else if (
@@ -615,6 +621,12 @@ function whichFeedbackScreen() {
     numGamestats();
     completedFlagsRound();
   }
+}
+
+
+function resetInputParameters(){
+  buttonClicked = 0;
+  countrySelectedLow = "";
 }
 
 function numGamestats() {
