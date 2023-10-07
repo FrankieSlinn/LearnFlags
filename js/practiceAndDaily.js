@@ -11,32 +11,24 @@ let countryButtonClasses = [
   ".fifthLabel",
 ];
 let buttonClicked = 0;
-let letterOnly = /^[a-zA-Z]+$/g;
 let countryMatchingPredText = [];
 let lowerCasePredText = "";
-let selection = document.querySelector(".selection");
 let turns = 0;
 let flagsDisplayedInRound = [];
 let flag = "";
 let flagLow = "";
 let correctAnswer = "Congratulations, That Was Correct";
 let incorrectAnswer = "Unlucky, That Was Not Correct";
-const finishGameMessage = document.querySelector(".finishGameMessage");
+
 let resetButton = document.querySelector(".reset");
 let containervisible = 0;
 let answervisible = 0;
 let resetvisible = 0;
 let messagevisible = 0;
 let statistics = document.querySelector(".stats");
-let letter = "";
 let isCorrect = false;
 let isIncorrect = false;
 let starArray = ["star1", "star2", "star3", "star4", "star5"];
-let flagNum1 = "";
-let flagNum2 = "";
-let flagNum3 = "";
-let flagNum4 = "";
-let flagNum5 = "";
 let countrySelectedLow = "";
 let dailyMode = true;
 let arrayDailyFlags = [];
@@ -51,58 +43,74 @@ const labelTimer = document.querySelector(".labelTimer");
 const message = document.querySelector(".message");
 const flagName = document.querySelector(".flagName");
 const instruction = document.querySelector(".instruction");
+const finishGameMessage = document.querySelector(".finishGameMessage");
 
 //Score Variables
 let score = 0;
 let countGames = 0;
 let averageScore = 0;
-let gamesPlayed = 0;
-//sumLongCount needed for sum equation to add up items in array for average score
-let sumLongCount = 0;
-let gameScores = [];
+let gamesPlayed = numGamesCalc();
 let allGameScores = [];
-let numGames =
-  JSON.parse(localStorage.getItem("allGameScores")) != null
+
+function numGamesCalc() {
+  return (JSON.parse(localStorage.getItem("allGameScores")) != null
     ? JSON.parse(localStorage.getItem("allGameScores")).length
-    : 0;
-let longGameAverage =
-  JSON.parse(localStorage.getItem("allGameScores")) != null
-    ? //Get sum of all game scores
-      (
-        JSON.parse(localStorage.getItem("allGameScores")).reduce(
-          (numa, numb) => numa + numb,
-          //If no game scores the average is zero
-          0
-        ) / JSON.parse(localStorage.getItem("allGameScores")).length
-      )
-        //Remove any decimals
-        .toFixed(0)
-    : 0;
-console.log("longGameAverage", longGameAverage);
-
-let statsScore =
-  JSON.parse(localStorage.getItem("allGameScores")) != null
-    ? JSON.parse(localStorage.getItem("allGameScores"))[
-        JSON.parse(localStorage.getItem("allGameScores")).length - 1
-      ]
-    : 0;
-if (
-  JSON.parse(localStorage.getItem("allGameScores")) == null &&
-  JSON.parse(localStorage.getItem("firstTurn")) != false
-) {
-  localStorage.setItem("firstTurn", JSON.stringify(true));
-} else {
-  localStorage.setItem("firstTurn", JSON.stringify(false));
+    : 0)
 }
 
-//makes sure score not null so in first turn flag can be matched to score.
-if (JSON.parse(localStorage.getItem("score")) == null) {
-  localStorage.setItem("score", JSON.stringify(0));
+function calcAverageScoreMultiValues() {
+  if (JSON.parse(localStorage.getItem("allGameScores")).length === 1) {
+    console.log("length allGameScores is one")
+   return JSON.parse(localStorage.getItem("allGameScores"))[0];}
+   else if(JSON.parse(localStorage.getItem("allGameScores")).length >= 1)
+  return JSON.parse(localStorage.getItem("allGameScores"))
+    .reduce(
+      //add all scores to get tota
+      (numa, numb) => numa + numb
+    )
+    .toFixed(0);
 }
 
-document.querySelector(
-  ".stats"
-).innerHTML = `FLAGL Score: <strong>${statsScore}</strong><br>Games: <strong>${numGames}</strong><br>Average Score: <strong>${longGameAverage}</strong>`;
+//Define average score
+if (JSON.parse(localStorage.getItem("allGameScores"))) {
+    averageScore = calcAverageScoreMultiValues();
+  }
+else {
+  averageScore = 0;
+}
+
+
+let gameScore = JSON.parse(localStorage.getItem("allGameScores"))
+  ? //get last score
+    JSON.parse(localStorage.getItem("allGameScores"))[
+      JSON.parse(localStorage.getItem("allGameScores")).length - 1
+    ]
+  : 0;
+
+//Populate stats message at beginning of game
+gameStats();
+
+//called on fifth turn after country selected as wrapup game activity
+function updateGameStats() {
+  //score when a game is completed expressed as percentage
+  let gameScore = Number(JSON.parse(localStorage.getItem("score")) * 2 * 10);
+  window.localStorage.setItem("gameScore", JSON.stringify(gameScore));
+  defineAndSaveLongGameScore(gameScore);
+  averageScore = calcAverageScoreMultiValues();
+  window.localStorage.setItem("averageScore", JSON.stringify(averageScore));
+  gamesPlayed = numGamesCalc();
+  //update statistics in popup
+  gameStats();
+}
+function gameStats() {
+  statistics.innerHTML = `FLAGL Score: <strong>${gameScore}</strong><br>Games: <strong>${gamesPlayed}</strong><br>Average Score: <strong>${averageScore}</strong>`;
+}
+function defineAndSaveLongGameScore(gameScore) {
+  allGameScores = JSON.parse(localStorage.getItem("allGameScores"))
+    ? JSON.parse(localStorage.getItem("allGameScores")).concat(gameScore)
+    : [JSON.parse(localStorage.getItem("gameScore"))];
+  window.localStorage.setItem("allGameScores", JSON.stringify(allGameScores));
+}
 
 //generates 5 random numbers for each day based on UK Julien Date
 let fullDate = new Date();
@@ -426,12 +434,12 @@ function formatFlagNameToCompare() {
 }
 
 function newQuizItem() {
-  countryMatchingPredText=[];
+  countryMatchingPredText = [];
   //resets quiz item
   localStorage.setItem("countrySelected", JSON.stringify(false));
   //places country name into array of flags displayed in round
   placeFlagNameIntoflagsDisplayedInRound();
-  //formats flag name to lower case removes underscores for comparison 
+  //formats flag name to lower case removes underscores for comparison
   formatFlagNameToCompare();
   //gets flag image and sets html for flag display
   displayFlag();
@@ -455,7 +463,7 @@ function placeFlagNameIntoflagsDisplayedInRound() {
     //so no flag goes missing after a round
     flagsDisplayedInRound.push(JSON.parse(localStorage.getItem("flag")));
   }
-  console.log("flagsDisplayedInRound: ", flagsDisplayedInRound); 
+  console.log("flagsDisplayedInRound: ", flagsDisplayedInRound);
 }
 //get HTML for flag display
 function displayFlag() {
@@ -481,8 +489,8 @@ function predictiveText() {
     //if input text is equal to those letters in a country return that country in next filter function
     countryMatchingPredText = countryMatchingPredText.filter((item) =>
       matchLowerCasePredTextToCountryInArray(item, lowerCasePredText)
-    ); 
-    console.log("countryMatchingPredText: " + countryMatchingPredText)
+    );
+    console.log("countryMatchingPredText: " + countryMatchingPredText);
     defineButtonText();
   });
 }
@@ -502,21 +510,24 @@ function matchLowerCasePredTextToCountryInArray(
 function ifPredTextMatchesCountryAddToArray(lowerCasePredText) {
   //flagsCopy used to ensure all answer options stay(no flag was removed from list).
   //To avoid duplicates a country is removed from array "flags" after displayed.
-  console.log("lowerCasePredText).toLowerCase() ", lowerCasePredText.toLowerCase() )
+  console.log(
+    "lowerCasePredText).toLowerCase() ",
+    lowerCasePredText.toLowerCase()
+  );
   for (let i = 0; i < flagsCopy.length; i++) {
     if (
       //if predictive text is typed equals the beginning of a country
       //slice used to ensure equal number of characters are compared
+      String(lowerCasePredText).length > 0 &&
       String(lowerCasePredText) ===
-        String(flagsCopy[i].slice(0, lowerCasePredText.length)).toLowerCase() &&
-      countryMatchingPredText.indexOf(flagsCopy[i] === -1)
+        String(flagsCopy[i].slice(0, lowerCasePredText.length)).toLowerCase()
     ) {
       //First check that country isn't already included in the array from which predictive text is generated
       if (!countryMatchingPredText.includes(flagsCopy[i])) {
         //push countries that share letters into the array
         console.log("flag to be inserted in matching countries", flagsCopy[i]);
         countryMatchingPredText.push(flagsCopy[i]);
-        console.log("countryMatchingPredText", countryMatchingPredText)
+        console.log("countryMatchingPredText", countryMatchingPredText);
       }
     }
   }
@@ -527,9 +538,15 @@ submitValue();
 
 function defineButtonText() {
   //for each predictive text button listen if pressed
-  for (let buttonNum = 0; buttonNum < countryButtonClasses.length; buttonNum++) {
+  for (
+    let buttonNum = 0;
+    buttonNum < countryButtonClasses.length;
+    buttonNum++
+  ) {
     //button element is each of the button classes
-    const buttonElement = document.querySelector(countryButtonClasses[buttonNum]); 
+    const buttonElement = document.querySelector(
+      countryButtonClasses[buttonNum]
+    );
     if (buttonElement) {
       buttonElement.style["visibility"] = "visible";
       //if a country matching the input text exists populate the country name on the button
@@ -539,12 +556,8 @@ function defineButtonText() {
       } else {
         buttonElement.style["display"] = "none";
       }
-    } else {
-      console.log(`Element with class ${countryButtonClasses[buttonNum]} not found.`);
     }
   }
-
-  
 }
 
 //event listener for the country button that is clicked
@@ -571,15 +584,13 @@ function processAnswerSubmission() {
   feedbackScreenLayout();
   whichFeedbackScreen();
 }
-function resetQuizParameters(countrySelectedName){
+function resetQuizParameters(countrySelectedName) {
   countrySelectedLow = countrySelectedName.toLowerCase();
   countrySelectedName = "";
   document.querySelector(countryButtonClasses[buttonClicked]).innerHTML == "";
-    //empty array of countries that match predictive text
-    countryMatchingPredText = [];
-
+  //empty array of countries that match predictive text
+  countryMatchingPredText = [];
 }
-
 
 function feedbackScreenLayout() {
   if (turns < 4) {
@@ -594,14 +605,12 @@ function feedbackScreenLayout() {
 }
 
 function whichFeedbackScreen() {
-//if input matches the right answer
+  //if input matches the right answer
   if (countrySelectedLow === String(flagLow)) {
     localStorage.setItem("isCorrect", JSON.stringify(true));
     localStorage.setItem("isIncorrect", JSON.stringify(false));
-  resetInputParameters();
-    score = JSON.parse(localStorage.getItem("score"));
-    const score1 = (score += 1);
-    localStorage.setItem("score", JSON.stringify(score1));
+    resetInputParameters();
+    incrementScore();
     starFill();
   } else {
     localStorage.setItem("isIncorrect", JSON.stringify(true));
@@ -610,65 +619,28 @@ function whichFeedbackScreen() {
   }
   handleNextScreenBasedOnTurn();
 }
+
+function incrementScore() {
+  score = JSON.parse(localStorage.getItem("score"));
+  const score1 = (score += 1);
+  localStorage.setItem("score", JSON.stringify(score1));
+}
 //determines screen based on the turn
-function handleNextScreenBasedOnTurn(){
+function handleNextScreenBasedOnTurn() {
   if (JSON.parse(localStorage.getItem("turns")) < 4) {
     first4Turns();
   } else if (
     JSON.parse(localStorage.getItem("turns")) == 4 &&
     JSON.parse(localStorage.getItem("countrySelected")) == true
   ) {
-    numGamestats();
+    updateGameStats();
     completedFlagsRound();
   }
 }
 
-
-function resetInputParameters(){
+function resetInputParameters() {
   buttonClicked = 0;
   countrySelectedLow = "";
-}
-
-function numGamestats() {
-  //set long scores
-  let gameScore = Number(JSON.parse(localStorage.getItem("score")) * 2 * 10);
-
-  gameScores.push(gameScore);
-
-  allGameScores =
-    numGames == 0
-      ? gameScores
-      : JSON.parse(localStorage.getItem("allGameScores")).concat(gameScore);
-
-  window.localStorage.setItem("allGameScores", JSON.stringify(allGameScores));
-  averageScore = (
-    gameScores.reduce((numa, numb) => numa + numb, 0) / gameScores.length
-  ).toFixed(0);
-
-  window.localStorage.setItem("averageScore", JSON.stringify(averageScore));
-
-  numGames = window.localStorage.getItem(
-    "allGameScores",
-    JSON.stringify(allGameScores).length
-  );
-  //set score for inclusion in statsHTML
-  statsScore = JSON.parse(localStorage.getItem("allGameScores"))[
-    JSON.parse(localStorage.getItem("allGameScores")).length - 1
-  ];
-  gamesPlayed = allGameScores.length;
-
-  const sumallGameScores = function (array) {
-    for (let i = 0; i < array.length; i++) {
-      sumLongCount += array[i];
-    }
-    return sumLongCount;
-  };
-
-  let sumLongCount = 0;
-  statistics.innerHTML = `FLAGL Score: <strong>${statsScore}</strong><br>Games: <strong>${gamesPlayed}</strong><br>Average Score: <strong>${(
-    sumallGameScores(JSON.parse(localStorage.getItem("allGameScores"))) /
-    JSON.parse(localStorage.getItem("allGameScores")).length
-  ).toFixed(0)}</strong>`;
 }
 
 /****Played 5 Games****/
