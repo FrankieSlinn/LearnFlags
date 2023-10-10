@@ -413,5 +413,6 @@ width: 80%;
   .statsContent,
 .helpContent {
 width: 95%;
+margin: 0 1rem;
 }
 }
