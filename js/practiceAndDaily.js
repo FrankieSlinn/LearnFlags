@@ -46,6 +46,7 @@ const finishGameMessage = document.querySelector(".finishGameMessage");
 
 //Score Variables
 let score = 0;
+let gameScore=0;
 let countGames = 0;
 let averageScore = 0;
 let gamesPlayed = numGamesCalc();
@@ -79,7 +80,7 @@ else {
 }
 
 
-let gameScore = JSON.parse(localStorage.getItem("allGameScores"))
+gameScore = JSON.parse(localStorage.getItem("allGameScores"))
   ? //get last score
     JSON.parse(localStorage.getItem("allGameScores"))[
       JSON.parse(localStorage.getItem("allGameScores")).length - 1
@@ -87,21 +88,21 @@ let gameScore = JSON.parse(localStorage.getItem("allGameScores"))
   : 0;
 
 //Populate stats message at beginning of game
-gameStats();
+gameStatsDisplay();
 
 //called on fifth turn after country selected as wrapup game activity
 function updateGameStats() {
   //score when a game is completed expressed as percentage
-  let gameScore = Number(JSON.parse(localStorage.getItem("score")) * 2 * 10);
+  gameScore = Number(JSON.parse(localStorage.getItem("score")) * 2 * 10);
   window.localStorage.setItem("gameScore", JSON.stringify(gameScore));
   defineAndSaveLongGameScore(gameScore);
   averageScore = calcAverageScoreMultiValues();
   window.localStorage.setItem("averageScore", JSON.stringify(averageScore));
   gamesPlayed = numGamesCalc();
   //update statistics in popup
-  gameStats();
+  gameStatsDisplay();
 }
-function gameStats() {
+function gameStatsDisplay() {
   statistics.innerHTML = `FLAGL Score: <strong>${gameScore}</strong><br>Games: <strong>${gamesPlayed}</strong><br>Average Score: <strong>${averageScore}</strong>`;
 }
 function defineAndSaveLongGameScore(gameScore) {
@@ -627,8 +628,8 @@ function handleNextScreenBasedOnTurn() {
   if (JSON.parse(localStorage.getItem("turns")) < 4) {
     first4Turns();
   } else if (
-    JSON.parse(localStorage.getItem("turns")) == 4 &&
-    JSON.parse(localStorage.getItem("countrySelected")) == true
+    JSON.parse(localStorage.getItem("turns")) === 4 &&
+    JSON.parse(localStorage.getItem("countrySelected")) === true
   ) {
     updateGameStats();
     completedFlagsRound();
