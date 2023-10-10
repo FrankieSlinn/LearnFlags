@@ -6,15 +6,14 @@
 
 body {
   font-family: sans-serif;
-
-  font-size: 10px;
+  font-size: 1.25rem;
   background-color: white;
   font-family: Arial;
   color: #242424;
   letter-spacing: -0.005rem;
 }
 
-.overall-container {
+.overallContainer {
   overflow: auto;
   align-items: center;
   margin-bottom: 0;
@@ -56,10 +55,7 @@ span {
   margin-top: -0.5rem;
 
 }
-/*#star1{
-fill: yellow;
 
-}*/
 
 .container {
   width: auto;
@@ -80,6 +76,9 @@ h1 {
 h1,
 h2 {
   color: #242424;
+}
+h2{
+  font-size: 1.5rem;
 }
 .introduction {
   margin-top: -1.5rem;
@@ -189,24 +188,7 @@ h2 {
   padding: 0.5rem;
 }
 
-button {
-  color: #ffffff !important;
-  background-color: #1f5124;
-  cursor: pointer;
-  border-color: #1f5124;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  margin-top: 1rem;
-}
 
-button:hover,
-button:active {
-  color: #ffffff !important;
-  background-color: #2e7b36;
-  border-color: #2e7b36;
-  cursor: pointer;
-}
 
 
 
@@ -277,55 +259,108 @@ a {
 .popupHeading {
   font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 1rem;
   text-align: center;
 }
 
-.popup-Content, .statsContent {
+.helpContent, .statsContent {
   margin: 0rem 5rem;
   text-align: center;
 }
-.statsContentNoClose {
+.how-to:hover, .stat-icon:hover {
+  cursor: pointer
+}
+
+.nav-link:hover,
+.nav-link:active {
+  color: #777;
+}
+.statsContainer{
+  display: flex; 
+  justify-content: center;
+}
+.helpContainer{
+  display: flex;
+  justify-content: center;
+}
+
+
+.statsContent,
+.helpContent {
+height: auto;
+width: 50%;
+  background-color: #eae6e6;
+  border: 2px solid #242424;
+  border-radius: 5px;
+}
+.statsContent{
+  min-height: 15rem;
+}
+.statsText{
+margin-bottom: 1.5rem;
+
+
+}
+.helpText, .statsText{
+  margin-top: -2rem;
+}
+
+
+.statsText,
+.helpText {
   text-align: center;
+  margin-right: 3rem;
+  margin-left: 3rem;
+  padding: 0.5rem;
 }
-.help-popup,
-.stats-popuptext {
-  display: none;
-  background-color: white;
-  min-width: 100vw;
-  min-height: 100vh;
-  display: absolute;
-}
-
-.help-popup:fullscreen,
-.stats-popuptext:fullscreen {
-  display: none;
-  background-color: white;
-}
-.help-text,
-.stats {
-  display: inline-block;
-  line-height: 2rem;
-  min-width: 100%;
-
-  font-size: 1.25rem;
+.shareResults{
+  margin-bottom: 1.5rem;
+  margin-top: -1rem;
 }
 .close {
-  text-align: right !important;
+  text-align: right;
 }
-.popupCloseButton-help,
-.popupCloseButton {
-  font-size: 1.75rem;
-  font-weight: 550;
+
+.closeButtonHelp,
+ .closeButtonStats {
+  text-align: right;
+  font-weight: 700;
+  background-color: transparent;
+  border: none;
+  font-size: 1.5rem;
+  padding-top: 2rem;
+  padding-right: 2rem;
+  color: #333;
+  display: block
+
+}
+
+
+.closeButtonHelp:hover,
+.closeButtonStats:hover,
+.closeButtonHelp:active,
+.closeButtonStats:active {
+  color: #777 !important;
+  background-color: transparent;
   cursor: pointer;
-  left: 0rem;
-  align-items: left;
-  padding: 4.5rem;
+}
 
+button {
+  color: #ffffff;
+  background-color: #1f5124;
+  cursor: pointer;
+  border-color: #1f5124;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
   margin-top: 1rem;
+}
 
-  display: relative;
-  top: 0px;
+button:hover,
+button:active {
+  color: #ffffff !important;
+  background-color: #2e7b36;
+  border-color: #2e7b36;
+  cursor: pointer;
 }
 .copyright {
   text-align: center;
@@ -353,12 +388,30 @@ a {
 a:hover, a:active{
   color:#b5838d;
 }
+.footer {
+  text-align: center;
+  display: block;
+}
+
 
 .coffee{
-  font-size: 1rem;
+  font-size: 1.25rem;
   margin-top: 6.5rem;
 
 }
 .coffee a{
   font-size: 1rem;
+}
+@media (max-width: 1000px) {
+  .statsContent,
+.helpContent {
+width: 80%;
+}
+}
+
+@media (max-width: 450px) {
+  .statsContent,
+.helpContent {
+width: 95%;
+}
 }

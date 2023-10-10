@@ -26,8 +26,6 @@ let answervisible = 0;
 let resetvisible = 0;
 let messagevisible = 0;
 let statistics = document.querySelector(".stats");
-let isCorrect = false;
-let isIncorrect = false;
 let starArray = ["star1", "star2", "star3", "star4", "star5"];
 let countrySelectedLow = "";
 let dailyMode = true;
@@ -211,8 +209,6 @@ function setNewGameParameters() {
   const parameters = {
     firstTurn: false,
     countrySelected: false,
-    isCorrect: false,
-    isIncorrect: false,
     turns: 0,
     score: 0,
     flagsShownToday: false,
@@ -648,78 +644,107 @@ function resetInputParameters() {
 //After the user completed 5 rounds see overall score
 
 function gameWrapup() {
-  countGames += 1;
-  let turns0 = 0;
-  let score0 = 0;
-
+  localStorage.setItem("score", JSON.stringify(0));
   starFill();
 }
 //displays new flag
 function startAgain() {
-  console.log("displayNewFlag");
   container.style["opacity"] = "100";
-
   answer.innerHTML = "";
-
   resetButton.style["display"] = "none";
-
   message.innerHTML = "";
-
   newQuizItem();
 }
 
 //starts new game from scratch
 function startNewGame() {
   gameWrapup();
-
-  //generate random number
-  container.style["opacity"] = "100";
-
-  container.style["visibility"] = "visible";
-
   //get flags to original length
   flags.push(...flagsDisplayedInRound);
   flagsDisplayedInRound = [];
-
-  resetButton.style["display"] = "none";
-  finishGameMessage.style["display"] = "none";
-  labelTimer.style["display"] = "none";
-
-  instruction.innerHTML = "Which country does this flag belong to?";
-  message.innerHTML = "";
+  newGameDisplayChanges();
   starFill();
   newQuizItem();
 }
 
+function newGameDisplayChanges(){
+  container.style["opacity"] = "100";
+  container.style["visibility"] = "visible";
+  resetButton.style["display"] = "none";
+  finishGameMessage.style["display"] = "none";
+  labelTimer.style["display"] = "none";
+  instruction.innerHTML = "Which country does this flag belong to?";
+  message.innerHTML = "";
+}
+
 /*****Stats Popup*****/
+
+//Ensures the active popup is displayed and remaining content hidden.
+function displayPopup(inactivePopup, activePopup) {
+  document.querySelector(`.${inactivePopup}`).style["display"] = "none";
+  document.querySelector(".overallContainer").style["display"] = "none";
+  document.querySelector(".overallContainer").style["z-index"] = "-1";
+  document.querySelector(`.${activePopup}`).style["display"] = "inline-block";
+}
+function hidePopup(closedPopup) {
+  document.querySelector(".overallContainer").style["display"] = "inline";
+  document.querySelector(".overallContainer").style["z-index"] = "1";
+  document.querySelector(`.${closedPopup}`).style["display"] = "none";
+}
+
+//Show Popup Content - Stats
 document.querySelector(".stat-icon").addEventListener("click", function () {
-  if ((document.querySelector(".stats-popuptext").style["display"] = "none"))
-    document.querySelector(".stats-popuptext").style["display"] =
-      "inline-block";
-
-  //checks if container or wrapup section open so it can be closed and opened by close button
-  if (container.offsetParent != null) {
-    containervisible = 1;
-
-    container.style["visibility"] = "hidden";
-  }
-
-  if (answer.offsetParent != null) {
-    answervisible = 1;
-
-    answer.style["visibility"] = "hidden";
-  }
-  if (resetButton.offsetParent != null) {
-    resetvisible = 1;
-
-    resetButton.style["visibility"] = "hidden";
-  }
-  if (message.offsetParent != null) {
-    messagevisible = 1;
-
-    message.style["visibility"] = "hidden";
-  }
+  displayPopup("helpContent", "statsContent");
 });
+
+//Close Button - Stats
+document
+  .querySelector(".closeButtonStats")
+  .addEventListener("click", function () {
+    hidePopup("statsContent");
+  });
+
+//Show Popup Content - Help
+document.querySelector(".how-to").addEventListener("click", function () {
+  displayPopup("statsContent", "helpContent");
+});
+
+//Close Button - Help
+document
+  .querySelector(".closeButtonHelp")
+  .addEventListener("click", function () {
+    hidePopup("helpContent");
+  });
+
+
+// document.querySelector(".stat-icon").addEventListener("click", function () {
+//   if ((document.querySelector(".statsContent").style["display"] = "none"))
+//     document.querySelector(".statsContent").style["display"] =
+//       "inline-block";
+
+//   //checks if container or wrapup section open so it can be closed and opened by close button
+//   if (container.offsetParent != null) {
+//     containervisible = 1;
+
+//     container.style["visibility"] = "hidden";
+//   }
+
+//   if (answer.offsetParent != null) {
+//     answervisible = 1;
+
+//     answer.style["visibility"] = "hidden";
+//   }
+//   if (resetButton.offsetParent != null) {
+//     resetvisible = 1;
+
+//     resetButton.style["visibility"] = "hidden";
+//   }
+//   if (message.offsetParent != null) {
+//     messagevisible = 1;
+
+//     message.style["visibility"] = "hidden";
+//   }
+// });
 
 document.querySelectorAll(".share").forEach((item) =>
   item.addEventListener("click", function () {
@@ -734,80 +759,80 @@ document.querySelectorAll(".share").forEach((item) =>
   })
 );
 //Close Button Stats
-document
-  .querySelector(".popupCloseButton")
-  .addEventListener("click", function () {
-    document.querySelector(".stats-popuptext").style["display"] = "none";
-    if (containervisible == 1) {
-      container.style["visibility"] = "visible";
-      containervisible = 0;
-    }
-    if (answervisible == 1) {
-      answer.style["visibility"] = "visible";
-      answervisible = 0;
-    }
-    if (resetvisible == 1) {
-      resetButton.style["visibility"] = "visible";
-      resetvisible = 0;
-    }
-    if (messagevisible == 1) {
-      message.style["visibility"] = "visible";
-      messagevisible = 0;
-    }
-  });
+// document
+//   .querySelector(".closeButtonStats")
+//   .addEventListener("click", function () {
+//     document.querySelector(".statsContent").style["display"] = "none";
+//     if (containervisible == 1) {
+//       container.style["visibility"] = "visible";
+//       containervisible = 0;
+//     }
+//     if (answervisible == 1) {
+//       answer.style["visibility"] = "visible";
+//       answervisible = 0;
+//     }
+//     if (resetvisible == 1) {
+//       resetButton.style["visibility"] = "visible";
+//       resetvisible = 0;
+//     }
+//     if (messagevisible == 1) {
+//       message.style["visibility"] = "visible";
+//       messagevisible = 0;
+//     }
+//   });
 
-/***********Help Popup******** */
-document.querySelector(".how-to").addEventListener("click", function () {
-  if (container.offsetParent != null) {
-    containervisible = 1;
+// /***********Help Popup******** */
+// document.querySelector(".how-to").addEventListener("click", function () {
+//   if (container.offsetParent != null) {
+//     containervisible = 1;
 
-    container.style["visibility"] = "hidden";
-  }
+//     container.style["visibility"] = "visible";
+//   }
 
-  if (answer.offsetParent != null) {
-    answervisible = 1;
+//   if (answer.offsetParent != null) {
+//     answervisible = 1;
 
-    answer.style["visibility"] = "hidden";
-  }
-  if (resetButton.offsetParent != null) {
-    resetvisible = 1;
-    resetButton.style["visibility"] = "hidden";
-  }
-  if (message.offsetParent != null) {
-    messagevisible = 1;
+//     answer.style["visibility"] = "hidden";
+//   }
+//   if (resetButton.offsetParent != null) {
+//     resetvisible = 1;
+//     resetButton.style["visibility"] = "hidden";
+//   }
+//   if (message.offsetParent != null) {
+//     messagevisible = 1;
 
-    message.style["visibility"] = "hidden";
-  }
+//     message.style["visibility"] = "hidden";
+//   }
 
-  if ((document.querySelector(".help-popup").style["display"] = "none"))
-    document.querySelector(".help-popup").style["display"] = "inline-block";
-});
+//   if ((document.querySelector(".helpContainer").style["display"] = "none"))
+//     document.querySelector(".helpContainer").style["display"] = "inline-block";
+// });
 
-//Close Button - Help
+// //Close Button - Help
 
-document
-  .querySelector(".popupCloseButton-help")
-  .addEventListener("click", function () {
-    document.querySelector(".help-popup").style["display"] = "none";
+// document
+//   .querySelector(".popupCloseButton-help")
+//   .addEventListener("click", function () {
+//     document.querySelector(".helpContainer").style["display"] = "none";
 
-    //ensures elements previously open stay displayed
-    if (containervisible == 1) {
-      container.style["visibility"] = "visible";
-      containervisible = 0;
-    }
+//     //ensures elements previously open stay displayed
+//     if (containervisible == 1) {
+//       container.style["visibility"] = "visible";
+//       containervisible = 0;
+//     }
 
-    if (answervisible == 1) {
-      answer.style["visibility"] = "visible";
-      answervisible = 0;
-    }
+//     if (answervisible == 1) {
+//       answer.style["visibility"] = "visible";
+//       answervisible = 0;
+//     }
 
-    if (resetvisible == 1) {
-      resetButton.style["visibility"] = "visible";
-      resetvisible = 0;
-    }
+//     if (resetvisible == 1) {
+//       resetButton.style["visibility"] = "visible";
+//       resetvisible = 0;
+//     }
 
-    if (messagevisible == 1) {
-      message.style["visibility"] = "visible";
-      messagevisible = 0;
-    }
-  });
+//     if (messagevisible == 1) {
+//       message.style["visibility"] = "visible";
+//       messagevisible = 0;
+//     }
+//   });

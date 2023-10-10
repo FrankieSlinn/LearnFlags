@@ -14,7 +14,7 @@
     
 </head>
 <body>
-    <div class = "overall-container">
+   
         <nav>  
             <div class = "how-to nav-link"><svg xmlns="http://www.w3.org/2000/svg"  fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -26,40 +26,55 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
           </svg></div>
         </nav>
-        <!--<div class = "introduction">The Flag Quiz</div> -->       
-        <div class = "stats-popuptext">
-            <div class = "close">
-            <btn type = "button" class="popupCloseButton">X</btn>
+        <!--<div class = "introduction">The Flag Quiz</div> -->    
+        <div class="statsContainer">
+          <div class="statsContent" hidden>
+            <div class="close">
+              <btn type="button" class="closeButtonStats close">X</btn>
             </div>
-            <div class = "statsContentNoClose">
-            <div class = "statsContent"  data-value="1">
-            <h2 class = "popupHeading">Flagl Game Stats</h2>
-            <p class = "stats">Games: 0<br>Average Score<br>FLAGL Score: 0</p>
-            <br>
-            <br>
-            <a href = "https://www.flagl.net" alt = "flagl.net">flagl.net</a>
+            <div class="statsText">
+              <h2 class="popupHeading">FLAGL Statistics</h2><br>
+              <p class = "stats">Games: 0<br>Average Score: 0<br>FLAGL Score: 0</p>
+              <br>
+              <a href = "https://www.flagl.net" alt = "flagl.net">flagl.net</a>
+              </div>
+              <button type = "button" class = "shareResults share" label = "Share Results">Share Results</button>
+              <br/>
             </div>
-            <br>
-            <button type = "button" class = "shareResults share" label = "Share Results">Share Results</button>
+          </div>
+        </div>   
+        <div class="helpContainer">
+          <div class="helpContent" hidden>
+            <div class="close">
+              <btn type="button" class="closeButtonHelp close">X</btn>
             </div>
-            
-            </div>
-            
- 
-            <div class = "help-popup">
-                <div class = "close">
-                <btn type =  "button" class="popupCloseButton-help">X</btn>
-                </div>
-                <div class = "popup-Content">
-                <h2 class = "popupHeading">The Daily Flag Quiz</h2>
+            <div class="helpText">
+              <h2 class="popupHeading">FLAGL - The Daily Flag Quiz</h2>
+              <br/>
+              <div class="description">
+                <p><strong>Guess the Flag</strong><br> <br>
+                  Each day every FLAGL Player will see the same five flags. The goal of course is to get as many flags right as you can. 
+                  All you need to do is to start typing in the box under the flag to get a list of countries and territories. Click one of the country or territory buttons to make your choice. 
+                  <br>
+                  <br>At the end of the flag quiz you will see what percentage of flags you got right. The statistics section on the top right shows your average score per game so you can see if you're improving. 
+                  Share and compare your score with friends by selecting the "Share Results" button in the statistics section. <br>
+                  They might be wowed by your flag guessing ability. Or maybe not. There's only one way of telling. 
+                  <br><br>
+                  Does this format look familiar? The game is inspired by the brilliant game Worlde created by the talented Josh Wardle.<br>
+                  <br>Want to get better at guessing flags? Try <a href = "../html/practice.html">Practice FLAGL</a>.<br><br>Would you like to do a wider geography quiz? Go to: <a href = https://geografiend.com/">geografiend.com</a>.
+                  <br><br>
+                  Love tough word games? Go to: <a href = "https://wordominoes.net/">wordominoes.net</a>.
                 
-                <p class = "help-text"><strong>Guess the Flag</strong> <br>Start typing to get a list of countries and territories. Click a button  with the country or territory name to make your choice. <br>Each game has five guesses. At the end of the flag quiz you will see what percentage you got right. The statistics section on the right shows the average score per game. <br>The statistics are shareable. <br><br>Want to improve? Try <a href = "../html/practice.html">Practice FLAGL</a>.<br><br>For a wider geography quiz see: <a href = https://geografiend.com/">geografiend.com</a>.</p>
-                
-                </div>
-                </div>
-               
-                
-            
+                </p>
+                </p>
+                <br/>
+              </div>
+
+            </div>
+          </div>
+       </div>
+
+                 <div class = "overallContainer">
                 <div class = "container" return false;>
                     <div class = "stars">
                         <span class = "star" id = "star1"><svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -110,17 +125,23 @@
     &nbsp; 
     <div class = "labelTimer">labelTimer</div>
     <div class = "practice">For More FLAGL Games Visit <a href = "../html/practice.html">FLAGL Practice Mode</a></div>
-    <div class = "coffee">🖤 FLAGL? <a href = "https://ko-fi.com/fkissling">Buy Me A Coffee!</a></div>
+
 </div>
 <br>   
     <br>
    <br>
-    <br>
-    <br>
-    <br>
+
 </div>
 </div>
-    <footer class = "copyright">@2022 F. Kissling</footer>
+<footer class="footer">
+  <div class="coffee">🖤 FLAGL? <a href="https://ko-fi.com/fkissling">Buy Me A Coffee</a>&#128522;</div>
+  <br>
+  <div class="copyright"> @2022 F. Kissling</div>
+</footer >
+<br>
+<br>
+<br>
+
 </body>
 </html>
 
