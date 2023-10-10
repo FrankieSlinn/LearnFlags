@@ -1,14 +1,10 @@
 import { flags } from "./flags.js";
 console.log("flags", flags);
-import { displayPopup, hidePopup } from './displayHidePopups.js';
+import { displayPopup, hidePopup } from "./displayHidePopups.js";
 import {
-  numGamesCalc,
-  calcAverageScoreMultiValues,
-  updateGameStats,
-  gameStats,
-  defineAndSaveLongGameScore,
-  calculateGameScore,
-} from './scores.js';
+  murmurHash3,
+  generateRandomNumber,
+} from "./randomNumberFromSeed.js";
 
 let flagsCopy = [...flags];
 let buttonClasses = [".First", ".Second", ".Third", ".Fourth", ".Fifth"];
@@ -50,39 +46,41 @@ const finishGameMessage = document.querySelector(".finishGameMessage");
 
 //Score Variables
 let score = 0;
-let gameScore=0;
+let gameScore = 0;
 let countGames = 0;
 let averageScore = 0;
 let gamesPlayed = numGamesCalc();
 let allGameScores = [];
 
 function numGamesCalc() {
-  return (JSON.parse(localStorage.getItem("allGameScores")) != null
+  return JSON.parse(localStorage.getItem("allGameScores")) != null
     ? JSON.parse(localStorage.getItem("allGameScores")).length
-    : 0)
+    : 0;
 }
 
 function calcAverageScoreMultiValues() {
   if (JSON.parse(localStorage.getItem("allGameScores")).length === 1) {
-    console.log("length allGameScores is one")
-   return JSON.parse(localStorage.getItem("allGameScores"))[0];}
-   else if(JSON.parse(localStorage.getItem("allGameScores")).length >= 1)
-  return JSON.parse(localStorage.getItem("allGameScores"))
-    .reduce(
-      //add all scores to get tota
-      (numa, numb) => numa + numb
-    )
-    .toFixed(0);
+    console.log("length allGameScores is one");
+    return JSON.parse(localStorage.getItem("allGameScores"))[0];
+  } else if (JSON.parse(localStorage.getItem("allGameScores")).length >= 1)
+    return JSON.parse(localStorage.getItem("allGameScores"))
+      .reduce(
+        //add all scores to get tota
+        (numa, numb) => numa + numb
+      )
+      .toFixed(0);
 }
 
 //Define average score
 if (JSON.parse(localStorage.getItem("allGameScores"))) {
-    averageScore = calcAverageScoreMultiValues();
-  }
-else {
+  averageScore = calcAverageScoreMultiValues();
+} else {
   averageScore = 0;
 }
 
+function calculateGameScore() {
+  return JSON.parse(localStorage.getItem("score")) * 2;
+}
 
 gameScore = JSON.parse(localStorage.getItem("allGameScores"))
   ? //get last score
@@ -107,7 +105,7 @@ function updateGameStats() {
   gameStatsDisplay();
 }
 function gameStatsDisplay() {
-  statistics.innerHTML = `FLAGL Score: <strong>${gameScore}</strong><br>Games: <strong>${gamesPlayed}</strong><br>Average Score: <strong>${averageScore}</strong>`;
+  statistics.innerHTML = `FLAGL Score: <strong>${gameScore}</strong><br><br>Games: <strong>${gamesPlayed}</strong><br><br>Average Score: <strong>${averageScore}</strong>`;
 }
 function defineAndSaveLongGameScore(gameScore) {
   allGameScores = JSON.parse(localStorage.getItem("allGameScores"))
@@ -125,64 +123,6 @@ let month = String(fullDate.getMonth() + 1);
 let day = String(fullDate.getDate());
 //number based on current date which is used as dateInputForSeed
 let dateNumberSeed = day + month + year;
-
-function murmurHash3(dateInputForSeed) {
-  let i = 0;
-  let hash = 0;
-  // XOR the dateInputForSeed with an initial hash value
-  hash = 1779033703 ^ dateInputForSeed.length;
-
-  // Loop through each character in the dateInputForSeed
-  for (i; i < dateInputForSeed.length; i++) {
-    // XOR the current hash with the current character's ASCII code
-    let bitwise_xor_from_character = hash ^ dateInputForSeed.charCodeAt(i);
-
-    // Perform multiplication and bit-shifting operations
-    hash = Math.imul(bitwise_xor_from_character, 3432918353);
-    hash = (hash << 13) | (hash >>> 19);
-  }
-  return () => {
-    // This returns a closure that can be used as a pseudo-random number generator (PRNG) with the computed hash as the dateInputForSeed.
-    hash = Math.imul(hash ^ (hash >>> 16), 2246822507);
-    hash = Math.imul(hash ^ (hash >>> 13), 3266489909);
-    return (hash ^= hash >>> 16) >>> 0; // Ensure the result is a positive integer
-  };
-}
-
-function generateRandomNumber(seed_1, seed_2, seed_3, seed_4) {
-  return () => {
-    // Ensure that the seed values are treated as unsigned 32-bit integers
-    seed_1 >>>= 0;
-    seed_2 >>>= 0;
-    seed_3 >>>= 0;
-    seed_4 >>>= 0;
-
-    // Combine seed_1 and seed_2, then cast it to a signed 32-bit integer
-    let cast32 = (seed_1 + seed_2) | 0;
-
-    // Update seed_1 by applying bitwise operations
-    seed_1 = seed_2 ^ (seed_2 >>> 9);
-
-    // Update seed_2 by applying bitwise and addition operations
-    seed_2 = (seed_3 + (seed_3 << 3)) | 0;
-
-    // Update seed_3 by applying bitwise shift operations
-    seed_3 = (seed_3 << 21) | (seed_3 >>> 11);
-
-    // Increment seed_4
-    seed_4 = (seed_4 + 1) | 0;
-
-    // Combine cast32 and seed_4, then cast it to an unsigned 32-bit integer
-    cast32 = (cast32 + seed_4) | 0;
-
-    // Update seed_3 by combining it with cast32
-    seed_3 = (seed_3 + cast32) | 0;
-
-    // Return a pseudo-random number between 0 (inclusive) and 1 (exclusive)
-    return (cast32 >>> 0) / 4294967296;
-  };
-}
-
 let generate_seed = murmurHash3(dateNumberSeed);
 let random_number = generateRandomNumber(generate_seed(), generate_seed());
 localStorage.setItem("random_number", JSON.stringify(random_number()));
@@ -337,10 +277,7 @@ function getFinishGameMessage() {
     finishGameMessage.innerHTML = "Congratulations, Your FLAGL Score Is 100%!";
   }
   if (1 <= JSON.parse(localStorage.getItem("score")) <= 4) {
-    finishGameMessage.innerHTML = `Your FLAGL Score Is ${
-      
-      calculateGameScore()
-    }0%`;
+    finishGameMessage.innerHTML = `Your FLAGL Score Is ${calculateGameScore()}0%`;
   }
   if (JSON.parse(localStorage.getItem("score")) === 0) {
     finishGameMessage.innerHTML = `Better Luck Next Time, Your FLAGL Score is 0%`;
@@ -674,7 +611,7 @@ function startNewGame() {
   newQuizItem();
 }
 
-function newGameDisplayChanges(){
+function newGameDisplayChanges() {
   container.style["opacity"] = "100";
   container.style["visibility"] = "visible";
   resetButton.style["display"] = "none";
@@ -722,4 +659,3 @@ document.querySelectorAll(".share").forEach((item) =>
     alert("FLAGL Results Copied To Clipboard");
   })
 );
-
