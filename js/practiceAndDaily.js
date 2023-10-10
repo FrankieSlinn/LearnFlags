@@ -1,6 +1,14 @@
 import { flags } from "./flags.js";
 console.log("flags", flags);
 import { displayPopup, hidePopup } from './displayHidePopups.js';
+import {
+  numGamesCalc,
+  calcAverageScoreMultiValues,
+  updateGameStats,
+  gameStats,
+  defineAndSaveLongGameScore,
+  calculateGameScore,
+} from './scores.js';
 
 let flagsCopy = [...flags];
 let buttonClasses = [".First", ".Second", ".Third", ".Fourth", ".Fifth"];
@@ -20,12 +28,8 @@ let flag = "";
 let flagLow = "";
 let correctAnswer = "Congratulations, That Was Correct";
 let incorrectAnswer = "Unlucky, That Was Not Correct";
-
 let resetButton = document.querySelector(".reset");
-let containervisible = 0;
-let answervisible = 0;
-let resetvisible = 0;
-let messagevisible = 0;
+
 let statistics = document.querySelector(".stats");
 let starArray = ["star1", "star2", "star3", "star4", "star5"];
 let countrySelectedLow = "";
@@ -329,12 +333,13 @@ function displayChangesAfterTurn() {
 }
 
 function getFinishGameMessage() {
-  if (score === 5) {
+  if (JSON.parse(localStorage.getItem("score")) === 5) {
     finishGameMessage.innerHTML = "Congratulations, Your FLAGL Score Is 100%!";
   }
   if (1 <= JSON.parse(localStorage.getItem("score")) <= 4) {
     finishGameMessage.innerHTML = `Your FLAGL Score Is ${
-      JSON.parse(localStorage.getItem("score")) * 2
+      
+      calculateGameScore()
     }0%`;
   }
   if (JSON.parse(localStorage.getItem("score")) === 0) {
