@@ -55,8 +55,6 @@ function murmurHash3(dateInputForSeed) {
     };
   }
   export{
-
     murmurHash3,
     generateRandomNumber,
-
   }
