@@ -25,8 +25,8 @@ let flagLow = "";
 let correctAnswer = "Congratulations, That Was Correct";
 let incorrectAnswer = "Unlucky, That Was Not Correct";
 let resetButton = document.querySelector(".reset");
-
 let statistics = document.querySelector(".stats");
+let description = document.querySelector(".description");
 let starArray = ["star1", "star2", "star3", "star4", "star5"];
 let countrySelectedLow = "";
 let dailyMode = true;
@@ -43,6 +43,53 @@ const message = document.querySelector(".message");
 const flagName = document.querySelector(".flagName");
 const instruction = document.querySelector(".instruction");
 const finishGameMessage = document.querySelector(".finishGameMessage");
+const shareResults = document.querySelector(".shareResults");
+const modeButton = document.querySelector(".mode-button");
+const dailyGameButton = document.querySelector(".dailyGameButton");
+const statsText=document.querySelector(".statsText");
+const stars = document.querySelector(".stars");
+
+
+
+//Practice
+
+//logic
+function scrollToTop() {
+  window.scrollTo(0, 0);
+}
+
+//switch to practice mode
+modeButton.addEventListener("click", ()=> {
+  hidePopup("helpContent");
+  dailyMode= false;
+  console.log("daily mode after switch", dailyMode)
+   document.body.classList.add("practiceMode");
+statistics.innerHTML = `You are in Practice Mode. To play the Daily FLAGL Game with statistics select the button below`;
+dailyGameButton.style["display"] = "inline-block";
+shareResults.style["display"] = "none";
+stars.style["display"] = "none";
+container.style["margin-top"] = "-2rem";
+statsText.style["margin-bottom"]="-0.25rem";
+handlePracticeMode();
+clearAnswer();
+
+ scrollToTop();
+}
+)
+
+//switch to daily game mode
+document.querySelector(".dailyGameButton").addEventListener("click", () => {
+  dailyMode= true;
+  clearAnswer();
+  hidePopup("statsContent");
+  document.body.classList.remove("practiceMode");
+ gameStatsDisplay();
+  dailyGameButton.style["display"]="none";
+  modeButton.style["display"]="inline-block";
+  shareResults.style["display"]="inline-block";
+})
+
+
 
 //Score Variables
 let score = 0;
@@ -105,7 +152,7 @@ function updateGameStats() {
   gameStatsDisplay();
 }
 function gameStatsDisplay() {
-  statistics.innerHTML = `FLAGL Score: <strong>${gameScore}</strong><br><br>Games: <strong>${gamesPlayed}</strong><br><br>Average Score: <strong>${averageScore}</strong>`;
+  if(dailyMode===true){statistics.innerHTML = `FLAGL Score: <strong>${gameScore}</strong><br><br>Games: <strong>${gamesPlayed}</strong><br><br>Average Score: <strong>${averageScore}</strong>`}
 }
 function defineAndSaveLongGameScore(gameScore) {
   allGameScores = JSON.parse(localStorage.getItem("allGameScores"))
@@ -116,7 +163,7 @@ function defineAndSaveLongGameScore(gameScore) {
 
 //generates 5 random numbers for each day based on UK Julien Date
 let fullDate = new Date();
-console.log("fullDate", fullDate);
+
 //Today's date split into three values
 let year = String(fullDate.getFullYear());
 let month = String(fullDate.getMonth() + 1);
@@ -140,6 +187,17 @@ if (
   setNewGameParameters();
   populateArrayDailyFlags();
   startNewGame();
+}
+
+function handlePracticeMode(){
+if(dailyMode===false){
+  console.log("daily mode false")
+  newGameDisplayChanges();
+  practiceQuizItem();
+}
+}
+function randomNumberPractice(){
+  return Math.abs(Math.floor(Math.random() * (flags.length)-1));
 }
 
 //adds flags to the array of 5 flags for that day via random number and set to local storage
@@ -168,9 +226,7 @@ function setNewGameParameters() {
 
 //ensure completedFlagsRound messages show up at the end
 const fourTurnsCompleted = JSON.parse(localStorage.getItem("turns")) === 4;
-console.log("fourTurnsCompleted", fourTurnsCompleted);
 const guessSubmitted = JSON.parse(localStorage.getItem("countrySelected"));
-console.log("guessSubmitted", guessSubmitted);
 
 if (
   //fifth turn completed
@@ -180,7 +236,6 @@ if (
   //finish up activites
   starFill();
   completedFlagsRound();
-  console.log("run finish up activities");
 } else if (
   //fifth turn pending
   fourTurnsCompleted &&
@@ -197,7 +252,6 @@ starFill();
 if (JSON.parse(localStorage.getItem("turns")) <= "3") {
   newQuizItem();
 }
-console.log("new Date", new Date());
 //display Timer
 const displayTimer = function () {
   //date is current date
@@ -361,8 +415,17 @@ function displayFlagScreen() {
   instruction.innerHTML =
     "Which Country or Territory Does this Flag Belong to?";
 }
+
+function getPracticeFlagName(){
+  flag = String(flags[randomNumberPractice()]);
+  console.log("practiceFlag", flag)
+  localStorage.setItem("flag", JSON.stringify(flag));
+
+}
+
 function formatFlagNameToCompare() {
   flagLow = JSON.parse(localStorage.getItem("flag")).toLowerCase();
+  console.log("flagLow", flagLow)
   let flagWithUnderscore = JSON.parse(localStorage.getItem("flag")).replaceAll(
     " ",
     "_"
@@ -372,6 +435,20 @@ function formatFlagNameToCompare() {
     JSON.stringify(flagWithUnderscore)
   );
 }
+function practiceQuizItem(){
+  console.log("practiceQuizItem function running")
+  //empties array of countries selected for predictive text
+  countryMatchingPredText = [];
+  localStorage.setItem("countrySelected", JSON.stringify(false));
+  getPracticeFlagName();
+    //formats flag name to lower case removes underscores for comparison
+    formatFlagNameToCompare();
+    displayFlag();
+    predictiveText();
+     //changes for screen when new flag displayed
+  displayFlagScreen();
+}
+
 
 function newQuizItem() {
   countryMatchingPredText = [];
@@ -594,10 +671,15 @@ function gameWrapup() {
 //displays new flag
 function startAgain() {
   container.style["opacity"] = "100";
-  answer.innerHTML = "";
+  clearAnswer();
   resetButton.style["display"] = "none";
   message.innerHTML = "";
   newQuizItem();
+}
+
+function clearAnswer(){
+  answer.innerHTML = "";
+
 }
 
 //starts new game from scratch
