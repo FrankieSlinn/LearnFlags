@@ -27,13 +27,13 @@ nav {
   padding: 2rem;
 }
 
-span {
+/* span {
   display: flex;
   justify-content: center;
   gap: 3rem;
   background-color: transparent;
   padding: 0.25rem;
-}
+} */
 .title {
   display: inline-block;
 }
@@ -48,7 +48,7 @@ span {
   width: 35px;
   height: 35px;
   fill: none;
-  margin-top: -0.5rem;
+  margin-top: 0rem;
 }
 
 .container {
@@ -114,13 +114,13 @@ h2 {
   margin-top: -1rem;
 }
 
-.practice {
-  color: #242424;
+/* .practice {
+  color: #ffffff;
   font-size: 1.25rem;
   margin-top: 3rem;
   margin-left: 2rem;
   margin-right: 2rem;
-}
+} */
 
 .flagName {
   margin-top: 0rem;

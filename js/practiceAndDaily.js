@@ -31,13 +31,15 @@ let starArray = ["star1", "star2", "star3", "star4", "star5"];
 let countrySelectedLow = "";
 let dailyMode = true;
 let arrayDailyFlags = [];
+let rightFlag="";
 const container = document.querySelector(".container");
 const showFlag = document.querySelector(".showFlag");
 const countryOptionButtons = document.querySelector(".countryOptionButtons");
 const intro = document.querySelector(".intro");
 const answer = document.querySelector(".answer");
 const feedback = document.querySelector(".feedback");
-const practice = document.querySelector(".practice");
+const practice = document.querySelectorAll(".practice");
+const practiceAtResults=document.querySelector(".practiceAtResults")
 const labelTimer = document.querySelector(".labelTimer");
 const message = document.querySelector(".message");
 const flagName = document.querySelector(".flagName");
@@ -47,39 +49,61 @@ const shareResults = document.querySelector(".shareResults");
 const modeButton = document.querySelector(".mode-button");
 const dailyGameButton = document.querySelector(".dailyGameButton");
 const statsText=document.querySelector(".statsText");
-const stars = document.querySelector(".stars");
+const stars = document.querySelectorAll(".star");
 
 
 
-//Practice
+
 
 //logic
 function scrollToTop() {
   window.scrollTo(0, 0);
 }
 
-//switch to practice mode
-modeButton.addEventListener("click", ()=> {
+//Set to default to dailyMode is true
+if (localStorage.getItem("dailyMode") === null) {
+  // If "dailyMode" is not found in localStorage, set it to true
+  localStorage.setItem("dailyMode", "true");
+}
+
+//Practice
+function practiceModeAfterClick(){
   hidePopup("helpContent");
-  dailyMode= false;
-  console.log("daily mode after switch", dailyMode)
+  localStorage.setItem("dailyMode", JSON.stringify(false));
+  console.log("daily mode after switch", JSON.parse(localStorage.getItem("dailyMode")))
    document.body.classList.add("practiceMode");
 statistics.innerHTML = `You are in Practice Mode. To play the Daily FLAGL Game with statistics select the button below`;
 dailyGameButton.style["display"] = "inline-block";
 shareResults.style["display"] = "none";
-stars.style["display"] = "none";
+stars.forEach((star)=>star.style["display"] = "none");
 container.style["margin-top"] = "-2rem";
 statsText.style["margin-bottom"]="-0.25rem";
+
 handlePracticeMode();
 clearAnswer();
-
  scrollToTop();
 }
-)
+
+//switch to practice mode
+
+practice.forEach((button)=>button.addEventListener("click", ()=> {
+  practiceModeAfterClick()
+}
+));
+
 
 //switch to daily game mode
 document.querySelector(".dailyGameButton").addEventListener("click", () => {
-  dailyMode= true;
+  console.log("Arraydaioyflags", JSON.parse(localStorage.getItem("arrayDailyFlags")))
+  localStorage.setItem("dailyMode", JSON.stringify(true));
+  localStorage.setItem("flag", JSON.stringify(flags[JSON.parse(localStorage.getItem("arrayDailyFlags"))[turns]]));
+  formatFlagNameToCompare()
+  if(JSON.parse(localStorage.getItem("countrySelected"))===false){
+    console.log("country selected false")
+    displayFlag();
+  }
+ 
+  console.log("dailyMode after daily game clicked", JSON.parse(localStorage.getItem("dailyMode")))
   clearAnswer();
   hidePopup("statsContent");
   document.body.classList.remove("practiceMode");
@@ -87,9 +111,11 @@ document.querySelector(".dailyGameButton").addEventListener("click", () => {
   dailyGameButton.style["display"]="none";
   modeButton.style["display"]="inline-block";
   shareResults.style["display"]="inline-block";
+  stars.forEach((star)=>star.style["display"]="inline-block");
+  handleNextScreenBasedOnTurn();
+ 
+  
 })
-
-
 
 //Score Variables
 let score = 0;
@@ -152,7 +178,7 @@ function updateGameStats() {
   gameStatsDisplay();
 }
 function gameStatsDisplay() {
-  if(dailyMode===true){statistics.innerHTML = `FLAGL Score: <strong>${gameScore}</strong><br><br>Games: <strong>${gamesPlayed}</strong><br><br>Average Score: <strong>${averageScore}</strong>`}
+  if(JSON.parse(localStorage.getItem("dailyMode"))===true){statistics.innerHTML = `FLAGL Score: <strong>${gameScore}</strong><br><br>Games: <strong>${gamesPlayed}</strong><br><br>Average Score: <strong>${averageScore}</strong>`}
 }
 function defineAndSaveLongGameScore(gameScore) {
   allGameScores = JSON.parse(localStorage.getItem("allGameScores"))
@@ -176,7 +202,7 @@ localStorage.setItem("random_number", JSON.stringify(random_number()));
 
 //if new day for English Time handle new game
 if (
-  dailyMode === true &&
+  JSON.parse(localStorage.getItem("dailyMode")) === true &&
   (String(dateNumberSeed) !==
     String(JSON.parse(localStorage.getItem("dateNumberSeed"))) ||
     (fullDate.getHours() == 0 &&
@@ -190,11 +216,11 @@ if (
 }
 
 function handlePracticeMode(){
-if(dailyMode===false){
+
   console.log("daily mode false")
   newGameDisplayChanges();
   practiceQuizItem();
-}
+
 }
 function randomNumberPractice(){
   return Math.abs(Math.floor(Math.random() * (flags.length)-1));
@@ -207,9 +233,11 @@ function populateArrayDailyFlags() {
     arrayDailyFlags.push(Math.abs(Math.floor(random_number() * 225)));
     localStorage.setItem("arrayDailyFlags", JSON.stringify(arrayDailyFlags));
   }
+  console.log("array daily flags", JSON.parse(localStorage.getItem("arrayDailyFlags")).forEach((flag)=> flags[flag]))
 }
 //set up parameters for new game to local storage
 function setNewGameParameters() {
+  if(JSON.parse(localStorage.getItem("dailyMode"))===true){
   const parameters = {
     firstTurn: false,
     countrySelected: false,
@@ -221,7 +249,7 @@ function setNewGameParameters() {
 
   for (const key in parameters) {
     localStorage.setItem(key, JSON.stringify(parameters[key]));
-  }
+  }}
 }
 
 //ensure completedFlagsRound messages show up at the end
@@ -232,6 +260,7 @@ if (
   //fifth turn completed
   fourTurnsCompleted &&
   guessSubmitted === true
+  && JSON.parse(localStorage.getItem("dailyMode"))===true
 ) {
   //finish up activites
   starFill();
@@ -249,7 +278,7 @@ if (
 starFill();
 
 //ensure that the correct screen is shown with the right score
-if (JSON.parse(localStorage.getItem("turns")) <= "3") {
+if (JSON.parse(localStorage.getItem("turns")) <= "3" && JSON.parse(localStorage.getItem("dailyMode"))===true) {
   newQuizItem();
 }
 //display Timer
@@ -283,28 +312,39 @@ if (
 
 //handle changes after first four turns
 function first4Turns() {
+  console.log("first4turns running")
   //reset country chosen
   buttonClicked = 0;
   displayChangesAfterTurn();
+  if(JSON.parse(localStorage.getItem("dailyMode"))===true && JSON.parse(localStorage.getItem("countrySelected")) ===true){
+    // displayFlag();
   let turns = JSON.parse(localStorage.getItem("turns"));
   let turns1 = (turns += 1);
   console.log("turns after turn", turns1);
   //set incremented number of turns
-  localStorage.setItem("turns", JSON.stringify(turns1));
+  localStorage.setItem("turns", JSON.stringify(turns1));}
+
   //reset country selected
   localStorage.setItem("countrySelected", JSON.stringify(false));
+  displayFlag();
 }
 
 function getCountryForFeedbackDisplay() {
+  console.log("getCountryForFeedbackDisplay running")
+  console.log("country Select3ed", JSON.parse(localStorage.getItem("countrySelected")) )
   //get flag to be displayed from the number of turns. Using that number to retrieve the flag from the array
-  const rightFlag =
+ if(JSON.parse(localStorage.getItem("dailyMode"))===true){ rightFlag =
     flags[
       JSON.parse(
         JSON.parse(localStorage.getItem("arrayDailyFlags"))[
           JSON.parse(localStorage.getItem("turns"))
         ]
       )
-    ];
+    ];}
+    else{
+      rightFlag=JSON.parse(localStorage.getItem("flag"))
+      console.log("rightFlag in function", rightFlag)
+    }
   console.log("rightFlag", rightFlag);
   flagName.innerHTML = `The Answer Is <strong>${rightFlag}</strong>`;
 }
@@ -315,6 +355,7 @@ function getAnswerFeedback() {
 }
 
 function displayChangesAfterTurn() {
+  console.log("displaychangesAfterTurn running")
   getCountryForFeedbackDisplay();
   countryOptionButtons.style["display"] = "none";
   resetButton.style["display"] = "inline-block";
@@ -353,9 +394,11 @@ function completedFlagsRoundDisplayChanges() {
   answer.style["display"] = "none";
   intro.style["display"] = "none";
   countryOptionButtons.style["display"] = "none";
+  instruction.style["display"] = "none";
   feedback.style["display"] = "inline-block";
-  practice.style["display"] = "inline-block";
+  practiceAtResults.style["display"] = "inline-block";
   labelTimer.style["display"] = "inline-block";
+
 }
 
 function completedFlagsRound() {
@@ -394,7 +437,7 @@ function allStarsNotFilledIfReset() {
 //listener for display new flag
 resetButton.addEventListener("click", function () {
   console.log("display new flag = change name?");
-  startAgain();
+ if(JSON.parse(localStorage.getItem("dailyMode"))===true){ startAgain()}else{handlePracticeMode()};
 });
 
 function displayFlagScreen() {
@@ -404,7 +447,7 @@ function displayFlagScreen() {
   feedback.style["display"] = "none";
   labelTimer.style["display"] = "none";
   flagName.style["display"] = "none";
-  practice.style["display"] = "none";
+  practiceAtResults.style["display"] = "none";
   answer.style["display"] = "inline-block";
   showFlag.style["display"] = "inline-block";
   showFlag.style["visibility"] = "visible";
@@ -417,6 +460,7 @@ function displayFlagScreen() {
 }
 
 function getPracticeFlagName(){
+  console.log("getPracticeFlagName running")
   flag = String(flags[randomNumberPractice()]);
   console.log("practiceFlag", flag)
   localStorage.setItem("flag", JSON.stringify(flag));
@@ -439,7 +483,7 @@ function practiceQuizItem(){
   console.log("practiceQuizItem function running")
   //empties array of countries selected for predictive text
   countryMatchingPredText = [];
-  localStorage.setItem("countrySelected", JSON.stringify(false));
+  // localStorage.setItem("countrySelected", JSON.stringify(false));
   getPracticeFlagName();
     //formats flag name to lower case removes underscores for comparison
     formatFlagNameToCompare();
@@ -490,6 +534,7 @@ function displayFlag() {
     '.png  style="width:400px;height:250px;">';
   showFlag.innerHTML = imageHTML;
   showFlag.style["display"] = "inline-block";
+  console.log("displayFlag running")
 }
 
 function predictiveText() {
@@ -623,19 +668,28 @@ function feedbackScreenLayout() {
 
 function whichFeedbackScreen() {
   //if input matches the right answer
+  console.log("countrySelectedLow, flagLow", countrySelectedLow, flagLow);
   if (countrySelectedLow === String(flagLow)) {
+    console.log("countrySelected matches flagLow", countrySelectedLow === String(flagLow))
     localStorage.setItem("isCorrect", JSON.stringify(true));
     localStorage.setItem("isIncorrect", JSON.stringify(false));
     resetInputParameters();
-    incrementScore();
+   if(JSON.parse(localStorage.getItem("dailyMode"))===true) {incrementScore();
     starFill();
+   }
+    
   } else {
     localStorage.setItem("isIncorrect", JSON.stringify(true));
     localStorage.setItem("isCorrect", JSON.stringify(false));
     resetInputParameters();
   }
-  handleNextScreenBasedOnTurn();
+
+ if(JSON.parse(localStorage.getItem("dailyMode"))===true) {handleNextScreenBasedOnTurn();
+}else{
+  console.log("as practice mode going straight to first4Turns"); 
+  first4Turns()}
 }
+
 
 function incrementScore() {
   score = JSON.parse(localStorage.getItem("score"));
@@ -644,12 +698,15 @@ function incrementScore() {
 }
 //determines screen based on the turn
 function handleNextScreenBasedOnTurn() {
+  console.log("handleNextScreenBasedonTurns running")
   if (JSON.parse(localStorage.getItem("turns")) < 4) {
+    console.log("fewer than 4 turns")
     first4Turns();
   } else if (
     JSON.parse(localStorage.getItem("turns")) === 4 &&
     JSON.parse(localStorage.getItem("countrySelected")) === true
   ) {
+    console.log("game completion screen running")
     updateGameStats();
     completedFlagsRound();
   }
@@ -678,8 +735,9 @@ function startAgain() {
 }
 
 function clearAnswer(){
+  console.log("clearAnswer running")
   answer.innerHTML = "";
-
+  answer.value = "";
 }
 
 //starts new game from scratch
