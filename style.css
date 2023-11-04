@@ -123,7 +123,7 @@ h2 {
 } */
 
 .flagName {
-  margin-top: 0rem;
+  margin-bottom: 3.5rem;
 }
 @-moz-document url-prefix() {
   .flagName {
@@ -201,7 +201,7 @@ a {
 
 .labelTimer {
   font-size: 1.25rem;
-  margin-top: 2.25rem;
+  margin-top: 1.25rem;
   padding: 1.5rem;
   border-radius: 0.5rem;
 
@@ -218,7 +218,7 @@ a {
   text-align: center;
   font-size: 1.5rem;
   font-weight: 700;
-  margin-top: -1rem;
+  margin-top: -5rem;
   padding-bottom: 0rem;
   color: #242424;
 }
@@ -228,6 +228,10 @@ a {
     margin-top: 0rem;
     margin-bottom: 0rem;
   }
+}
+
+.practiceAtResults{
+  margin-top: 3rem;
 }
 
 .startNewGame {

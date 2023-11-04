@@ -53,18 +53,18 @@ const stars = document.querySelectorAll(".star");
 
 
 
-
-
 //logic
 function scrollToTop() {
   window.scrollTo(0, 0);
 }
 
 //Set to default to dailyMode is true
-if (localStorage.getItem("dailyMode") === null) {
-  // If "dailyMode" is not found in localStorage, set it to true
-  localStorage.setItem("dailyMode", "true");
-}
+document.addEventListener("DOMContentLoaded", function () {
+
+    localStorage.setItem("dailyMode", "true");
+    dailyModeChanges();
+  
+});
 
 //Practice
 function practiceModeAfterClick(){
@@ -94,15 +94,23 @@ practice.forEach((button)=>button.addEventListener("click", ()=> {
 
 //switch to daily game mode
 document.querySelector(".dailyGameButton").addEventListener("click", () => {
+dailyModeChanges();
+ 
+  
+})
+
+function dailyModeChanges(){
   console.log("Arraydaioyflags", JSON.parse(localStorage.getItem("arrayDailyFlags")))
   localStorage.setItem("dailyMode", JSON.stringify(true));
-  localStorage.setItem("flag", JSON.stringify(flags[JSON.parse(localStorage.getItem("arrayDailyFlags"))[turns]]));
+  let turnsDaily= JSON.parse(localStorage.getItem("turns"));
+  localStorage.setItem("flag", JSON.stringify(flags[JSON.parse(localStorage.getItem("arrayDailyFlags"))[turnsDaily]]));
+  console.log("flag", JSON.parse(localStorage.getItem("flag")));
   formatFlagNameToCompare()
   if(JSON.parse(localStorage.getItem("countrySelected"))===false){
     console.log("country selected false")
     displayFlag();
   }
- 
+
   console.log("dailyMode after daily game clicked", JSON.parse(localStorage.getItem("dailyMode")))
   clearAnswer();
   hidePopup("statsContent");
@@ -111,11 +119,15 @@ document.querySelector(".dailyGameButton").addEventListener("click", () => {
   dailyGameButton.style["display"]="none";
   modeButton.style["display"]="inline-block";
   shareResults.style["display"]="inline-block";
+  answer.style["display"]="inline-block";
+ feedback.style["display"]="none";
+
   stars.forEach((star)=>star.style["display"]="inline-block");
+  stars.forEach((star)=>star.style["margin-top"]="2rem");
   handleNextScreenBasedOnTurn();
- 
-  
-})
+
+
+}
 
 //Score Variables
 let score = 0;
@@ -185,6 +197,7 @@ function defineAndSaveLongGameScore(gameScore) {
     ? JSON.parse(localStorage.getItem("allGameScores")).concat(gameScore)
     : [JSON.parse(localStorage.getItem("gameScore"))];
   window.localStorage.setItem("allGameScores", JSON.stringify(allGameScores));
+  console.log("allGameScores", JSON.parse(localStorage.getItem("allGameScores")))
 }
 
 //generates 5 random numbers for each day based on UK Julien Date
@@ -315,17 +328,18 @@ function first4Turns() {
   console.log("first4turns running")
   //reset country chosen
   buttonClicked = 0;
-  displayChangesAfterTurn();
-  if(JSON.parse(localStorage.getItem("dailyMode"))===true && JSON.parse(localStorage.getItem("countrySelected")) ===true){
+  if(JSON.parse(localStorage.getItem("countrySelected")) ===true){
+
+    displayChangesAfterTurn();
+  }
+  
+  if(JSON.parse(localStorage.getItem("dailyMode"))===true){
+    
     // displayFlag();
-  let turns = JSON.parse(localStorage.getItem("turns"));
-  let turns1 = (turns += 1);
-  console.log("turns after turn", turns1);
-  //set incremented number of turns
-  localStorage.setItem("turns", JSON.stringify(turns1));}
+}
 
   //reset country selected
-  localStorage.setItem("countrySelected", JSON.stringify(false));
+  
   displayFlag();
 }
 
@@ -333,7 +347,8 @@ function getCountryForFeedbackDisplay() {
   console.log("getCountryForFeedbackDisplay running")
   console.log("country Select3ed", JSON.parse(localStorage.getItem("countrySelected")) )
   //get flag to be displayed from the number of turns. Using that number to retrieve the flag from the array
- if(JSON.parse(localStorage.getItem("dailyMode"))===true){ rightFlag =
+
+  if(JSON.parse(localStorage.getItem("dailyMode"))===true){ rightFlag =
     flags[
       JSON.parse(
         JSON.parse(localStorage.getItem("arrayDailyFlags"))[
@@ -347,11 +362,21 @@ function getCountryForFeedbackDisplay() {
     }
   console.log("rightFlag", rightFlag);
   flagName.innerHTML = `The Answer Is <strong>${rightFlag}</strong>`;
+  if(JSON.parse(localStorage.getItem("dailyMode"))===true){increaseTurns()};
 }
 function getAnswerFeedback() {
   JSON.parse(localStorage.getItem("isCorrect")) === true
     ? (feedback.innerHTML = `${correctAnswer}`)
     : (feedback.innerHTML = `${incorrectAnswer}`);
+}
+function increaseTurns(){
+  let turns = JSON.parse(localStorage.getItem("turns"));
+  let turns1 = (turns += 1);
+  console.log("turns after turn", turns1);
+  //set incremented number of turns
+  localStorage.setItem("turns", JSON.stringify(turns1));
+
+
 }
 
 function displayChangesAfterTurn() {
@@ -535,6 +560,7 @@ function displayFlag() {
   showFlag.innerHTML = imageHTML;
   showFlag.style["display"] = "inline-block";
   console.log("displayFlag running")
+  localStorage.setItem("countrySelected", JSON.stringify(false));
 }
 
 function predictiveText() {
@@ -707,7 +733,7 @@ function handleNextScreenBasedOnTurn() {
     JSON.parse(localStorage.getItem("countrySelected")) === true
   ) {
     console.log("game completion screen running")
-    updateGameStats();
+    if(JSON.parse(localStorage.getItem("dailyMode"))===true){updateGameStats()};
     completedFlagsRound();
   }
 }
