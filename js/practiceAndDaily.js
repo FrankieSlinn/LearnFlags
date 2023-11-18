@@ -51,6 +51,15 @@ const dailyGameButton = document.querySelector(".dailyGameButton");
 const statsText=document.querySelector(".statsText");
 const stars = document.querySelectorAll(".star");
 
+//Changes
+/*
+-double refresh
+-first letter big
+-score updates
+-advert
+-checklayout
+
+*/
 
 
 //logic
@@ -180,6 +189,10 @@ gameStatsDisplay();
 //called on fifth turn after country selected as wrapup game activity
 function updateGameStats() {
   //score when a game is completed expressed as percentage
+  console.log("updateGameStats running", JSON.parse(localStorage.getItem("scoresUpdated")));
+  //below: ensure scores not updated for samegame more than once
+  if(JSON.parse(localStorage.getItem("scoresUpdated"))===false){
+    console.log("scores not updated");
   gameScore = Number(JSON.parse(localStorage.getItem("score")) * 2 * 10);
   window.localStorage.setItem("gameScore", JSON.stringify(gameScore));
   defineAndSaveLongGameScore(gameScore);
@@ -188,11 +201,15 @@ function updateGameStats() {
   gamesPlayed = numGamesCalc();
   //update statistics in popup
   gameStatsDisplay();
+  window.localStorage.setItem("scoresUpdated", JSON.stringify(true));
+  
+}
 }
 function gameStatsDisplay() {
   if(JSON.parse(localStorage.getItem("dailyMode"))===true){statistics.innerHTML = `FLAGL Score: <strong>${gameScore}</strong><br><br>Games: <strong>${gamesPlayed}</strong><br><br>Average Score: <strong>${averageScore}</strong>`}
 }
 function defineAndSaveLongGameScore(gameScore) {
+  console.log("defineAndSaveLongGameScore running")
   allGameScores = JSON.parse(localStorage.getItem("allGameScores"))
     ? JSON.parse(localStorage.getItem("allGameScores")).concat(gameScore)
     : [JSON.parse(localStorage.getItem("gameScore"))];
@@ -433,6 +450,8 @@ function completedFlagsRound() {
   completedFlagsRoundDisplayChanges();
   getAnswerFeedback();
   getFinishGameMessage();
+  updateGameStats();
+
 }
 
 function starFill() {
@@ -561,6 +580,15 @@ function displayFlag() {
   showFlag.style["display"] = "inline-block";
   console.log("displayFlag running")
   localStorage.setItem("countrySelected", JSON.stringify(false));
+  preventScoreUpdate();
+ 
+}
+function preventScoreUpdate(){
+   //Ensure scores not updated more than once
+   if(dailyMode===true){
+    localStorage.setItem("scoresUpdated", JSON.stringify(false));
+  }
+
 }
 
 function predictiveText() {
@@ -733,7 +761,6 @@ function handleNextScreenBasedOnTurn() {
     JSON.parse(localStorage.getItem("countrySelected")) === true
   ) {
     console.log("game completion screen running")
-    if(JSON.parse(localStorage.getItem("dailyMode"))===true){updateGameStats()};
     completedFlagsRound();
   }
 }
@@ -775,6 +802,7 @@ function startNewGame() {
   newGameDisplayChanges();
   starFill();
   newQuizItem();
+
 }
 
 function newGameDisplayChanges() {
