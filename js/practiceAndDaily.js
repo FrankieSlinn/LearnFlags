@@ -59,7 +59,7 @@ const newFlag = document.querySelectorAll(".newFlag");
 -score updates
 -advert
 -checklayout
-
+-After finish game resets before it's meant to. 
 */
 
 
@@ -281,7 +281,7 @@ function setNewGameParameters() {
   };
 
   for (const key in parameters) {
-    localStorage.setItem(key, JSON.stringify(parameters[key]));
+    localStorage.setItem(TO_CHAR(key), JSON.stringify(parameters[key]));
   }}
 }
 
@@ -316,6 +316,8 @@ if (JSON.parse(localStorage.getItem("turns")) <= "3" && JSON.parse(localStorage.
 }
 //display Timer
 const displayTimer = function () {
+  localStorage.setItem("countrySelected", JSON.stringify(true));
+  // console.log("countrySelected in displayTimer",JSON.parse(localStorage.getItem("countrySelected")));
   //date is current date
   let date = new Date();
   //showTimer
