@@ -269,19 +269,20 @@ function populateArrayDailyFlags() {
 }
 //set up parameters for new game to local storage
 function setNewGameParameters() {
-  if(JSON.parse(localStorage.getItem("dailyMode"))===true){
-  const parameters = {
-    firstTurn: false,
-    countrySelected: false,
-    turns: 0,
-    score: 0,
-    flagsShownToday: false,
-    dateNumberSeed: dateNumberSeed,
-  };
+  if (JSON.parse(localStorage.getItem("dailyMode")) === true) {
+    const parameters = {
+      firstTurn: false,
+      countrySelected: false,
+      turns: 0,
+      score: 0,
+      flagsShownToday: false,
+      dateNumberSeed: dateNumberSeed,
+    };
 
-  for (const key in parameters) {
-    localStorage.setItem(TO_CHAR(key), JSON.stringify(parameters[key]));
-  }}
+    for (const key in parameters) {
+      localStorage.setItem(key, JSON.stringify(parameters[key]));
+    }
+  }
 }
 
 //ensure completedFlagsRound messages show up at the end
