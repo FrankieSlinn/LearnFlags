@@ -50,7 +50,6 @@ const modeButton = document.querySelector(".mode-button");
 const dailyGameButton = document.querySelector(".dailyGameButton");
 const statsText=document.querySelector(".statsText");
 const stars = document.querySelectorAll(".star");
-const newFlag = document.querySelectorAll(".newFlag");
 
 //Changes
 /*
@@ -329,8 +328,7 @@ const displayTimer = function () {
     60 - new Date().getMinutes()
   }
     </strong> Minutes <strong>${60 - new Date().getSeconds()}</strong> Seconds`;
-    console.log("displayTimer running");
-    // localStorage.setItem("countrySelected", JSON.stringify(true));
+    localStorage.setItem("countrySelected", JSON.stringify(true));
 
 };
 
@@ -357,15 +355,8 @@ function first4Turns() {
 
     displayChangesAfterTurn();
   }
-  if(JSON.parse(localStorage.getItem("countrySelected")) ===false){
-    console.log("country not selected");
-    // location.href = location.href;
-
-    newQuizItem();
-  }
   
   if(JSON.parse(localStorage.getItem("dailyMode"))===true){
-   
     
     // displayFlag();
 }
@@ -509,7 +500,6 @@ function displayFlagScreen() {
   labelTimer.style["display"] = "none";
   flagName.style["display"] = "none";
   practiceAtResults.style["display"] = "none";
-  resetButton.style["display"] = "none";
   answer.style["display"] = "inline-block";
   showFlag.style["display"] = "inline-block";
   showFlag.style["visibility"] = "visible";
@@ -557,11 +547,9 @@ function practiceQuizItem(){
 
 
 function newQuizItem() {
-  console.log("new quiz item running");
   countryMatchingPredText = [];
   //resets quiz item
   localStorage.setItem("countrySelected", JSON.stringify(false));
-  console.log("country selected", JSON.parse(localStorage.getItem("countrySelected")))
   //places country name into array of flags displayed in round
   placeFlagNameIntoflagsDisplayedInRound();
   //formats flag name to lower case removes underscores for comparison
@@ -710,7 +698,6 @@ function submitValue() {
 }
 
 function processAnswerSubmission() {
-  console.log("processAnswerSubmission function running");
   //flag for going to the answer screen
   localStorage.setItem("countrySelected", JSON.stringify(true));
   //get name for selected country
@@ -774,9 +761,8 @@ function incrementScore() {
 //determines screen based on the turn
 function handleNextScreenBasedOnTurn() {
   console.log("handleNextScreenBasedonTurns running")
-  if (JSON.parse(localStorage.getItem("turns")) < 4|| JSON.parse(localStorage.getItem("turns")) === 4 &&
-  JSON.parse(localStorage.getItem("countrySelected")) === false){
-    console.log("fewer than 4 turns or 4 turns, country not selected")
+  if (JSON.parse(localStorage.getItem("turns")) < 4) {
+    console.log("fewer than 4 turns")
     first4Turns();
   } else if (
     JSON.parse(localStorage.getItem("turns")) === 4 &&
