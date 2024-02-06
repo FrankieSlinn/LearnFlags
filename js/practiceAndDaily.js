@@ -51,6 +51,7 @@ const dailyGameButton = document.querySelector(".dailyGameButton");
 const statsText=document.querySelector(".statsText");
 const stars = document.querySelectorAll(".star");
 
+
 //Changes
 /*
 -double refresh
@@ -59,6 +60,7 @@ const stars = document.querySelectorAll(".star");
 -advert
 -checklayout
 -After finish game resets before it's meant to. 
+-Prevent duplicate flags
 */
 
 
@@ -103,6 +105,7 @@ practice.forEach((button)=>button.addEventListener("click", ()=> {
 
 //switch to daily game mode
 document.querySelector(".dailyGameButton").addEventListener("click", () => {
+  console.log("dailyG game mode button clicked");
 dailyModeChanges();
  
   
@@ -110,15 +113,18 @@ dailyModeChanges();
 
 function dailyModeChanges(){
   console.log("Arraydaioyflags", JSON.parse(localStorage.getItem("arrayDailyFlags")))
+  let dailyFlagArrayDisplay = JSON.parse(localStorage.getItem("arrayDailyFlags"));
+  dailyFlagArrayDisplay.forEach(flag => console.log(flags[flag]));
   localStorage.setItem("dailyMode", JSON.stringify(true));
   let turnsDaily= JSON.parse(localStorage.getItem("turns"));
   localStorage.setItem("flag", JSON.stringify(flags[JSON.parse(localStorage.getItem("arrayDailyFlags"))[turnsDaily]]));
   console.log("flag", JSON.parse(localStorage.getItem("flag")));
-  formatFlagNameToCompare()
-  if(JSON.parse(localStorage.getItem("countrySelected"))===false){
-    console.log("country selected false")
-    displayFlag();
-  }
+  formatFlagNameToCompare();
+  displayFlag();
+  // if(JSON.parse(localStorage.getItem("countrySelected"))===false){
+  //   console.log("country selected false")
+  //   displayFlag();
+  // }
 
   console.log("dailyMode after daily game clicked", JSON.parse(localStorage.getItem("dailyMode")))
   clearAnswer();
@@ -364,7 +370,7 @@ function first4Turns() {
 
   //reset country selected
   
-  displayFlag();
+  // displayFlag();
 }
 
 function getCountryForFeedbackDisplay() {
@@ -386,7 +392,7 @@ function getCountryForFeedbackDisplay() {
     }
   console.log("rightFlag", rightFlag);
   flagName.innerHTML = `The Answer Is <strong>${rightFlag}</strong>`;
-  if(JSON.parse(localStorage.getItem("dailyMode"))===true){increaseTurns()};
+  // if(JSON.parse(localStorage.getItem("dailyMode"))===true){increaseTurns()};
 }
 function getAnswerFeedback() {
   JSON.parse(localStorage.getItem("isCorrect")) === true
@@ -489,6 +495,8 @@ function allStarsNotFilledIfReset() {
 
 //listener for display new flag
 resetButton.addEventListener("click", function () {
+  // if(JSON.parse(localStorage.getItem("dailyMode"))==true )
+  // {increaseTurns()};
   console.log("display new flag = change name?");
  if(JSON.parse(localStorage.getItem("dailyMode"))===true){ startAgain()}else{handlePracticeMode()};
 });
@@ -500,7 +508,8 @@ function displayFlagScreen() {
   feedback.style["display"] = "none";
   labelTimer.style["display"] = "none";
   flagName.style["display"] = "none";
-  practiceAtResults.style["display"] = "none";
+  practiceAtResults.style["display"] = "none"
+  resetButton.style["display"] = "none";
   answer.style["display"] = "inline-block";
   showFlag.style["display"] = "inline-block";
   showFlag.style["visibility"] = "visible";
@@ -557,8 +566,6 @@ function newQuizItem() {
   formatFlagNameToCompare();
   //gets flag image and sets html for flag display
   displayFlag();
-  //changes for screen when new flag displayed
-  displayFlagScreen();
   //carries out filtering based on input text
   predictiveText();
 }
@@ -581,6 +588,8 @@ function placeFlagNameIntoflagsDisplayedInRound() {
 }
 //get HTML for flag display
 function displayFlag() {
+    //changes for screen when new flag displayed
+    displayFlagScreen();
   let imageHTML =
     "<img src = ../Images/" +
     JSON.parse(localStorage.getItem("flagWithUnderscore")) +
@@ -694,6 +703,8 @@ function submitValue() {
       .addEventListener("click", function () {
         buttonClicked = i;
         processAnswerSubmission();
+        if(JSON.parse(localStorage.getItem("dailyMode"))===true) {
+        increaseTurns()};
       });
   }
 }
@@ -742,6 +753,7 @@ function whichFeedbackScreen() {
    }
     
   } else {
+    console.log("wrong answer in which FeedbackScreen")
     localStorage.setItem("isIncorrect", JSON.stringify(true));
     localStorage.setItem("isCorrect", JSON.stringify(false));
     resetInputParameters();
