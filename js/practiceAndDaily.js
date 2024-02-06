@@ -121,10 +121,6 @@ function dailyModeChanges(){
   console.log("flag", JSON.parse(localStorage.getItem("flag")));
   formatFlagNameToCompare();
   displayFlag();
-  // if(JSON.parse(localStorage.getItem("countrySelected"))===false){
-  //   console.log("country selected false")
-  //   displayFlag();
-  // }
 
   console.log("dailyMode after daily game clicked", JSON.parse(localStorage.getItem("dailyMode")))
   clearAnswer();
@@ -248,6 +244,7 @@ if (
       fullDate.getSeconds() == 0) ||
     JSON.parse(localStorage.getItem("firstTurn")) == true)
 ) {
+  localStorage.setItem("gameComplete", JSON.stringify(false));
   setNewGameParameters();
   populateArrayDailyFlags();
   startNewGame();
@@ -401,10 +398,11 @@ function getAnswerFeedback() {
 }
 function increaseTurns(){
   let turns = JSON.parse(localStorage.getItem("turns"));
+  if(turns<4){
   let turns1 = (turns += 1);
-  console.log("turns after turn", turns1);
+  console.log("turns after turn", turns1)
   //set incremented number of turns
-  localStorage.setItem("turns", JSON.stringify(turns1));
+  localStorage.setItem("turns", JSON.stringify(turns1));}
 
 
 }
@@ -460,6 +458,7 @@ function completedFlagsRound() {
 
   console.log("completedFlagsRound started");
   localStorage.setItem("countrySelected", JSON.stringify(true));
+  localStorage.setItem("gameComplete", JSON.stringify(true));
  
   getFlagName();
   completedFlagsRoundDisplayChanges();
@@ -588,6 +587,7 @@ function placeFlagNameIntoflagsDisplayedInRound() {
 }
 //get HTML for flag display
 function displayFlag() {
+  if (!JSON.parse(localStorage.getItem("gameComplete"))==true||!JSON.parse(localStorage.getItem("dailyMode"))==true) {
     //changes for screen when new flag displayed
     displayFlagScreen();
   let imageHTML =
@@ -597,8 +597,8 @@ function displayFlag() {
   showFlag.innerHTML = imageHTML;
   showFlag.style["display"] = "inline-block";
   console.log("displayFlag running")
-  localStorage.setItem("countrySelected", JSON.stringify(false));
-  // preventScoreUpdate();
+  localStorage.setItem("countrySelected", JSON.stringify(false));}
+  // preventScoreUpdate();}
  
 }
 function preventScoreUpdate(){
