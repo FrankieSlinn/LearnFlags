@@ -60,7 +60,6 @@ const stars = document.querySelectorAll(".star");
 -advert
 -checklayout
 -After finish game resets before it's meant to. 
--Prevent duplicate flags
 */
 
 
@@ -611,9 +610,15 @@ function preventScoreUpdate(){
 
 }
 
+
+
 function predictiveText() {
+ 
   //listener for when a user types a letter
   answer.addEventListener("keyup", function (e) {
+    answer.value = answer.value[0].toUpperCase().concat(answer.value.slice(1))
+ 
+     console.log("answer displayed", answer.value[0].toUpperCase());
     //ensures country buttons are displayed
     countryOptionButtons.style["display"] = "inline";
     //get input text in lower case
