@@ -48,7 +48,7 @@ export const flags = [
     "South Africa",
     "South Sudan",
     "Sudan",
-    "eSwatini",
+    "Eswatini",
     "Tanzania",
     "Togo",
     "Tunisia",
