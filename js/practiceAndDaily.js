@@ -263,10 +263,12 @@ function randomNumberPractice(){
 
 //adds flags to the array of 5 flags for that day via random number and set to local storage
 function populateArrayDailyFlags() {
-  for (let flagNum = 0; flagNum <= 4; flagNum++) {
+ while (arrayDailyFlags.length<5){
     //random_number needs to be a function to generate number
+    let newFlagItem = Math.abs(Math.floor(random_number() * 225));
+    if(!arrayDailyFlags.includes(newFlagItem)){
     arrayDailyFlags.push(Math.abs(Math.floor(random_number() * 225)));
-    localStorage.setItem("arrayDailyFlags", JSON.stringify(arrayDailyFlags));
+    localStorage.setItem("arrayDailyFlags", JSON.stringify(arrayDailyFlags));}
   }
   console.log("array daily flags", JSON.parse(localStorage.getItem("arrayDailyFlags")).forEach((flag)=> flags[flag]))
 }
