@@ -55,7 +55,7 @@ const stars = document.querySelectorAll(".star");
 //Changes
 /*
 -double refresh
--first letter big
+-first letter big- Done
 -score updates
 -advert
 -checklayout
@@ -155,16 +155,20 @@ function numGamesCalc() {
 }
 
 function calcAverageScoreMultiValues() {
+  console.log("calcaverage running")
   if (JSON.parse(localStorage.getItem("allGameScores")).length === 1) {
     console.log("length allGameScores is one");
     return JSON.parse(localStorage.getItem("allGameScores"))[0];
   } else if (JSON.parse(localStorage.getItem("allGameScores")).length >= 1)
-    return JSON.parse(localStorage.getItem("allGameScores"))
+  {
+    console.log("length allgames more than 1");
+    let allScores = JSON.parse(localStorage.getItem("allGameScores"));
+    return (allScores
       .reduce(
         //add all scores to get tota
         (numa, numb) => numa + numb
-      )
-      .toFixed(0);
+      )/allScores.length)
+      .toFixed(0);}
 }
 
 //Define average score
@@ -191,10 +195,10 @@ gameStatsDisplay();
 //called on fifth turn after country selected as wrapup game activity
 function updateGameStats() {
   //score when a game is completed expressed as percentage
-  console.log("updateGameStats running", JSON.parse(localStorage.getItem("scoresUpdated")));
+  console.log("updateGameStats running and scores updated", JSON.parse(localStorage.getItem("scoresUpdated")));
   //below: ensure scores not updated for samegame more than once
   if(JSON.parse(localStorage.getItem("scoresUpdated"))===false||JSON.parse(localStorage.getItem("scoresUpdated"))===null){
-    console.log("scores not updated");
+    console.log("scores not updated so will concatenate");
   gameScore = Number(JSON.parse(localStorage.getItem("score")) * 2 * 10);
   window.localStorage.setItem("gameScore", JSON.stringify(gameScore));
   defineAndSaveLongGameScore(gameScore);
@@ -244,6 +248,7 @@ if (
     JSON.parse(localStorage.getItem("firstTurn")) == true)
 ) {
   localStorage.setItem("gameComplete", JSON.stringify(false));
+  localStorage.setItem("scoresUpdated", JSON.stringify(false));
   setNewGameParameters();
   populateArrayDailyFlags();
   startNewGame();
@@ -290,7 +295,7 @@ function setNewGameParameters() {
 }
 
 //ensure completedFlagsRound messages show up at the end
-const fourTurnsCompleted = JSON.parse(localStorage.getItem("turns")) === 4;
+const fourTurnsCompleted = JSON.parse(localStorage.getItem("turns")) >= 4;
 const guessSubmitted = JSON.parse(localStorage.getItem("countrySelected"));
 
 if (
@@ -460,6 +465,7 @@ function completedFlagsRound() {
   console.log("completedFlagsRound started");
   localStorage.setItem("countrySelected", JSON.stringify(true));
   localStorage.setItem("gameComplete", JSON.stringify(true));
+
  
   getFlagName();
   completedFlagsRoundDisplayChanges();
