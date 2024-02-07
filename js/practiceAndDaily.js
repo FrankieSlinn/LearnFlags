@@ -32,6 +32,13 @@ let countrySelectedLow = "";
 let dailyMode = true;
 let arrayDailyFlags = [];
 let rightFlag="";
+let getTime = document.querySelector(
+  ".labelTimer"
+).innerHTML = `FLAGL Will Restart in <strong>
+  ${23 - new Date().getHours()}</strong> Hours<strong> ${
+  60 - new Date().getMinutes()
+}
+  </strong> Minutes <strong>${60 - new Date().getSeconds()}</strong> Seconds`;
 const container = document.querySelector(".container");
 const showFlag = document.querySelector(".showFlag");
 const countryOptionButtons = document.querySelector(".countryOptionButtons");
@@ -54,12 +61,14 @@ const stars = document.querySelectorAll(".star");
 
 //Changes
 /*
--double refresh
+-double refresh - Done
 -first letter big- Done
--score updates
+-score updates - Done
+-Share Result
+-Share Result 2 buttons
 -advert
 -checklayout
--After finish game resets before it's meant to. 
+-After finish game resets before it's meant to - Done
 */
 
 
@@ -326,23 +335,13 @@ if (JSON.parse(localStorage.getItem("turns")) <= "3" && JSON.parse(localStorage.
 //display Timer
 const displayTimer = function () {
   localStorage.setItem("countrySelected", JSON.stringify(true));
-  // console.log("countrySelected in displayTimer",JSON.parse(localStorage.getItem("countrySelected")));
   //date is current date
   let date = new Date();
   //showTimer
   labelTimer.style["visibility"] = "visible";
-  document.querySelector(
-    ".labelTimer"
-  ).innerHTML = `FLAGL Will Restart in <strong>
-    ${23 - new Date().getHours()}</strong> Hours<strong> ${
-    60 - new Date().getMinutes()
-  }
-    </strong> Minutes <strong>${60 - new Date().getSeconds()}</strong> Seconds`;
-    localStorage.setItem("countrySelected", JSON.stringify(true));
-
 };
 
-// displayTimer();
+
 //run timer function every second so that it will count down
 setInterval(displayTimer, 1000);
 
@@ -365,15 +364,6 @@ function first4Turns() {
 
     displayChangesAfterTurn();
   }
-  
-  if(JSON.parse(localStorage.getItem("dailyMode"))===true){
-    
-    // displayFlag();
-}
-
-  //reset country selected
-  
-  // displayFlag();
 }
 
 function getCountryForFeedbackDisplay() {
