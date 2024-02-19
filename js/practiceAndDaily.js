@@ -76,12 +76,21 @@ const stars = document.querySelectorAll(".star");
 function scrollToTop() {
   window.scrollTo(0, 0);
 }
+predictiveText();
 
 //Set to default to dailyMode is true
 document.addEventListener("DOMContentLoaded", function () {
+  console.log("event listenr for load running")
+  if(!JSON.parse(localStorage.getItem("gameComplete"))==true && !JSON.parse(localStorage.getItem("arrayDailyFlags"))){
+    console.log("after load running event listenr conditions met to populate flag array");
+    localStorage.setItem("turns", JSON.stringify(0));
+    
+    populateArrayDailyFlags();
 
     localStorage.setItem("dailyMode", "true");
     dailyModeChanges();
+
+    }
   
 });
 
@@ -242,6 +251,7 @@ let month = String(fullDate.getMonth() + 1);
 let day = String(fullDate.getDate());
 //number based on current date which is used as dateInputForSeed
 let dateNumberSeed = day + month + year;
+console.log("dateNumberSeed now", dateNumberSeed);
 let generate_seed = murmurHash3(dateNumberSeed);
 let random_number = generateRandomNumber(generate_seed(), generate_seed());
 localStorage.setItem("random_number", JSON.stringify(random_number()));
@@ -250,12 +260,12 @@ localStorage.setItem("random_number", JSON.stringify(random_number()));
 if (
   JSON.parse(localStorage.getItem("dailyMode")) === true &&
   (String(dateNumberSeed) !==
-    String(JSON.parse(localStorage.getItem("dateNumberSeed"))) ||
+    String(JSON.parse(localStorage.getItem("dateNumberSeed"))) && JSON.parse(localStorage.getItem("dateNumberSeed"))||
     (fullDate.getHours() == 0 &&
       fullDate.getMinutes() == 0 &&
-      fullDate.getSeconds() == 0) ||
-    JSON.parse(localStorage.getItem("firstTurn")) == true)
+      fullDate.getSeconds() == 0) )
 ) {
+  console.log("Strings for dates are not the same", String(JSON.parse(localStorage.getItem("dateNumberSeed"))) )
   localStorage.setItem("gameComplete", JSON.stringify(false));
   localStorage.setItem("scoresUpdated", JSON.stringify(false));
   setNewGameParameters();
@@ -276,12 +286,15 @@ function randomNumberPractice(){
 
 //adds flags to the array of 5 flags for that day via random number and set to local storage
 function populateArrayDailyFlags() {
+  arrayDailyFlags = [];
+  console.log("arrayDailyFlags", arrayDailyFlags);
  while (arrayDailyFlags.length<5){
     //random_number needs to be a function to generate number
     let newFlagItem = Math.abs(Math.floor(random_number() * 225));
     if(!arrayDailyFlags.includes(newFlagItem)){
     arrayDailyFlags.push(Math.abs(Math.floor(random_number() * 225)));
     localStorage.setItem("arrayDailyFlags", JSON.stringify(arrayDailyFlags));}
+    console.log("arrayDailyFlags after population", JSON.parse(localStorage.getItem("arrayDailyFlags")))
   }
   console.log("array daily flags", JSON.parse(localStorage.getItem("arrayDailyFlags")).forEach((flag)=> flags[flag]))
 }
