@@ -83,14 +83,18 @@ document.addEventListener("DOMContentLoaded", function () {
   console.log("event listenr for load running")
   if(!JSON.parse(localStorage.getItem("gameComplete"))==true && !JSON.parse(localStorage.getItem("arrayDailyFlags"))){
     console.log("after load running event listenr conditions met to populate flag array");
+   if(!JSON.parse(localStorage.getItem("turns"))){
+    console.log("turns set to zero as they were indicated as null");
     localStorage.setItem("turns", JSON.stringify(0));
-    
+    console.log("turns after reset", JSON.parse(localStorage.getItem("turns")));
+   };
     populateArrayDailyFlags();
 
-    localStorage.setItem("dailyMode", "true");
-    dailyModeChanges();
+
 
     }
+    localStorage.setItem("dailyMode", "true");
+    dailyModeChanges();
   
 });
 
@@ -251,16 +255,19 @@ let month = String(fullDate.getMonth() + 1);
 let day = String(fullDate.getDate());
 //number based on current date which is used as dateInputForSeed
 let dateNumberSeed = day + month + year;
+
+
 console.log("dateNumberSeed now", dateNumberSeed);
 let generate_seed = murmurHash3(dateNumberSeed);
 let random_number = generateRandomNumber(generate_seed(), generate_seed());
 localStorage.setItem("random_number", JSON.stringify(random_number()));
+console.log(String(dateNumberSeed));
 
 //if new day for English Time handle new game
 if (
   JSON.parse(localStorage.getItem("dailyMode")) === true &&
-  (String(dateNumberSeed) !==
-    String(JSON.parse(localStorage.getItem("dateNumberSeed"))) && JSON.parse(localStorage.getItem("dateNumberSeed"))||
+  ((String(dateNumberSeed) !==
+   String(JSON.parse(localStorage.getItem("dateNumberSeed"))) )&& !String(JSON.parse(localStorage.getItem("dateNumberSeed")))===null||
     (fullDate.getHours() == 0 &&
       fullDate.getMinutes() == 0 &&
       fullDate.getSeconds() == 0) )
@@ -326,13 +333,14 @@ if (
   guessSubmitted === true
   && JSON.parse(localStorage.getItem("dailyMode"))===true
 ) {
+  console.log("fifth turn completed, turns is 4", fourTurnsCompleted, "countrySelected", guessSubmitted);
   //finish up activites
   starFill();
   completedFlagsRound();
 } else if (
   //fifth turn pending
   fourTurnsCompleted &&
-  guessSubmitted === false
+  !guessSubmitted===true
 ) {
   console.log("start fifth turn");
   //start the fifth turn
@@ -347,7 +355,7 @@ if (JSON.parse(localStorage.getItem("turns")) <= "3" && JSON.parse(localStorage.
 }
 //display Timer
 const displayTimer = function () {
-  localStorage.setItem("countrySelected", JSON.stringify(true));
+ if(JSON.parse(localStorage.getItem("turns") <4)) {localStorage.setItem("countrySelected", JSON.stringify(true))};
   //date is current date
   let date = new Date();
   //showTimer
@@ -364,8 +372,10 @@ if (
   JSON.parse(localStorage.getItem("score") > 5) ||
   JSON.parse(localStorage.getItem("turns") > 5)
 ) {
+  console.log("socres / turns above 5");
   localStorage.setItem("score", JSON.stringify(0));
   localStorage.setItem("turns", JSON.stringify(0));
+  console.log(JSON.parse(localStorage.getItem("turns") ));
 }
 
 //handle changes after first four turns
@@ -398,7 +408,7 @@ function getCountryForFeedbackDisplay() {
     }
   console.log("rightFlag", rightFlag);
   flagName.innerHTML = `The Answer Is <strong>${rightFlag}</strong>`;
-  // if(JSON.parse(localStorage.getItem("dailyMode"))===true){increaseTurns()};
+
 }
 function getAnswerFeedback() {
   JSON.parse(localStorage.getItem("isCorrect")) === true
@@ -406,12 +416,20 @@ function getAnswerFeedback() {
     : (feedback.innerHTML = `${incorrectAnswer}`);
 }
 function increaseTurns(){
+  console.log("function increase turns running");
   let turns = JSON.parse(localStorage.getItem("turns"));
   if(turns<4){
   let turns1 = (turns += 1);
+
   console.log("turns after turn", turns1)
   //set incremented number of turns
-  localStorage.setItem("turns", JSON.stringify(turns1));}
+  localStorage.setItem("turns", JSON.stringify(turns1));
+// if(JSON.parse(localStorage.getItem("turns")) ===4){
+//   console.log('fifth turn setting countryselected to false')
+//   localStorage.setItem("countrySelected", JSON.stringify(false))
+  
+// }
+}
 
 
 }
@@ -504,8 +522,7 @@ function allStarsNotFilledIfReset() {
 
 //listener for display new flag
 resetButton.addEventListener("click", function () {
-  // if(JSON.parse(localStorage.getItem("dailyMode"))==true )
-  // {increaseTurns()};
+
   console.log("display new flag = change name?");
  if(JSON.parse(localStorage.getItem("dailyMode"))===true){ startAgain()}else{handlePracticeMode()};
 });
@@ -566,6 +583,7 @@ function practiceQuizItem(){
 
 
 function newQuizItem() {
+  console.log("next quiz item running")
   countryMatchingPredText = [];
   //resets quiz item
   localStorage.setItem("countrySelected", JSON.stringify(false));
