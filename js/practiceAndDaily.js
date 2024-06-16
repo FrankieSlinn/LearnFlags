@@ -331,7 +331,7 @@ if (
   //fifth turn completed
   fourTurnsCompleted &&
   guessSubmitted === true
-  && JSON.parse(localStorage.getItem("dailyMode"))===true
+  && JSON.parse(localStorage.getItem("dailyMode"))===true&&JSON.parse(localStorage.getItem("gameComplete"))==false
 ) {
   console.log("fifth turn completed, turns is 4", fourTurnsCompleted, "countrySelected", guessSubmitted);
   //finish up activites
@@ -586,7 +586,9 @@ function newQuizItem() {
   console.log("next quiz item running")
   countryMatchingPredText = [];
   //resets quiz item
-  localStorage.setItem("countrySelected", JSON.stringify(false));
+  if(JSON.parse(localStorage.getItem("gameComplete"))===true){localStorage.setItem("countrySelected", JSON.stringify(false))}else{
+    localStorage.setItem("countrySelected", JSON.stringify(true))}
+  
   //places country name into array of flags displayed in round
   placeFlagNameIntoflagsDisplayedInRound();
   //formats flag name to lower case removes underscores for comparison
@@ -813,7 +815,7 @@ function handleNextScreenBasedOnTurn() {
     first4Turns();
   } else if (
     JSON.parse(localStorage.getItem("turns")) === 4 &&
-    JSON.parse(localStorage.getItem("countrySelected")) === true
+    JSON.parse(localStorage.getItem("countrySelected")) === true||JSON.parse(localStorage.getItem("gameComplete")) === true
   ) {
     console.log("game completion screen running")
     completedFlagsRound();
