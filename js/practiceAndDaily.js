@@ -779,6 +779,7 @@ function feedbackScreenLayout() {
 function whichFeedbackScreen() {
   //if input matches the right answer
   console.log("countrySelectedLow, flagLow", countrySelectedLow, flagLow);
+  let getShareResultsArray = JSON.parse(localStorage.getItem("shareResultsArray"));
   if (countrySelectedLow === String(flagLow)) {
     console.log("countrySelected matches flagLow", countrySelectedLow === String(flagLow))
     localStorage.setItem("isCorrect", JSON.stringify(true));
@@ -787,11 +788,35 @@ function whichFeedbackScreen() {
    if(JSON.parse(localStorage.getItem("dailyMode"))===true) {incrementScore();
     starFill();
    }
+   if (!localStorage.getItem("shareResultsArray")) {
+    // Initialize localStorage with an array containing "flag"
+    localStorage.setItem("shareResultsArray", JSON.stringify(["flag"]));
+}
+else{
+  console.log("getShareResultsArrayinElse", getShareResultsArray)
+  getShareResultsArray.push("flag");
+  localStorage.setItem("shareResultsArray", JSON.stringify(getShareResultsArray));
+
+}
+
+console.log("shareResultsArray", JSON.parse(localStorage.getItem("shareResultsArray")));
+
     
   } else {
     console.log("wrong answer in which FeedbackScreen")
     localStorage.setItem("isIncorrect", JSON.stringify(true));
     localStorage.setItem("isCorrect", JSON.stringify(false));
+    if (!localStorage.getItem("shareResultsArray")) {
+      // Initialize localStorage with an array containing "flag"
+      localStorage.setItem("shareResultsArray", JSON.stringify(["cross"]));
+  }
+  else{
+    console.log("getShareResultsArrayinElse", getShareResultsArray)
+    getShareResultsArray.push("cross");
+    localStorage.setItem("shareResultsArray", JSON.stringify(getShareResultsArray));
+  
+  }
+  
     resetInputParameters();
   }
 
