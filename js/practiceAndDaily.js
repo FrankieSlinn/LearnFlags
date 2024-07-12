@@ -69,6 +69,7 @@ const stars = document.querySelectorAll(".star");
 -advert
 -checklayout
 -After finish game resets before it's meant to - Done
+Sort out same flags not being shown if played before.
 */
 
 
@@ -139,7 +140,7 @@ function dailyModeChanges(){
   localStorage.setItem("dailyMode", JSON.stringify(true));
   let turnsDaily= JSON.parse(localStorage.getItem("turns"));
   localStorage.setItem("flag", JSON.stringify(flags[JSON.parse(localStorage.getItem("arrayDailyFlags"))[turnsDaily]]));
-  console.log("flag", JSON.parse(localStorage.getItem("flag")));
+  //console.log("flag", JSON.parse(localStorage.getItem("flag")));
   formatFlagNameToCompare();
   displayFlag();
 
@@ -260,25 +261,34 @@ let dateNumberSeed = day + month + year;
 console.log("dateNumberSeed now", dateNumberSeed);
 let generate_seed = murmurHash3(dateNumberSeed);
 let random_number = generateRandomNumber(generate_seed(), generate_seed());
-localStorage.setItem("random_number", JSON.stringify(random_number()));
-console.log(String(dateNumberSeed));
+localStorage.setItem("random_number", JSON.stringify(random_number()));//may not be needed?
+//console.log(String(dateNumberSeed));
 
 //if new day for English Time handle new game
+function automaticNewGame(){
+  console.log("automaticNewGame running");
 if (
   JSON.parse(localStorage.getItem("dailyMode")) === true &&
   ((String(dateNumberSeed) !==
-   String(JSON.parse(localStorage.getItem("dateNumberSeed"))) )&& !String(JSON.parse(localStorage.getItem("dateNumberSeed")))===null||
+   String(JSON.parse(localStorage.getItem("dateNumberSeed"))) )
+   &&JSON.parse(localStorage.getItem("dateNumberSeed"))!=null
+   )||
+   JSON.parse(localStorage.getItem("dateNumberSeed"))===null||
     (fullDate.getHours() == 0 &&
       fullDate.getMinutes() == 0 &&
       fullDate.getSeconds() == 0) )
-) {
+ {
   console.log("Strings for dates are not the same", String(JSON.parse(localStorage.getItem("dateNumberSeed"))) )
   localStorage.setItem("gameComplete", JSON.stringify(false));
   localStorage.setItem("scoresUpdated", JSON.stringify(false));
+  localStorage.setItem("dateNumberSeed", dateNumberSeed);
   setNewGameParameters();
   populateArrayDailyFlags();
   startNewGame();
 }
+}
+
+automaticNewGame();
 
 function handlePracticeMode(){
 
@@ -602,9 +612,13 @@ function newQuizItem() {
 function placeFlagNameIntoflagsDisplayedInRound() {
   //generate flag one by one today
   //find current flag name
-  let turns = JSON.parse(localStorage.getItem("turns"));
+  if(JSON.parse(localStorage.getItem("turns"))){
+  let turns = JSON.parse(localStorage.getItem("turns"))}
+  else{turns = 0;
+    localStorage.setItem("turns", JSON.stringify(turns))}
+
   let getFlag =
-    flags[JSON.parse(localStorage.getItem("arrayDailyFlags"))[turns]];
+    flags[JSON.parse(localStorage.getItem("arrayDailyFlags"))[JSON.parse(localStorage.getItem("turns"))]];
   //put current flag name into local storage
   localStorage.setItem("flag", JSON.stringify(getFlag));
   //check right amount of turns(shouldn't exceed 4)
