@@ -57,6 +57,10 @@ const modeButton = document.querySelector(".mode-button");
 const dailyGameButton = document.querySelector(".dailyGameButton");
 const statsText=document.querySelector(".statsText");
 const stars = document.querySelectorAll(".star");
+let flagImage = "../Images/flagImage.png";
+let crossImage = "../Images/crossImage.png";
+
+console.log("flag, cross images", flagImage, crossImage);
 
 
 //Changes
@@ -790,10 +794,17 @@ function feedbackScreenLayout() {
   }
 }
 
+//flagImage.png
+//crossImage.png
+//../Images/"
 function whichFeedbackScreen() {
   //if input matches the right answer
   console.log("countrySelectedLow, flagLow", countrySelectedLow, flagLow);
-  let getShareResultsArray = JSON.parse(localStorage.getItem("shareResultsArray"));
+  if(JSON.parse(localStorage.getItem("shareResultsArray"))){
+    
+    console.log("getShareResultsArray exists in local storage");
+    let getShareResultsArray = JSON.parse(localStorage.getItem("shareResultsArray"))
+    console.log("getShareResultsArray exists in local storage", getShareResultsArray);}
   if (countrySelectedLow === String(flagLow)) {
     console.log("countrySelected matches flagLow", countrySelectedLow === String(flagLow))
     localStorage.setItem("isCorrect", JSON.stringify(true));
@@ -804,12 +815,18 @@ function whichFeedbackScreen() {
    }
    if (!localStorage.getItem("shareResultsArray")) {
     // Initialize localStorage with an array containing "flag"
-    localStorage.setItem("shareResultsArray", JSON.stringify(["flag"]));
+    console.log("getShareResultsArrayi not initiated /correct answer", JSON.parse(localStorage.getItem("shareResultsArray")))
+
+    //console.log("flagImage", flagImage);
+    localStorage.setItem("shareResultsArray", JSON.stringify([flagImage]));
 }
 else{
-  console.log("getShareResultsArrayinElse", getShareResultsArray)
-  getShareResultsArray.push("flag");
-  localStorage.setItem("shareResultsArray", JSON.stringify(getShareResultsArray));
+ // console.log("getShareResultsArrayinElse", getShareResultsArray)
+ let updateShareResultsArray = JSON.parse(localStorage.getItem("shareResultsArray")).concat(flagImage);
+ console.log('updateShareResultsArray', updateShareResultsArray);
+ localStorage.setItem("shareResultsArray", JSON.stringify(updateShareResultsArray));
+ updateShareResultsArray = '';
+
 
 }
 
@@ -821,13 +838,18 @@ console.log("shareResultsArray", JSON.parse(localStorage.getItem("shareResultsAr
     localStorage.setItem("isIncorrect", JSON.stringify(true));
     localStorage.setItem("isCorrect", JSON.stringify(false));
     if (!localStorage.getItem("shareResultsArray")) {
+      console.log("no shareresultsarray found")
       // Initialize localStorage with an array containing "flag"
-      localStorage.setItem("shareResultsArray", JSON.stringify(["cross"]));
+      localStorage.setItem("shareResultsArray", JSON.stringify([crossImage]));
   }
+
+
   else{
-    console.log("getShareResultsArrayinElse", getShareResultsArray)
-    getShareResultsArray.push("cross");
-    localStorage.setItem("shareResultsArray", JSON.stringify(getShareResultsArray));
+    console.log("getShareResultsArrayinElse Incorrect answer", JSON.parse(localStorage.getItem("shareResultsArray")))
+    let updateShareResultsArray = JSON.parse(localStorage.getItem("shareResultsArray")).concat(crossImage);
+    console.log('updateShareResultsArray', updateShareResultsArray);
+    localStorage.setItem("shareResultsArray", JSON.stringify(updateShareResultsArray));
+    updateShareResultsArray = '';
   
   }
   
@@ -949,3 +971,21 @@ document.querySelectorAll(".share").forEach((item) =>
     alert("FLAGL Results Copied To Clipboard");
   })
 );
+
+populateShareResultsImages();
+
+//populate flag images from array into HTML
+function populateShareResultsImages(){
+  let resultsContainer = document.querySelector('.resultsGallery');
+  let ind = 0;
+  let picHTML = "";
+  if(JSON.parse(localStorage.getItem("shareResultsArray"))){JSON.parse(localStorage.getItem("shareResultsArray")).forEach((pic)=>{
+    const img = document.createElement('img');
+    img.src = pic
+    img.style = "width:40px;height:40px;"
+    resultsContainer.appendChild(img);
+    //let picHTML = pic;
+  
+  
+  });}}
+  
