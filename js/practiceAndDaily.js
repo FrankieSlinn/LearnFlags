@@ -58,7 +58,8 @@ const dailyGameButton = document.querySelector(".dailyGameButton");
 const statsText=document.querySelector(".statsText");
 const stars = document.querySelectorAll(".star");
 let flagImage = "../Images/flagImage.png";
-let crossImage = "../Images/crossImage.png";
+let crossImage = "../Images/crossImage.svg";
+let resultsGallery = document.querySelector(".resultsGallery");
 
 console.log("flag, cross images", flagImage, crossImage);
 
@@ -74,6 +75,7 @@ console.log("flag, cross images", flagImage, crossImage);
 -checklayout
 -After finish game resets before it's meant to - Done
 Sort out same flags not being shown if played before.
+-check if using shareResults button changes flag display
 */
 
 
@@ -894,6 +896,8 @@ function resetInputParameters() {
 
 function gameWrapup() {
   localStorage.setItem("score", JSON.stringify(0));
+  let emptyArray = [];
+  localStorage.setItem('shareResultsArray', JSON.stringify(emptyArray));
   starFill();
 }
 //displays new flag
@@ -959,23 +963,13 @@ document
     hidePopup("helpContent");
   });
 
-//Share Score
-document.querySelectorAll(".share").forEach((item) =>
-  item.addEventListener("click", function () {
-    var r = document.createRange();
-    r.selectNode(document.querySelector(".statsContent"));
-    window.getSelection().removeAllRanges();
-    window.getSelection().addRange(r);
-    document.execCommand("copy");
-    window.getSelection().removeAllRanges();
-    alert("FLAGL Results Copied To Clipboard");
-  })
-);
+
 
 populateShareResultsImages();
 
 //populate flag images from array into HTML
 function populateShareResultsImages(){
+  console.log("populateShareResultsImages running")
   let resultsContainer = document.querySelector('.resultsGallery');
   let ind = 0;
   let picHTML = "";
@@ -988,4 +982,122 @@ function populateShareResultsImages(){
   
   
   });}}
+
+  //shareResults.addEventListener('click',
+  
+  //navigator.clipboard.writeText(JSON.parse(localStorage.getItem("shareResultsArray")).value)
+
+  // Alert the copied text
+  //alert("Copied the text: " + JSON.parse(localStorage.getItem("shareResultsArray")).value)
+  //)
+
+  document.querySelectorAll(".share").forEach((item) => {
+    item.addEventListener("click", async function () {
+        try {
+            const shareResultsArray = JSON.parse(localStorage.getItem("shareResultsArray"));
+            if (!shareResultsArray || !shareResultsArray.length) {
+                alert("No images to share");
+                return;
+            }
+  
+            const imageBitmaps = [];
+            const imageSize = 80; // Size of each image in pixels
+            const padding = 10; // Padding between images
+  
+            // Fetch and process each image
+            for (const src of shareResultsArray) {
+                try {
+                    const response = await fetch(src);
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok for URL: ${src}`);
+                    }
+  
+                    const blob = await response.blob();
+                    let imageBitmap;
+  
+                    // Handle SVG images separately by modifying their color
+                    if (blob.type === "image/svg+xml") {
+                        const text = await blob.text();
+                        const modifiedSvgText = text.replace(/fill="[^"]*"/g, 'fill="red"'); // Change color to red
+                        const svgBlob = new Blob([modifiedSvgText], { type: "image/svg+xml" });
+                        const url = URL.createObjectURL(svgBlob);
+                        const img = new Image();
+                        img.src = url;
+                        await new Promise((resolve, reject) => {
+                            img.onload = () => resolve();
+                            img.onerror = () => reject(new Error('Error loading modified SVG image'));
+                        });
+                        const tempCanvas = document.createElement("canvas");
+                        tempCanvas.width = imageSize;
+                        tempCanvas.height = imageSize;
+                        const tempCtx = tempCanvas.getContext("2d");
+                        tempCtx.drawImage(img, 0, 0, imageSize, imageSize);
+                        imageBitmap = await createImageBitmap(tempCanvas);
+                        URL.revokeObjectURL(url); // Clean up object URL
+                    } else {
+                        imageBitmap = await createImageBitmap(blob);
+                    }
+  
+                    imageBitmaps.push(imageBitmap);
+                } catch (innerError) {
+                    console.error(`Failed to process image from URL: ${src}`, innerError);
+                }
+            }
+  
+            if (imageBitmaps.length === 0) {
+                alert("No valid images to copy to clipboard");
+                return;
+            }
+  
+            // Calculate the required canvas dimensions
+            const imagesPerRow = Math.floor((1200 - padding) / (imageSize + padding));
+            const rows = Math.ceil(imageBitmaps.length / imagesPerRow);
+            const canvasWidth = (Math.min(imagesPerRow, imageBitmaps.length) * (imageSize + padding)) + padding;
+            const canvasHeight = (rows * (imageSize + padding)) + padding;
+  
+            // Create a canvas with the calculated dimensions
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+  
+            // Enable image smoothing for better quality
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+  
+            // Draw images onto the canvas
+            let x = padding; // Start drawing from the left with padding
+            let y = padding; // Start drawing from the top with padding
+  
+            imageBitmaps.forEach((bitmap) => {
+                if (x + imageSize + padding > canvasWidth) {
+                    // Move to next row if the image doesn't fit in the current row
+                    x = padding;
+                    y += imageSize + padding;
+                }
+  
+                ctx.drawImage(bitmap, x, y, imageSize, imageSize);
+                x += imageSize + padding; // Move to the next position in the row
+            });
+  
+            // Convert the canvas content to a Blob
+            const combinedBlob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png', 1.0));
+  
+            if (combinedBlob) {
+                // Create a ClipboardItem with the combined Blob
+                const clipboardItem = new ClipboardItem({ 'image/png': combinedBlob });
+  
+                // Write the ClipboardItem to the clipboard
+                await navigator.clipboard.write([clipboardItem]);
+  
+                alert("FLAGL Results Copied To Clipboard");
+            } else {
+                alert("Failed to create image blob");
+            }
+        } catch (err) {
+            console.error("Failed to copy images: ", err);
+            alert("Failed to copy images to clipboard");
+        }
+    });
+  });
   
