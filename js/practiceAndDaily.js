@@ -990,7 +990,6 @@ function populateShareResultsImages(){
   // Alert the copied text
   //alert("Copied the text: " + JSON.parse(localStorage.getItem("shareResultsArray")).value)
   //)
-
   document.querySelectorAll(".share").forEach((item) => {
     item.addEventListener("click", async function () {
       try {
@@ -1067,9 +1066,9 @@ function populateShareResultsImages(){
         ctx.imageSmoothingQuality = 'high';
   
         // Draw the title onto the canvas
-        ctx.font = '30px Arial';
+        ctx.font = 'bold 30px Arial';
         ctx.textAlign = 'center';
-        ctx.fillStyle = 'black';
+        ctx.fillStyle = '#1f5124'; // Set text color to #242424
         ctx.fillText('FLAGL', canvasWidth / 2, 40);
   
         // Draw images onto the canvas
