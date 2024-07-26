@@ -57,8 +57,8 @@ const modeButton = document.querySelector(".mode-button");
 const dailyGameButton = document.querySelector(".dailyGameButton");
 const statsText=document.querySelector(".statsText");
 const stars = document.querySelectorAll(".star");
-let flagImage = "../Images/flagImage.png";
-let crossImage = "../Images/crossImage.svg";
+let flagImage = "../Images/flagImageBackground.png";
+let crossImage = "../Images/crossImageBackground.png";
 let resultsGallery = document.querySelector(".resultsGallery");
 
 console.log("flag, cross images", flagImage, crossImage);
@@ -84,6 +84,35 @@ function scrollToTop() {
   window.scrollTo(0, 0);
 }
 predictiveText();
+
+function getDaysElapsed(startDate, endDate) {
+  const oneDay = 24 * 60 * 60 * 1000; // milliseconds in one day
+  
+  // Convert to Date objects
+  const start = new Date(startDate);
+  const end = new Date();
+
+  // Check if dates are valid
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+    console.error('Invalid Date(s)');
+    return NaN;
+  }
+
+  const differenceInTime = end - start;
+  const differenceInDays = Math.round(differenceInTime / oneDay);
+  return differenceInDays;
+}
+
+// Example start date
+const startDate = '2023-07-01';
+// Using today's date as the end date
+const endDate = new Date(); // Today's date
+
+// Calculate days elapsed
+const daysElapsed = getDaysElapsed(startDate, endDate);
+console.log(`Start Date: ${startDate}`);
+console.log(`End Date: ${endDate.toISOString().split('T')[0]}`);
+console.log(`Days Elapsed: ${daysElapsed}`);
 
 //Set to default to dailyMode is true
 document.addEventListener("DOMContentLoaded", function () {
