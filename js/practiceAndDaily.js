@@ -94,7 +94,7 @@ function getDaysElapsed(startDate, endDate) {
 
   // Check if dates are valid
   if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-    console.error('Invalid Date(s)');
+    console.error('Game');
     return NaN;
   }
 
@@ -104,7 +104,7 @@ function getDaysElapsed(startDate, endDate) {
 }
 
 // Example start date
-const startDate = '2023-07-01';
+const startDate = '2024-09-15';
 // Using today's date as the end date
 const endDate = new Date(); // Today's date
 
@@ -1032,6 +1032,11 @@ function populateShareResultsImages(){
         const imageSize = 80; // Size of each image in pixels
         const padding = 10; // Padding between images
         const titleHeight = 50; // Height of the title area
+
+        // Calculate the daysElapsed
+        /*const startDate = new Date('2024-01-01'); // Example start date
+        const endDate = new Date();
+        const daysElapsed = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));*/
   
         // Fetch and process each image
         for (const src of shareResultsArray) {
@@ -1094,11 +1099,11 @@ function populateShareResultsImages(){
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = 'high';
   
-        // Draw the title onto the canvas
+        // Draw the title and daysElapsed onto the canvas
         ctx.font = 'bold 30px Arial';
         ctx.textAlign = 'center';
-        ctx.fillStyle = '#1f5124'; // Set text color to #242424
-        ctx.fillText('FLAGL', canvasWidth / 2, 40);
+        ctx.fillStyle = '#1f5124'; // Set text color to #1f5124
+        ctx.fillText(`FLAGL ${daysElapsed}`, canvasWidth / 2, 40);
   
         // Draw images onto the canvas
         let x = padding; // Start drawing from the left with padding
@@ -1135,5 +1140,3 @@ function populateShareResultsImages(){
       }
     });
   });
-  
-  
