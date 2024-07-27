@@ -994,23 +994,6 @@ document
 
 
 
-populateShareResultsImages();
-
-//populate flag images from array into HTML
-function populateShareResultsImages(){
-  console.log("populateShareResultsImages running")
-  let resultsContainer = document.querySelector('.resultsGallery');
-  let ind = 0;
-  let picHTML = "";
-  if(JSON.parse(localStorage.getItem("shareResultsArray"))){JSON.parse(localStorage.getItem("shareResultsArray")).forEach((pic)=>{
-    const img = document.createElement('img');
-    img.src = pic
-    img.style = "width:40px;height:40px;"
-    resultsContainer.appendChild(img);
- 
-  });}}
-
-
   document.querySelectorAll(".share").forEach((item) => {
     item.addEventListener("click", async function () {
         try {
