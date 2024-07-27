@@ -69,7 +69,7 @@ console.log("flag, cross images", flagImage, crossImage);
 -double refresh - Done
 -first letter big- Done
 -score updates - Done
--Share Result
+-Share Result - Done
 -Share Result 2 buttons
 -advert
 -checklayout
@@ -1007,18 +1007,10 @@ function populateShareResultsImages(){
     img.src = pic
     img.style = "width:40px;height:40px;"
     resultsContainer.appendChild(img);
-    //let picHTML = pic;
-  
-  
+ 
   });}}
 
-  //shareResults.addEventListener('click',
-  
-  //navigator.clipboard.writeText(JSON.parse(localStorage.getItem("shareResultsArray")).value)
 
-  // Alert the copied text
-  //alert("Copied the text: " + JSON.parse(localStorage.getItem("shareResultsArray")).value)
-  //)
   document.querySelectorAll(".share").forEach((item) => {
     item.addEventListener("click", async function () {
         try {
