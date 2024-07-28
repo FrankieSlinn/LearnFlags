@@ -190,6 +190,7 @@ function dailyModeChanges(){
   answer.style["display"]="inline-block";
  feedback.style["display"]="none";
  flagName.style["display"]="none";
+ hideShareButtons();
 
   stars.forEach((star)=>star.style["display"]="inline-block");
   stars.forEach((star)=>star.style["margin-top"]="2rem");
@@ -513,6 +514,9 @@ function getFlagName() {
 }
 
 function completedFlagsRoundDisplayChanges() {
+  document.querySelectorAll(".share").forEach((item) => {
+    item.style["display"] = "inline-block";
+  });
   container.style["visibility"] = "visible";
   showFlag.style["display"] = "none";
   resetButton.style["display"] = "none";
@@ -523,6 +527,7 @@ function completedFlagsRoundDisplayChanges() {
   feedback.style["display"] = "inline-block";
   practiceAtResults.style["display"] = "inline-block";
   labelTimer.style["display"] = "inline-block";
+
 
 }
 
@@ -590,6 +595,7 @@ function displayFlagScreen() {
   intro.innerHTML = "<br>Type and Select a Country or Territory";
   instruction.innerHTML =
     "Which Country or Territory Does this Flag Belong to?";
+  hideShareButtons();
 }
 
 function getPracticeFlagName(){
@@ -628,6 +634,7 @@ function practiceQuizItem(){
 
 
 function newQuizItem() {
+  hideShareButtons();
   console.log("next quiz item running")
   countryMatchingPredText = [];
   //resets quiz item
@@ -957,6 +964,7 @@ function startNewGame() {
 }
 
 function newGameDisplayChanges() {
+  hideShareButtons();
   container.style["opacity"] = "100";
   container.style["visibility"] = "visible";
   resetButton.style["display"] = "none";
@@ -964,6 +972,13 @@ function newGameDisplayChanges() {
   labelTimer.style["display"] = "none";
   instruction.innerHTML = "Which country does this flag belong to?";
   message.innerHTML = "";
+}
+
+//Do not display share buttons
+function hideShareButtons(){
+document.querySelectorAll(".share").forEach((item) => {
+  item.style["display"] = "none";
+});
 }
 
 /*****Stats Popup*****/
