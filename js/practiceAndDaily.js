@@ -70,11 +70,11 @@ console.log("flag, cross images", flagImage, crossImage);
 -first letter big- Done
 -score updates - Done
 -Share Result - Done
--Share Result 2 buttons
+-Share Result 2 buttons - Done
 -advert
 -checklayout
 -After finish game resets before it's meant to - Done
-Sort out same flags not being shown if played before.
+Sort out same flags not being shown if played before - Possbly Done
 -check if using shareResults button changes flag display
 */
 
@@ -271,7 +271,7 @@ function updateGameStats() {
 }
 }
 function gameStatsDisplay() {
-  if(JSON.parse(localStorage.getItem("dailyMode"))===true){statistics.innerHTML = `FLAGL Score: <strong>${gameScore}</strong><br><br>Games: <strong>${gamesPlayed}</strong><br><br>Average Score: <strong>${averageScore}</strong>`}
+  if(JSON.parse(localStorage.getItem("dailyMode"))===true){statistics.innerHTML = `Last FLAGL Score: <strong>${gameScore}</strong><br><br>Games: <strong>${gamesPlayed}</strong><br><br>Average Score: <strong>${averageScore}</strong>`}
 }
 function defineAndSaveLongGameScore(gameScore) {
   console.log("defineAndSaveLongGameScore running")
