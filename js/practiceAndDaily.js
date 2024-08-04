@@ -5,6 +5,7 @@ import {
   murmurHash3,
   generateRandomNumber,
 } from "./randomNumberFromSeed.js";
+import{clipboard} from "./clipboard.js";
 
 let flagsCopy = [...flags];
 let buttonClasses = [".First", ".Second", ".Third", ".Fourth", ".Fifth"];
@@ -1007,8 +1008,9 @@ document
     hidePopup("helpContent");
   });
 
+  clipboard();
 
-
+/*
   document.querySelectorAll(".share").forEach((item) => {
     item.addEventListener("click", async function () {
         try {
@@ -1129,4 +1131,4 @@ document
             alert("Failed to copy images to clipboard");
         }
     });
-});
+});*/
