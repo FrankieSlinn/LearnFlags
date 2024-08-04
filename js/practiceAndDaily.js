@@ -24,7 +24,6 @@ let correctAnswer = "Congratulations, That Was Correct";
 let incorrectAnswer = "Unlucky, That Was Not Correct";
 let resetButton = document.querySelector(".reset");
 let statistics = document.querySelector(".stats");
-let description = document.querySelector(".description");
 let starArray = ["star1", "star2", "star3", "star4", "star5"];
 let countrySelectedLow = "";
 let dailyMode = true;
@@ -50,9 +49,8 @@ const statsText = document.querySelector(".statsText");
 const stars = document.querySelectorAll(".star");
 let flagImage = "../Images/flagImageBackground.png";
 let crossImage = "../Images/crossImageBackground.png";
-let resultsGallery = document.querySelector(".resultsGallery");
 
-console.log("flag, cross images", flagImage, crossImage);
+
 
 //Changes
 /*
@@ -72,9 +70,11 @@ Sort out same flags not being shown if played before - Possbly Done
 function scrollToTop() {
   window.scrollTo(0, 0);
 }
+
+//ensure predictive Text runs
 predictiveText();
 
-//Set to default to dailyMode is true
+//game starts - Ensure defaults set. Set to default to dailyMode is true, populate flag array, set turns to null. 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("event listenr for load running");
   if (
@@ -84,19 +84,25 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log(
       "after load running event listenr conditions met to populate flag array"
     );
-    if (!JSON.parse(localStorage.getItem("turns"))) {
-      console.log("turns set to zero as they were indicated as null");
-      localStorage.setItem("turns", JSON.stringify(0));
-      console.log(
-        "turns after reset",
-        JSON.parse(localStorage.getItem("turns"))
-      );
-    }
+    setTurnstoZero();
+
     populateArrayDailyFlags();
   }
   localStorage.setItem("dailyMode", "true");
   dailyModeChanges();
 });
+
+function setTurnstoZero(){
+  if (!JSON.parse(localStorage.getItem("turns"))) {
+    console.log("turns set to zero as they were indicated as null");
+    localStorage.setItem("turns", JSON.stringify(0));
+    console.log(
+      "turns after reset",
+      JSON.parse(localStorage.getItem("turns"))
+    );
+  }
+
+}
 
 //Practice
 function practiceModeAfterClick() {
