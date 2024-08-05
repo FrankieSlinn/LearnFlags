@@ -2,6 +2,7 @@ import { flags } from "./flags.js";
 console.log("flags", flags);
 import { displayPopup, hidePopup } from "./displayHidePopups.js";
 import { murmurHash3, generateRandomNumber } from "./randomNumberFromSeed.js";
+import { numGamesCalc, calcAverageScoreMultiValues, defineAverageScore, calculateGameScore, gameStatsDisplay} from "./scoreStatistics.js";
 import { clipboard } from "./clipboard.js";
 
 let flagsCopy = [...flags];
@@ -23,7 +24,7 @@ let flagLow = "";
 let correctAnswer = "Congratulations, That Was Correct";
 let incorrectAnswer = "Unlucky, That Was Not Correct";
 let resetButton = document.querySelector(".reset");
-let statistics = document.querySelector(".stats");
+
 let starArray = ["star1", "star2", "star3", "star4", "star5"];
 let countrySelectedLow = "";
 let dailyMode = true;
@@ -180,55 +181,8 @@ function dailyModeChanges() {
   handleNextScreenBasedOnTurn();
 }
 
-//Score Variables
-let score = 0;
-let gameScore = 0;
-let countGames = 0;
-let averageScore = 0;
-let gamesPlayed = numGamesCalc();
-let allGameScores = [];
 
-function numGamesCalc() {
-  return JSON.parse(localStorage.getItem("allGameScores")) != null
-    ? JSON.parse(localStorage.getItem("allGameScores")).length
-    : 0;
-}
-
-function calcAverageScoreMultiValues() {
-  console.log("calcaverage running");
-  if (JSON.parse(localStorage.getItem("allGameScores")).length === 1) {
-    console.log("length allGameScores is one");
-    return JSON.parse(localStorage.getItem("allGameScores"))[0];
-  } else if (JSON.parse(localStorage.getItem("allGameScores")).length >= 1) {
-    console.log("length allgames more than 1");
-    let allScores = JSON.parse(localStorage.getItem("allGameScores"));
-    return (
-      allScores.reduce(
-        //add all scores to get tota
-        (numa, numb) => numa + numb
-      ) / allScores.length
-    ).toFixed(0);
-  }
-}
-
-//Define average score
-if (JSON.parse(localStorage.getItem("allGameScores"))) {
-  averageScore = calcAverageScoreMultiValues();
-} else {
-  averageScore = 0;
-}
-
-function calculateGameScore() {
-  return JSON.parse(localStorage.getItem("score")) * 2;
-}
-
-gameScore = JSON.parse(localStorage.getItem("allGameScores"))
-  ? //get last score
-    JSON.parse(localStorage.getItem("allGameScores"))[
-      JSON.parse(localStorage.getItem("allGameScores")).length - 1
-    ]
-  : 0;
-
+defineAverageScore();
 //Populate stats message at beginning of game
 gameStatsDisplay();
 
@@ -256,11 +210,7 @@ function updateGameStats() {
     window.localStorage.setItem("scoresUpdated", JSON.stringify(true));
   }
 }
-function gameStatsDisplay() {
-  if (JSON.parse(localStorage.getItem("dailyMode")) === true) {
-    statistics.innerHTML = `Last FLAGL Score: <strong>${gameScore}</strong><br><br>Games: <strong>${gamesPlayed}</strong><br><br>Average Score: <strong>${averageScore}</strong>`;
-  }
-}
+
 function defineAndSaveLongGameScore(gameScore) {
   console.log("defineAndSaveLongGameScore running");
   allGameScores = JSON.parse(localStorage.getItem("allGameScores"))
@@ -908,7 +858,7 @@ function whichFeedbackScreen() {
     console.log("wrong answer in which FeedbackScreen");
     localStorage.setItem("isIncorrect", JSON.stringify(true));
     localStorage.setItem("isCorrect", JSON.stringify(false));
-    
+
     if(JSON.parse(localStorage.getItem("dailyMode")) == true){
     if (!localStorage.getItem("shareResultsArray")) {
       console.log("no shareresultsarray found");
