@@ -85,7 +85,6 @@ document.addEventListener("DOMContentLoaded", function () {
       "after load running event listenr conditions met to populate flag array"
     );
     setTurnstoZero();
-
     populateArrayDailyFlags();
   }
   localStorage.setItem("dailyMode", "true");
@@ -104,7 +103,7 @@ function setTurnstoZero(){
 
 }
 
-//Practice
+//Practice if the user selects practice mode
 function practiceModeAfterClick() {
   hidePopup("helpContent");
   localStorage.setItem("dailyMode", JSON.stringify(false));
@@ -878,6 +877,7 @@ function whichFeedbackScreen() {
       incrementScore();
       starFill();
     }
+    if(JSON.parse(localStorage.getItem("dailyMode")) == true){
     if (!localStorage.getItem("shareResultsArray")) {
       // Initialize localStorage with an array containing "flag"
       console.log(
@@ -898,7 +898,7 @@ function whichFeedbackScreen() {
         JSON.stringify(updateShareResultsArray)
       );
       updateShareResultsArray = "";
-    }
+    }}
 
     console.log(
       "shareResultsArray",
@@ -908,6 +908,8 @@ function whichFeedbackScreen() {
     console.log("wrong answer in which FeedbackScreen");
     localStorage.setItem("isIncorrect", JSON.stringify(true));
     localStorage.setItem("isCorrect", JSON.stringify(false));
+    
+    if(JSON.parse(localStorage.getItem("dailyMode")) == true){
     if (!localStorage.getItem("shareResultsArray")) {
       console.log("no shareresultsarray found");
       // Initialize localStorage with an array containing "flag"
@@ -926,7 +928,7 @@ function whichFeedbackScreen() {
         JSON.stringify(updateShareResultsArray)
       );
       updateShareResultsArray = "";
-    }
+    }}
 
     resetInputParameters();
   }
