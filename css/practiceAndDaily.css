@@ -291,14 +291,13 @@
 
     margin-top: -2rem;
   }
-  .shareResults1{
-    margin-bottom: 2.5rem;
-
-  }
-  .shareResults2{
- 
+  @-moz-document url-prefix() {
+    .share2{
+ margin-top: 1.5rem;
     
+    }
   }
+
   .dailyGameButton{
     display: none;
     margin-top: -4rem;
