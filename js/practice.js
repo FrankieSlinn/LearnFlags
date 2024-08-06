@@ -742,7 +742,7 @@ let flags = [
   
       //ensures elements previously open stay displayed
       if (containervisible == 1) {
-        // console.log("container visible 1 or 0", containervisible);
+     
         document.querySelector(".container").style["visibility"] = "visible";
         containervisible = 0;
       }
@@ -768,15 +768,9 @@ let flags = [
         document.querySelector(".message").style["visibility"] = "visible";
         messagevisible = 0;
       }
-      // document.querySelector(".container")["visibility"] = "hidden";
-      // document.querySelector(".container").style.visibility = "visible";
-      //document.querySelector(".wrapup").style.visibility = "visible";
+   
+ 
     });
   
-  /*********/
-  /*
-  capitalisation
-  reveal answer
-  share score on clipboard
-  */
+
   

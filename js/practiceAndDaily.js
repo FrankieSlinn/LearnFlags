@@ -2,7 +2,8 @@ import { flags } from "./flags.js";
 console.log("flags", flags);
 import { displayPopup, hidePopup } from "./displayHidePopups.js";
 import { murmurHash3, generateRandomNumber } from "./randomNumberFromSeed.js";
-import { numGamesCalc, calcAverageScoreMultiValues, defineAverageScore, calculateGameScore, gameStatsDisplay} from "./scoreStatistics.js";
+import { numGamesCalc, calcAverageScoreMultiValues, defineAverageScore, calculateGameScore, updateGameStats,
+  defineAndSaveLongGameScore,incrementScore, gameStatsDisplay, statistics} from "./scoreStatistics.js";
 import { clipboard } from "./clipboard.js";
 
 let flagsCopy = [...flags];
@@ -24,7 +25,6 @@ let flagLow = "";
 let correctAnswer = "Congratulations, That Was Correct";
 let incorrectAnswer = "Unlucky, That Was Not Correct";
 let resetButton = document.querySelector(".reset");
-
 let starArray = ["star1", "star2", "star3", "star4", "star5"];
 let countrySelectedLow = "";
 let dailyMode = true;
@@ -106,23 +106,22 @@ function setTurnstoZero(){
 
 //Practice if the user selects practice mode
 function practiceModeAfterClick() {
-  hidePopup("helpContent");
   localStorage.setItem("dailyMode", JSON.stringify(false));
-  console.log(
-    "daily mode after switch",
-    JSON.parse(localStorage.getItem("dailyMode"))
-  );
   document.body.classList.add("practiceMode");
+  practiceModeDisplayChanges();
+  handlePracticeMode();
+  clearAnswer();
+  scrollToTop();
+}
+
+function practiceModeDisplayChanges(){
+  hidePopup("helpContent");
   statistics.innerHTML = `You are in Practice Mode. To play the Daily FLAGL Game with statistics select the button below`;
   dailyGameButton.style["display"] = "inline-block";
   shareResults.style["display"] = "none";
   stars.forEach((star) => (star.style["display"] = "none"));
   container.style["margin-top"] = "-2rem";
   statsText.style["margin-bottom"] = "-0.25rem";
-
-  handlePracticeMode();
-  clearAnswer();
-  scrollToTop();
 }
 
 //switch to practice mode
@@ -186,42 +185,7 @@ defineAverageScore();
 //Populate stats message at beginning of game
 gameStatsDisplay();
 
-//called on fifth turn after country selected as wrapup game activity
-function updateGameStats() {
-  //score when a game is completed expressed as percentage
-  console.log(
-    "updateGameStats running and scores updated",
-    JSON.parse(localStorage.getItem("scoresUpdated"))
-  );
-  //below: ensure scores not updated for samegame more than once
-  if (
-    JSON.parse(localStorage.getItem("scoresUpdated")) === false ||
-    JSON.parse(localStorage.getItem("scoresUpdated")) === null
-  ) {
-    console.log("scores not updated so will concatenate");
-    gameScore = Number(JSON.parse(localStorage.getItem("score")) * 2 * 10);
-    window.localStorage.setItem("gameScore", JSON.stringify(gameScore));
-    defineAndSaveLongGameScore(gameScore);
-    averageScore = calcAverageScoreMultiValues();
-    window.localStorage.setItem("averageScore", JSON.stringify(averageScore));
-    gamesPlayed = numGamesCalc();
-    //update statistics in popup
-    gameStatsDisplay();
-    window.localStorage.setItem("scoresUpdated", JSON.stringify(true));
-  }
-}
 
-function defineAndSaveLongGameScore(gameScore) {
-  console.log("defineAndSaveLongGameScore running");
-  allGameScores = JSON.parse(localStorage.getItem("allGameScores"))
-    ? JSON.parse(localStorage.getItem("allGameScores")).concat(gameScore)
-    : [JSON.parse(localStorage.getItem("gameScore"))];
-  window.localStorage.setItem("allGameScores", JSON.stringify(allGameScores));
-  console.log(
-    "allGameScores",
-    JSON.parse(localStorage.getItem("allGameScores"))
-  );
-}
 
 //generates 5 random numbers for each day based on UK Julien Date
 let fullDate = new Date();
@@ -891,11 +855,6 @@ function whichFeedbackScreen() {
   }
 }
 
-function incrementScore() {
-  score = JSON.parse(localStorage.getItem("score"));
-  const score1 = (score += 1);
-  localStorage.setItem("score", JSON.stringify(score1));
-}
 //determines screen based on the turn
 function handleNextScreenBasedOnTurn() {
   console.log("handleNextScreenBasedonTurns running");
