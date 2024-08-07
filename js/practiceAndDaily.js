@@ -34,6 +34,8 @@ const container = document.querySelector(".container");
 const showFlag = document.querySelector(".showFlag");
 const countryOptionButtons = document.querySelector(".countryOptionButtons");
 const intro = document.querySelector(".intro");
+let isCorrect; 
+let isIncorrect;
 const answer = document.querySelector(".answer");
 const feedback = document.querySelector(".feedback");
 const practice = document.querySelectorAll(".practice");
@@ -390,9 +392,16 @@ function getCountryForFeedbackDisplay() {
   flagName.innerHTML = `The Answer Is <strong>${rightFlag}</strong>`;
 }
 function getAnswerFeedback() {
-  JSON.parse(localStorage.getItem("isCorrect")) === true
-    ? (feedback.innerHTML = `${correctAnswer}`)
-    : (feedback.innerHTML = `${incorrectAnswer}`);
+
+  
+  if(JSON.parse(localStorage.getItem("isCorrect")) === true && JSON.parse(localStorage.getItem("dailyMode")) === true|| isCorrect===true)
+    {(feedback.innerHTML = `${correctAnswer}`);
+      console.log("answer is correct.")
+    }
+  else
+    { (feedback.innerHTML = `${incorrectAnswer}`)
+      console.log("answer is incorrect")
+    };
 }
 function increaseTurns() {
   console.log("function increase turns running");
@@ -784,8 +793,12 @@ function whichFeedbackScreen() {
       "countrySelected matches flagLow",
       countrySelectedLow === String(flagLow)
     );
+    if(JSON.parse(localStorage.getItem("dailyMode")) == true){
     localStorage.setItem("isCorrect", JSON.stringify(true));
-    localStorage.setItem("isIncorrect", JSON.stringify(false));
+    localStorage.setItem("isIncorrect", JSON.stringify(false));}
+    else{isCorrect == true; isIncorrect ==false;
+
+    }
     resetInputParameters();
     if (JSON.parse(localStorage.getItem("dailyMode")) === true) {
       incrementScore();
@@ -802,6 +815,7 @@ function whichFeedbackScreen() {
       //console.log("flagImage", flagImage);
       localStorage.setItem("shareResultsArray", JSON.stringify([flagImage]));
     } else {
+     
       // console.log("getShareResultsArrayinElse", getShareResultsArray)
       let updateShareResultsArray = JSON.parse(
         localStorage.getItem("shareResultsArray")
@@ -820,8 +834,10 @@ function whichFeedbackScreen() {
     );
   } else {
     console.log("wrong answer in which FeedbackScreen");
+    if (JSON.parse(localStorage.getItem("dailyMode")) === true){
     localStorage.setItem("isIncorrect", JSON.stringify(true));
-    localStorage.setItem("isCorrect", JSON.stringify(false));
+    localStorage.setItem("isCorrect", JSON.stringify(false));}
+    if (JSON.parse(localStorage.getItem("dailyMode")) === false) {isCorrect==false};
 
     if(JSON.parse(localStorage.getItem("dailyMode")) == true){
     if (!localStorage.getItem("shareResultsArray")) {

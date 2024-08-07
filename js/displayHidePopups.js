@@ -14,4 +14,6 @@ function displayPopup(inactivePopup, activePopup) {
   
   // Export the functions so that they can be used in other files
   export { displayPopup, hidePopup };
+
+  
   
