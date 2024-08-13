@@ -6,6 +6,8 @@ import { numGamesCalc, calcAverageScoreMultiValues, defineAverageScore, calculat
   defineAndSaveLongGameScore,incrementScore, gameStatsDisplay, statistics} from "./scoreStatistics.js";
 import { clipboard } from "./clipboard.js";
 
+/*****Variables******/
+
 let flagsCopy = [...flags];
 let buttonClasses = [".First", ".Second", ".Third", ".Fourth", ".Fifth"];
 let countryButtonClasses = [
@@ -66,7 +68,7 @@ let crossImage = "../Images/crossImageBackground.png";
 -checklayout
 -After finish game resets before it's meant to - Done
 Sort out same flags not being shown if played before - Possbly Done
--check if using shareResults button changes flag display
+-check if using shareResults button changes flag display - Done
 */
 
 //Make sure FLAGL Opens with top displayed
@@ -141,6 +143,30 @@ document.querySelector(".dailyGameButton").addEventListener("click", () => {
 });
 
 function dailyModeChanges() {
+  dailyArrayChanges();
+  formatFlagNameToCompare();
+  displayFlag();
+  clearAnswer();
+  hidePopup("statsContent");
+  document.body.classList.remove("practiceMode");
+  gameStatsDisplay();
+  dailyStyleChanges();
+  handleNextScreenBasedOnTurn();
+}
+
+function dailyStyleChanges(){
+  dailyGameButton.style["display"] = "none";
+  modeButton.style["display"] = "inline-block";
+  shareResults.style["display"] = "inline-block";
+  answer.style["display"] = "inline-block";
+  feedback.style["display"] = "none";
+  flagName.style["display"] = "none";
+  hideShareButtons();
+  stars.forEach((star) => (star.style["display"] = "inline-block"));
+  stars.forEach((star) => (star.style["margin-top"] = "2rem"));
+}
+
+function dailyArrayChanges(){
   console.log(
     "Arraydaioyflags",
     JSON.parse(localStorage.getItem("arrayDailyFlags"))
@@ -157,29 +183,6 @@ function dailyModeChanges() {
       flags[JSON.parse(localStorage.getItem("arrayDailyFlags"))[turnsDaily]]
     )
   );
-
-  formatFlagNameToCompare();
-  displayFlag();
-
-  console.log(
-    "dailyMode after daily game clicked",
-    JSON.parse(localStorage.getItem("dailyMode"))
-  );
-  clearAnswer();
-  hidePopup("statsContent");
-  document.body.classList.remove("practiceMode");
-  gameStatsDisplay();
-  dailyGameButton.style["display"] = "none";
-  modeButton.style["display"] = "inline-block";
-  shareResults.style["display"] = "inline-block";
-  answer.style["display"] = "inline-block";
-  feedback.style["display"] = "none";
-  flagName.style["display"] = "none";
-  hideShareButtons();
-
-  stars.forEach((star) => (star.style["display"] = "inline-block"));
-  stars.forEach((star) => (star.style["margin-top"] = "2rem"));
-  handleNextScreenBasedOnTurn();
 }
 
 
