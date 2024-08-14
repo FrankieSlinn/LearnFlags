@@ -66,6 +66,7 @@ const shareResults = document.querySelector(".shareResults");
 const dailyGameButton = document.querySelector(".dailyGameButton");
 let flagImage = "../Images/flagImageBackground.png";
 let crossImage = "../Images/crossImageBackground.png";
+
 let fullDate = new Date();
 //Today's date split into three values
 let year = String(fullDate.getFullYear());
@@ -73,9 +74,14 @@ let month = String(fullDate.getMonth() + 1);
 let day = String(fullDate.getDate());
 //number based on current date which is used as dateInputForSeed
 let dateNumberSeed = day + month + year;
+
 console.log("dateNumberSeed now", dateNumberSeed);
 let generate_seed = murmurHash3(dateNumberSeed);
 let random_number = generateRandomNumber(generate_seed(), generate_seed());
+
+//number based on current date which is used as dateInputForSeed
+
+
 
 //Changes
 /*
@@ -254,6 +260,8 @@ if (
 //populate stars
 starFill();
 
+
+
 //ensure that the correct screen is shown with the right score
 if (
   JSON.parse(localStorage.getItem("turns")) <= "3" &&
@@ -270,12 +278,7 @@ const displayTimer = function () {
   let date = new Date();
   //showTimer
   labelTimer.style["visibility"] = "visible";
-};
-
-//run timer function every second so that it will count down
-setInterval(displayTimer, 1000);
-
-//Text displayed in labelTimer element counting down to next game
+  //Text displayed in labelTimer element counting down to next game
 document.querySelector(
   ".labelTimer"
 ).innerHTML = `FLAGL Will Restart in <strong>
@@ -283,6 +286,12 @@ document.querySelector(
   60 - new Date().getMinutes()
 }
   </strong> Minutes <strong>${60 - new Date().getSeconds()}</strong> Seconds`;
+};
+
+//run timer function every second so that it will count down
+setInterval(displayTimer, 1000);
+
+
 
 //if score wrong, reset.
 //score and turns should never be over five. If this happens set back to first turn / score as a safety measure.
@@ -697,71 +706,82 @@ function feedbackScreenLayout() {
 function whichFeedbackScreen() {
   //if input matches the right answer
   console.log("countrySelectedLow, flagLow", countrySelectedLow, flagLow);
+  //check if shareResultsArray exists - if yes, define parameter
   if (JSON.parse(localStorage.getItem("shareResultsArray"))) {
     console.log("getShareResultsArray exists in local storage");
     let getShareResultsArray = JSON.parse(
       localStorage.getItem("shareResultsArray")
     );
-    console.log(
-      "getShareResultsArray exists in local storage",
-      getShareResultsArray
-    );
   }
   if (countrySelectedLow === String(flagLow)) {
-    console.log(
-      "countrySelected matches flagLow",
-      countrySelectedLow === String(flagLow)
-    );
-    if (
-      JSON.parse(localStorage.getItem("dailyMode")) == true &&
-      JSON.parse(localStorage.getItem("gameComplete")) === false
-    ) {
-      localStorage.setItem("isCorrect", JSON.stringify(true));
-      localStorage.setItem("isIncorrect", JSON.stringify(false));
-    } else if (JSON.parse(localStorage.getItem("dailyMode")) == false) {
-      isCorrect = true;
-      console.log("isCorrect in practice mode", isCorrect);
-      console.log(
-        "daily mode is true",
-        JSON.parse(localStorage.getItem("dailyMode")) == true
-      );
-    }
-
+    feedbackScreenCorrectAnswer();
     
-    resetInputParameters();
-    if (JSON.parse(localStorage.getItem("dailyMode")) === true) {
-      incrementScore();
-      starFill();
-    }
-    if (JSON.parse(localStorage.getItem("dailyMode")) == true) {
-      if (!localStorage.getItem("shareResultsArray")) {
-        // Initialize localStorage with an array containing "flag"
-        console.log(
-          "getShareResultsArrayi not initiated /correct answer",
-          JSON.parse(localStorage.getItem("shareResultsArray"))
-        );
-
-        //console.log("flagImage", flagImage);
-        localStorage.setItem("shareResultsArray", JSON.stringify([flagImage]));
-      } else {
-        // console.log("getShareResultsArrayinElse", getShareResultsArray)
-        let updateShareResultsArray = JSON.parse(
-          localStorage.getItem("shareResultsArray")
-        ).concat(flagImage);
-        console.log("updateShareResultsArray", updateShareResultsArray);
-        localStorage.setItem(
-          "shareResultsArray",
-          JSON.stringify(updateShareResultsArray)
-        );
-        updateShareResultsArray = "";
-      }
-    }
-
-    console.log(
-      "shareResultsArray",
-      JSON.parse(localStorage.getItem("shareResultsArray"))
-    );
   } else {
+    feedbackScreenIncorrectAnswer();
+   
+  }
+
+  if (JSON.parse(localStorage.getItem("dailyMode")) === true) {
+    handleNextScreenBasedOnTurn();
+  } else {
+    console.log("as practice mode going straight to first4Turns");
+    first4Turns();
+  }
+}
+
+function feedbackScreenCorrectAnswer(){
+  console.log(
+    "countrySelected matches flagLow",
+    countrySelectedLow === String(flagLow)
+  );
+  if (
+    JSON.parse(localStorage.getItem("dailyMode")) == true &&
+    JSON.parse(localStorage.getItem("gameComplete")) === false
+  ) {
+    localStorage.setItem("isCorrect", JSON.stringify(true));
+    localStorage.setItem("isIncorrect", JSON.stringify(false));
+  } else if (JSON.parse(localStorage.getItem("dailyMode")) == false) {
+    isCorrect = true;
+    console.log("isCorrect in practice mode", isCorrect);
+    console.log(
+      "daily mode is true",
+      JSON.parse(localStorage.getItem("dailyMode")) == true
+    );
+  }
+  resetInputParameters();
+
+  if (JSON.parse(localStorage.getItem("dailyMode")) === true) {
+    incrementScore();
+    starFill();
+  }
+  if (JSON.parse(localStorage.getItem("dailyMode")) == true) {
+    if (!localStorage.getItem("shareResultsArray")) {
+      // Initialize localStorage with an array containing "flag"
+      console.log(
+        "getShareResultsArrayi not initiated /correct answer",
+        JSON.parse(localStorage.getItem("shareResultsArray"))
+      );
+
+      //console.log("flagImage", flagImage);
+      localStorage.setItem("shareResultsArray", JSON.stringify([flagImage]));
+    } else {
+      // console.log("getShareResultsArrayinElse", getShareResultsArray)
+      let updateShareResultsArray = JSON.parse(
+        localStorage.getItem("shareResultsArray")
+      ).concat(flagImage);
+      console.log("updateShareResultsArray", updateShareResultsArray);
+      localStorage.setItem(
+        "shareResultsArray",
+        JSON.stringify(updateShareResultsArray)
+      );
+      updateShareResultsArray = "";
+    }
+  }
+}
+
+
+
+  function feedbackScreenIncorrectAnswer(){
     console.log("wrong answer in which FeedbackScreen");
     if (
       JSON.parse(localStorage.getItem("dailyMode")) === true &&
@@ -775,6 +795,15 @@ function whichFeedbackScreen() {
     }
     console.log("isCorrect if wrong asnwer:", isCorrect);
 
+
+    shareResultsArrayChangesIncorrect();
+    resetInputParameters();
+ 
+
+
+  }
+
+  function shareResultsArrayChangesIncorrect(){
     if (JSON.parse(localStorage.getItem("dailyMode")) == true) {
       if (!localStorage.getItem("shareResultsArray")) {
         console.log("no shareresultsarray found");
@@ -796,17 +825,15 @@ function whichFeedbackScreen() {
         updateShareResultsArray = "";
       }
     }
+    console.log(
+      "shareResultsArray",
+      JSON.parse(localStorage.getItem("shareResultsArray"))
+    );
 
-    resetInputParameters();
+
   }
 
-  if (JSON.parse(localStorage.getItem("dailyMode")) === true) {
-    handleNextScreenBasedOnTurn();
-  } else {
-    console.log("as practice mode going straight to first4Turns");
-    first4Turns();
-  }
-}
+
 
 //determines screen based on the turn
 function handleNextScreenBasedOnTurn() {
