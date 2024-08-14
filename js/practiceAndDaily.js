@@ -1,9 +1,11 @@
+/*****Imports*****/
+
 import { flags } from "./flags.js";
-console.log("flags", flags);
 import { displayPopup, hidePopup } from "./displayHidePopups.js";
 import { murmurHash3, generateRandomNumber } from "./randomNumberFromSeed.js";
 import { numGamesCalc, calcAverageScoreMultiValues, defineAverageScore, calculateGameScore, updateGameStats,
   defineAndSaveLongGameScore,incrementScore, gameStatsDisplay, statistics} from "./scoreStatistics.js";
+import {practiceModeAfterClick, dailyModeChanges,  handlePracticeMode} from "./dailyAndPracticeFunctions.js";
 import { clipboard } from "./clipboard.js";
 
 /*****Variables******/
@@ -48,10 +50,7 @@ const flagName = document.querySelector(".flagName");
 const instruction = document.querySelector(".instruction");
 const finishGameMessage = document.querySelector(".finishGameMessage");
 const shareResults = document.querySelector(".shareResults");
-const modeButton = document.querySelector(".mode-button");
 const dailyGameButton = document.querySelector(".dailyGameButton");
-const statsText = document.querySelector(".statsText");
-const stars = document.querySelectorAll(".star");
 let flagImage = "../Images/flagImageBackground.png";
 let crossImage = "../Images/crossImageBackground.png";
 
@@ -69,6 +68,7 @@ let crossImage = "../Images/crossImageBackground.png";
 -After finish game resets before it's meant to - Done
 Sort out same flags not being shown if played before - Possbly Done
 -check if using shareResults button changes flag display - Done
+-Make sure feedback message correct if switch from practice to daily
 */
 
 //Make sure FLAGL Opens with top displayed
@@ -109,24 +109,14 @@ function setTurnstoZero(){
 }
 
 //Practice if the user selects practice mode
-function practiceModeAfterClick() {
-  localStorage.setItem("dailyMode", JSON.stringify(false));
-  document.body.classList.add("practiceMode");
-  practiceModeDisplayChanges();
-  handlePracticeMode();
-  clearAnswer();
-  scrollToTop();
-}
 
-function practiceModeDisplayChanges(){
-  hidePopup("helpContent");
-  statistics.innerHTML = `You are in Practice Mode. To play the Daily FLAGL Game with statistics select the button below`;
-  dailyGameButton.style["display"] = "inline-block";
-  shareResults.style["display"] = "none";
-  stars.forEach((star) => (star.style["display"] = "none"));
-  container.style["margin-top"] = "-2rem";
-  statsText.style["margin-bottom"] = "-0.25rem";
-}
+
+//switch to daily game mode
+document.querySelector(".dailyGameButton").addEventListener("click", () => {
+  console.log("dailyG game mode button clicked");
+  dailyModeChanges();
+});
+
 
 //switch to practice mode
 
@@ -135,55 +125,6 @@ practice.forEach((button) =>
     practiceModeAfterClick();
   })
 );
-
-//switch to daily game mode
-document.querySelector(".dailyGameButton").addEventListener("click", () => {
-  console.log("dailyG game mode button clicked");
-  dailyModeChanges();
-});
-
-function dailyModeChanges() {
-  dailyArrayChanges();
-  formatFlagNameToCompare();
-  displayFlag();
-  clearAnswer();
-  hidePopup("statsContent");
-  document.body.classList.remove("practiceMode");
-  gameStatsDisplay();
-  dailyStyleChanges();
-  handleNextScreenBasedOnTurn();
-}
-
-function dailyStyleChanges(){
-  dailyGameButton.style["display"] = "none";
-  modeButton.style["display"] = "inline-block";
-  shareResults.style["display"] = "inline-block";
-  answer.style["display"] = "inline-block";
-  feedback.style["display"] = "none";
-  flagName.style["display"] = "none";
-  hideShareButtons();
-  stars.forEach((star) => (star.style["display"] = "inline-block"));
-  stars.forEach((star) => (star.style["margin-top"] = "2rem"));
-}
-
-function dailyArrayChanges(){
-  console.log(
-    "Arraydaioyflags",
-    JSON.parse(localStorage.getItem("arrayDailyFlags"))
-  );
-  let dailyFlagArrayDisplay = JSON.parse(
-    localStorage.getItem("arrayDailyFlags")
-  );
-  dailyFlagArrayDisplay.forEach((flag) => console.log(flags[flag]));
-  localStorage.setItem("dailyMode", JSON.stringify(true));
-  let turnsDaily = JSON.parse(localStorage.getItem("turns"));
-  localStorage.setItem(
-    "flag",
-    JSON.stringify(
-      flags[JSON.parse(localStorage.getItem("arrayDailyFlags"))[turnsDaily]]
-    )
-  );
-}
 
 
 defineAverageScore();
@@ -236,11 +177,7 @@ function automaticNewGame() {
 
 automaticNewGame();
 
-function handlePracticeMode() {
-  console.log("daily mode false");
-  newGameDisplayChanges();
-  practiceQuizItem();
-}
+
 function randomNumberPractice() {
   return Math.abs(Math.floor(Math.random() * flags.length - 1));
 }
@@ -397,11 +334,11 @@ function getCountryForFeedbackDisplay() {
 function getAnswerFeedback() {
 
   
-  if(JSON.parse(localStorage.getItem("isCorrect")) === true && JSON.parse(localStorage.getItem("dailyMode")) === true|| isCorrect===true)
+  if(JSON.parse(localStorage.getItem("isCorrect")) === true && JSON.parse(localStorage.getItem("dailyMode")) === true|| isCorrect===true && JSON.parse(localStorage.getItem("dailyMode")) === false)
     {(feedback.innerHTML = `${correctAnswer}`);
       console.log("answer is correct.")
     }
-  else
+  else if (JSON.parse(localStorage.getItem("isCorrect")) === false && JSON.parse(localStorage.getItem("dailyMode")) === true|| isCorrect===false && JSON.parse(localStorage.getItem("dailyMode")) === false)
     { (feedback.innerHTML = `${incorrectAnswer}`)
       console.log("answer is incorrect")
     };
@@ -775,9 +712,7 @@ function feedbackScreenLayout() {
   }
 }
 
-//flagImage.png
-//crossImage.png
-//../Images/"
+
 function whichFeedbackScreen() {
   //if input matches the right answer
   console.log("countrySelectedLow, flagLow", countrySelectedLow, flagLow);
@@ -796,10 +731,12 @@ function whichFeedbackScreen() {
       "countrySelected matches flagLow",
       countrySelectedLow === String(flagLow)
     );
-    if(JSON.parse(localStorage.getItem("dailyMode")) == true){
+    if(JSON.parse(localStorage.getItem("dailyMode")) == true&&JSON.parse(localStorage.getItem("gameComplete")) === false){
     localStorage.setItem("isCorrect", JSON.stringify(true));
     localStorage.setItem("isIncorrect", JSON.stringify(false));}
-    else{isCorrect == true; isIncorrect ==false;
+    else if(JSON.parse(localStorage.getItem("dailyMode")) == false){isCorrect =true;
+      console.log("isCorrect in practice mode", isCorrect)
+      console.log("daily mode is true", JSON.parse(localStorage.getItem("dailyMode")) == true)
 
     }
     resetInputParameters();
@@ -837,10 +774,11 @@ function whichFeedbackScreen() {
     );
   } else {
     console.log("wrong answer in which FeedbackScreen");
-    if (JSON.parse(localStorage.getItem("dailyMode")) === true){
+    if (JSON.parse(localStorage.getItem("dailyMode")) === true&&JSON.parse(localStorage.getItem("gameComplete")) === false){
     localStorage.setItem("isIncorrect", JSON.stringify(true));
     localStorage.setItem("isCorrect", JSON.stringify(false));}
     if (JSON.parse(localStorage.getItem("dailyMode")) === false) {isCorrect==false};
+    console.log("isCorrect if wrong asnwer:", isCorrect);
 
     if(JSON.parse(localStorage.getItem("dailyMode")) == true){
     if (!localStorage.getItem("shareResultsArray")) {
@@ -979,3 +917,9 @@ document
 //funciton in clipboard.js folder
 
 clipboard();
+
+
+export {formatFlagNameToCompare, displayFlag, clearAnswer, dailyGameButton, shareResults, answer, feedback, flagName, hideShareButtons,
+  handleNextScreenBasedOnTurn, container, newGameDisplayChanges, practiceQuizItem, scrollToTop, getAnswerFeedback
+
+}
