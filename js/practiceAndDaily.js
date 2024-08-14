@@ -2,10 +2,24 @@
 
 import { flags } from "./flags.js";
 import { displayPopup, hidePopup } from "./displayHidePopups.js";
+import { starFill } from "./starFillFunctions.js";
 import { murmurHash3, generateRandomNumber } from "./randomNumberFromSeed.js";
-import { numGamesCalc, calcAverageScoreMultiValues, defineAverageScore, calculateGameScore, updateGameStats,
-  defineAndSaveLongGameScore,incrementScore, gameStatsDisplay, statistics} from "./scoreStatistics.js";
-import {practiceModeAfterClick, dailyModeChanges,  handlePracticeMode} from "./dailyAndPracticeFunctions.js";
+import {
+  numGamesCalc,
+  calcAverageScoreMultiValues,
+  defineAverageScore,
+  calculateGameScore,
+  updateGameStats,
+  defineAndSaveLongGameScore,
+  incrementScore,
+  gameStatsDisplay,
+  statistics,
+} from "./scoreStatistics.js";
+import {
+  practiceModeAfterClick,
+  dailyModeChanges,
+  handlePracticeMode,
+} from "./dailyAndPracticeFunctions.js";
 import { clipboard } from "./clipboard.js";
 
 /*****Variables******/
@@ -29,7 +43,6 @@ let flagLow = "";
 let correctAnswer = "Congratulations, That Was Correct";
 let incorrectAnswer = "Unlucky, That Was Not Correct";
 let resetButton = document.querySelector(".reset");
-let starArray = ["star1", "star2", "star3", "star4", "star5"];
 let countrySelectedLow = "";
 let dailyMode = true;
 let arrayDailyFlags = [];
@@ -38,7 +51,7 @@ const container = document.querySelector(".container");
 const showFlag = document.querySelector(".showFlag");
 const countryOptionButtons = document.querySelector(".countryOptionButtons");
 const intro = document.querySelector(".intro");
-let isCorrect; 
+let isCorrect;
 let isIncorrect;
 const answer = document.querySelector(".answer");
 const feedback = document.querySelector(".feedback");
@@ -53,8 +66,16 @@ const shareResults = document.querySelector(".shareResults");
 const dailyGameButton = document.querySelector(".dailyGameButton");
 let flagImage = "../Images/flagImageBackground.png";
 let crossImage = "../Images/crossImageBackground.png";
-
-
+let fullDate = new Date();
+//Today's date split into three values
+let year = String(fullDate.getFullYear());
+let month = String(fullDate.getMonth() + 1);
+let day = String(fullDate.getDate());
+//number based on current date which is used as dateInputForSeed
+let dateNumberSeed = day + month + year;
+console.log("dateNumberSeed now", dateNumberSeed);
+let generate_seed = murmurHash3(dateNumberSeed);
+let random_number = generateRandomNumber(generate_seed(), generate_seed());
 
 //Changes
 /*
@@ -79,7 +100,7 @@ function scrollToTop() {
 //ensure predictive Text runs
 predictiveText();
 
-//game starts - Ensure defaults set. Set to default to dailyMode is true, populate flag array, set turns to null. 
+//game starts - Ensure defaults set. Set to default to dailyMode is true, populate flag array, set turns to null.
 document.addEventListener("DOMContentLoaded", function () {
   console.log("event listenr for load running");
   if (
@@ -96,27 +117,21 @@ document.addEventListener("DOMContentLoaded", function () {
   dailyModeChanges();
 });
 
-function setTurnstoZero(){
+function setTurnstoZero() {
   if (!JSON.parse(localStorage.getItem("turns"))) {
     console.log("turns set to zero as they were indicated as null");
     localStorage.setItem("turns", JSON.stringify(0));
-    console.log(
-      "turns after reset",
-      JSON.parse(localStorage.getItem("turns"))
-    );
+    console.log("turns after reset", JSON.parse(localStorage.getItem("turns")));
   }
-
 }
 
 //Practice if the user selects practice mode
-
 
 //switch to daily game mode
 document.querySelector(".dailyGameButton").addEventListener("click", () => {
   console.log("dailyG game mode button clicked");
   dailyModeChanges();
 });
-
 
 //switch to practice mode
 
@@ -126,28 +141,13 @@ practice.forEach((button) =>
   })
 );
 
-
 defineAverageScore();
 //Populate stats message at beginning of game
 gameStatsDisplay();
 
-
-
 //generates 5 random numbers for each day based on UK Julien Date
-let fullDate = new Date();
 
-//Today's date split into three values
-let year = String(fullDate.getFullYear());
-let month = String(fullDate.getMonth() + 1);
-let day = String(fullDate.getDate());
-//number based on current date which is used as dateInputForSeed
-let dateNumberSeed = day + month + year;
-
-console.log("dateNumberSeed now", dateNumberSeed);
-let generate_seed = murmurHash3(dateNumberSeed);
-let random_number = generateRandomNumber(generate_seed(), generate_seed());
 localStorage.setItem("random_number", JSON.stringify(random_number())); //may not be needed?
-
 
 //if new day for English Time handle new game
 function automaticNewGame() {
@@ -176,7 +176,6 @@ function automaticNewGame() {
 }
 
 automaticNewGame();
-
 
 function randomNumberPractice() {
   return Math.abs(Math.floor(Math.random() * flags.length - 1));
@@ -332,16 +331,23 @@ function getCountryForFeedbackDisplay() {
   flagName.innerHTML = `The Answer Is <strong>${rightFlag}</strong>`;
 }
 function getAnswerFeedback() {
-
-  
-  if(JSON.parse(localStorage.getItem("isCorrect")) === true && JSON.parse(localStorage.getItem("dailyMode")) === true|| isCorrect===true && JSON.parse(localStorage.getItem("dailyMode")) === false)
-    {(feedback.innerHTML = `${correctAnswer}`);
-      console.log("answer is correct.")
-    }
-  else if (JSON.parse(localStorage.getItem("isCorrect")) === false && JSON.parse(localStorage.getItem("dailyMode")) === true|| isCorrect===false && JSON.parse(localStorage.getItem("dailyMode")) === false)
-    { (feedback.innerHTML = `${incorrectAnswer}`)
-      console.log("answer is incorrect")
-    };
+  if (
+    (JSON.parse(localStorage.getItem("isCorrect")) === true &&
+      JSON.parse(localStorage.getItem("dailyMode")) === true) ||
+    (isCorrect === true &&
+      JSON.parse(localStorage.getItem("dailyMode")) === false)
+  ) {
+    feedback.innerHTML = `${correctAnswer}`;
+    console.log("answer is correct.");
+  } else if (
+    (JSON.parse(localStorage.getItem("isCorrect")) === false &&
+      JSON.parse(localStorage.getItem("dailyMode")) === true) ||
+    (isCorrect === false &&
+      JSON.parse(localStorage.getItem("dailyMode")) === false)
+  ) {
+    feedback.innerHTML = `${incorrectAnswer}`;
+    console.log("answer is incorrect");
+  }
 }
 function increaseTurns() {
   console.log("function increase turns running");
@@ -414,30 +420,6 @@ function completedFlagsRound() {
   getAnswerFeedback();
   getFinishGameMessage();
   updateGameStats();
-}
-
-function starFill() {
-  //check that score is valid for star fill
-  if (
-    JSON.parse(localStorage.getItem("score")) !== "0" &&
-    JSON.parse(localStorage.getItem("score")) <= "5"
-  ) {
-    //ensure filled stars match the score
-    for (
-      let starNum = 0;
-      starNum <= JSON.parse(localStorage.getItem("score")) - 1;
-      starNum++
-    ) {
-      document.getElementById(`${starArray[starNum]}`).style["fill"] = "yellow";
-    }
-  }
-  allStarsNotFilledIfReset();
-}
-function allStarsNotFilledIfReset() {
-  if (JSON.parse(localStorage.getItem("score")) === "0") {
-    const allStars = document.querySelectorAll(".star");
-    allStars.forEach((star) => (star.style.fill = "white"));
-  }
 }
 
 //listener for display new flag
@@ -712,7 +694,6 @@ function feedbackScreenLayout() {
   }
 }
 
-
 function whichFeedbackScreen() {
   //if input matches the right answer
   console.log("countrySelectedLow, flagLow", countrySelectedLow, flagLow);
@@ -731,42 +712,50 @@ function whichFeedbackScreen() {
       "countrySelected matches flagLow",
       countrySelectedLow === String(flagLow)
     );
-    if(JSON.parse(localStorage.getItem("dailyMode")) == true&&JSON.parse(localStorage.getItem("gameComplete")) === false){
-    localStorage.setItem("isCorrect", JSON.stringify(true));
-    localStorage.setItem("isIncorrect", JSON.stringify(false));}
-    else if(JSON.parse(localStorage.getItem("dailyMode")) == false){isCorrect =true;
-      console.log("isCorrect in practice mode", isCorrect)
-      console.log("daily mode is true", JSON.parse(localStorage.getItem("dailyMode")) == true)
-
+    if (
+      JSON.parse(localStorage.getItem("dailyMode")) == true &&
+      JSON.parse(localStorage.getItem("gameComplete")) === false
+    ) {
+      localStorage.setItem("isCorrect", JSON.stringify(true));
+      localStorage.setItem("isIncorrect", JSON.stringify(false));
+    } else if (JSON.parse(localStorage.getItem("dailyMode")) == false) {
+      isCorrect = true;
+      console.log("isCorrect in practice mode", isCorrect);
+      console.log(
+        "daily mode is true",
+        JSON.parse(localStorage.getItem("dailyMode")) == true
+      );
     }
+
+    
     resetInputParameters();
     if (JSON.parse(localStorage.getItem("dailyMode")) === true) {
       incrementScore();
       starFill();
     }
-    if(JSON.parse(localStorage.getItem("dailyMode")) == true){
-    if (!localStorage.getItem("shareResultsArray")) {
-      // Initialize localStorage with an array containing "flag"
-      console.log(
-        "getShareResultsArrayi not initiated /correct answer",
-        JSON.parse(localStorage.getItem("shareResultsArray"))
-      );
+    if (JSON.parse(localStorage.getItem("dailyMode")) == true) {
+      if (!localStorage.getItem("shareResultsArray")) {
+        // Initialize localStorage with an array containing "flag"
+        console.log(
+          "getShareResultsArrayi not initiated /correct answer",
+          JSON.parse(localStorage.getItem("shareResultsArray"))
+        );
 
-      //console.log("flagImage", flagImage);
-      localStorage.setItem("shareResultsArray", JSON.stringify([flagImage]));
-    } else {
-     
-      // console.log("getShareResultsArrayinElse", getShareResultsArray)
-      let updateShareResultsArray = JSON.parse(
-        localStorage.getItem("shareResultsArray")
-      ).concat(flagImage);
-      console.log("updateShareResultsArray", updateShareResultsArray);
-      localStorage.setItem(
-        "shareResultsArray",
-        JSON.stringify(updateShareResultsArray)
-      );
-      updateShareResultsArray = "";
-    }}
+        //console.log("flagImage", flagImage);
+        localStorage.setItem("shareResultsArray", JSON.stringify([flagImage]));
+      } else {
+        // console.log("getShareResultsArrayinElse", getShareResultsArray)
+        let updateShareResultsArray = JSON.parse(
+          localStorage.getItem("shareResultsArray")
+        ).concat(flagImage);
+        console.log("updateShareResultsArray", updateShareResultsArray);
+        localStorage.setItem(
+          "shareResultsArray",
+          JSON.stringify(updateShareResultsArray)
+        );
+        updateShareResultsArray = "";
+      }
+    }
 
     console.log(
       "shareResultsArray",
@@ -774,32 +763,39 @@ function whichFeedbackScreen() {
     );
   } else {
     console.log("wrong answer in which FeedbackScreen");
-    if (JSON.parse(localStorage.getItem("dailyMode")) === true&&JSON.parse(localStorage.getItem("gameComplete")) === false){
-    localStorage.setItem("isIncorrect", JSON.stringify(true));
-    localStorage.setItem("isCorrect", JSON.stringify(false));}
-    if (JSON.parse(localStorage.getItem("dailyMode")) === false) {isCorrect==false};
+    if (
+      JSON.parse(localStorage.getItem("dailyMode")) === true &&
+      JSON.parse(localStorage.getItem("gameComplete")) === false
+    ) {
+      localStorage.setItem("isIncorrect", JSON.stringify(true));
+      localStorage.setItem("isCorrect", JSON.stringify(false));
+    }
+    else if (JSON.parse(localStorage.getItem("dailyMode")) === false) {
+      isCorrect = false;
+    }
     console.log("isCorrect if wrong asnwer:", isCorrect);
 
-    if(JSON.parse(localStorage.getItem("dailyMode")) == true){
-    if (!localStorage.getItem("shareResultsArray")) {
-      console.log("no shareresultsarray found");
-      // Initialize localStorage with an array containing "flag"
-      localStorage.setItem("shareResultsArray", JSON.stringify([crossImage]));
-    } else {
-      console.log(
-        "getShareResultsArrayinElse Incorrect answer",
-        JSON.parse(localStorage.getItem("shareResultsArray"))
-      );
-      let updateShareResultsArray = JSON.parse(
-        localStorage.getItem("shareResultsArray")
-      ).concat(crossImage);
-      console.log("updateShareResultsArray", updateShareResultsArray);
-      localStorage.setItem(
-        "shareResultsArray",
-        JSON.stringify(updateShareResultsArray)
-      );
-      updateShareResultsArray = "";
-    }}
+    if (JSON.parse(localStorage.getItem("dailyMode")) == true) {
+      if (!localStorage.getItem("shareResultsArray")) {
+        console.log("no shareresultsarray found");
+        // Initialize localStorage with an array containing "flag"
+        localStorage.setItem("shareResultsArray", JSON.stringify([crossImage]));
+      } else {
+        console.log(
+          "getShareResultsArrayinElse Incorrect answer",
+          JSON.parse(localStorage.getItem("shareResultsArray"))
+        );
+        let updateShareResultsArray = JSON.parse(
+          localStorage.getItem("shareResultsArray")
+        ).concat(crossImage);
+        console.log("updateShareResultsArray", updateShareResultsArray);
+        localStorage.setItem(
+          "shareResultsArray",
+          JSON.stringify(updateShareResultsArray)
+        );
+        updateShareResultsArray = "";
+      }
+    }
 
     resetInputParameters();
   }
@@ -918,8 +914,22 @@ document
 
 clipboard();
 
+/*****Exports*****/
 
-export {formatFlagNameToCompare, displayFlag, clearAnswer, dailyGameButton, shareResults, answer, feedback, flagName, hideShareButtons,
-  handleNextScreenBasedOnTurn, container, newGameDisplayChanges, practiceQuizItem, scrollToTop, getAnswerFeedback
-
-}
+export {
+  formatFlagNameToCompare,
+  displayFlag,
+  clearAnswer,
+  dailyGameButton,
+  shareResults,
+  answer,
+  feedback,
+  flagName,
+  hideShareButtons,
+  handleNextScreenBasedOnTurn,
+  container,
+  newGameDisplayChanges,
+  practiceQuizItem,
+  scrollToTop,
+  getAnswerFeedback,
+};
