@@ -52,7 +52,6 @@ const showFlag = document.querySelector(".showFlag");
 const countryOptionButtons = document.querySelector(".countryOptionButtons");
 const intro = document.querySelector(".intro");
 let isCorrect;
-let isIncorrect;
 const answer = document.querySelector(".answer");
 const feedback = document.querySelector(".feedback");
 const practice = document.querySelectorAll(".practice");
@@ -78,9 +77,6 @@ let dateNumberSeed = day + month + year;
 console.log("dateNumberSeed now", dateNumberSeed);
 let generate_seed = murmurHash3(dateNumberSeed);
 let random_number = generateRandomNumber(generate_seed(), generate_seed());
-
-//number based on current date which is used as dateInputForSeed
-
 
 
 //Changes
@@ -703,25 +699,13 @@ function feedbackScreenLayout() {
   }
 }
 
-function whichFeedbackScreen() {
+function whichFeedbackScreen(feedback) {
+  let answerResult;
   //if input matches the right answer
   console.log("countrySelectedLow, flagLow", countrySelectedLow, flagLow);
-  //check if shareResultsArray exists - if yes, define parameter
-  if (JSON.parse(localStorage.getItem("shareResultsArray"))) {
-    console.log("getShareResultsArray exists in local storage");
-    let getShareResultsArray = JSON.parse(
-      localStorage.getItem("shareResultsArray")
-    );
-  }
-  if (countrySelectedLow === String(flagLow)) {
-    feedbackScreenCorrectAnswer();
-    
-  } else {
-    feedbackScreenIncorrectAnswer();
-   
-  }
-
-  if (JSON.parse(localStorage.getItem("dailyMode")) === true) {
+  countrySelectedLow === String(flagLow)?answerResult= "right":"wrong";
+    feedbackScreenProcessAnswer(answerResult);
+    if (JSON.parse(localStorage.getItem("dailyMode")) === true) {
     handleNextScreenBasedOnTurn();
   } else {
     console.log("as practice mode going straight to first4Turns");
@@ -729,19 +713,19 @@ function whichFeedbackScreen() {
   }
 }
 
-function feedbackScreenCorrectAnswer(){
+function feedbackScreenProcessAnswer(feedback){
+  feedback==="right"?
   console.log(
     "countrySelected matches flagLow",
     countrySelectedLow === String(flagLow)
-  );
+  ): console.log("wrong answer in which FeedbackScreen");
   if (
     JSON.parse(localStorage.getItem("dailyMode")) == true &&
     JSON.parse(localStorage.getItem("gameComplete")) === false
   ) {
-    localStorage.setItem("isCorrect", JSON.stringify(true));
-    localStorage.setItem("isIncorrect", JSON.stringify(false));
+    feedback==="right"?localStorage.setItem("isCorrect", JSON.stringify(true)):localStorage.setItem("isCorrect", JSON.stringify(false));
   } else if (JSON.parse(localStorage.getItem("dailyMode")) == false) {
-    isCorrect = true;
+    feedback==="right"?isCorrect = true:isCorrect = false;
     console.log("isCorrect in practice mode", isCorrect);
     console.log(
       "daily mode is true",
@@ -749,66 +733,25 @@ function feedbackScreenCorrectAnswer(){
     );
   }
   resetInputParameters();
-
+let resultStatus;
+if(feedback==="right"){
+  resultStatus = "correct";
   if (JSON.parse(localStorage.getItem("dailyMode")) === true) {
     incrementScore();
     starFill();
-  }
-  if (JSON.parse(localStorage.getItem("dailyMode")) == true) {
-    if (!localStorage.getItem("shareResultsArray")) {
-      // Initialize localStorage with an array containing "flag"
-      console.log(
-        "getShareResultsArrayi not initiated /correct answer",
-        JSON.parse(localStorage.getItem("shareResultsArray"))
-      );
-
-      //console.log("flagImage", flagImage);
-      localStorage.setItem("shareResultsArray", JSON.stringify([flagImage]));
-    } else {
-      // console.log("getShareResultsArrayinElse", getShareResultsArray)
-      let updateShareResultsArray = JSON.parse(
-        localStorage.getItem("shareResultsArray")
-      ).concat(flagImage);
-      console.log("updateShareResultsArray", updateShareResultsArray);
-      localStorage.setItem(
-        "shareResultsArray",
-        JSON.stringify(updateShareResultsArray)
-      );
-      updateShareResultsArray = "";
     }
-  }
+  }else{resultStatus = "notCorrect";}
+  shareResultsArrayChanges(resultStatus);
 }
 
-
-
-  function feedbackScreenIncorrectAnswer(){
-    console.log("wrong answer in which FeedbackScreen");
-    if (
-      JSON.parse(localStorage.getItem("dailyMode")) === true &&
-      JSON.parse(localStorage.getItem("gameComplete")) === false
-    ) {
-      localStorage.setItem("isIncorrect", JSON.stringify(true));
-      localStorage.setItem("isCorrect", JSON.stringify(false));
-    }
-    else if (JSON.parse(localStorage.getItem("dailyMode")) === false) {
-      isCorrect = false;
-    }
-    console.log("isCorrect if wrong asnwer:", isCorrect);
-
-
-    shareResultsArrayChangesIncorrect();
-    resetInputParameters();
- 
-
-
-  }
-
-  function shareResultsArrayChangesIncorrect(){
+  function shareResultsArrayChanges(symbol){
+    let pic;
+    symbol =="correct"?pic=flagImage:pic=crossImage;
     if (JSON.parse(localStorage.getItem("dailyMode")) == true) {
       if (!localStorage.getItem("shareResultsArray")) {
         console.log("no shareresultsarray found");
         // Initialize localStorage with an array containing "flag"
-        localStorage.setItem("shareResultsArray", JSON.stringify([crossImage]));
+        localStorage.setItem("shareResultsArray", JSON.stringify([pic]));
       } else {
         console.log(
           "getShareResultsArrayinElse Incorrect answer",
@@ -816,7 +759,7 @@ function feedbackScreenCorrectAnswer(){
         );
         let updateShareResultsArray = JSON.parse(
           localStorage.getItem("shareResultsArray")
-        ).concat(crossImage);
+        ).concat(pic);
         console.log("updateShareResultsArray", updateShareResultsArray);
         localStorage.setItem(
           "shareResultsArray",
@@ -829,11 +772,7 @@ function feedbackScreenCorrectAnswer(){
       "shareResultsArray",
       JSON.parse(localStorage.getItem("shareResultsArray"))
     );
-
-
   }
-
-
 
 //determines screen based on the turn
 function handleNextScreenBasedOnTurn() {
