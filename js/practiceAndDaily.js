@@ -4,6 +4,8 @@ import { flags } from "./flags.js";
 import { displayPopup, hidePopup } from "./displayHidePopups.js";
 import { starFill } from "./starFillFunctions.js";
 import { murmurHash3, generateRandomNumber } from "./randomNumberFromSeed.js";
+import  {predictiveText, countryMatchingPredTextEmpty}
+from "./predictiveTextFunctions.js";
 import {
   numGamesCalc,
   calcAverageScoreMultiValues,
@@ -34,7 +36,6 @@ let countryButtonClasses = [
   ".fifthLabel",
 ];
 let buttonClicked = 0;
-let countryMatchingPredText = [];
 let lowerCasePredText = "";
 let turns = 0;
 let flagsDisplayedInRound = [];
@@ -77,7 +78,6 @@ let dateNumberSeed = day + month + year;
 console.log("dateNumberSeed now", dateNumberSeed);
 let generate_seed = murmurHash3(dateNumberSeed);
 let random_number = generateRandomNumber(generate_seed(), generate_seed());
-
 
 //Changes
 /*
@@ -256,8 +256,6 @@ if (
 //populate stars
 starFill();
 
-
-
 //ensure that the correct screen is shown with the right score
 if (
   JSON.parse(localStorage.getItem("turns")) <= "3" &&
@@ -275,19 +273,17 @@ const displayTimer = function () {
   //showTimer
   labelTimer.style["visibility"] = "visible";
   //Text displayed in labelTimer element counting down to next game
-document.querySelector(
-  ".labelTimer"
-).innerHTML = `FLAGL Will Restart in <strong>
+  document.querySelector(
+    ".labelTimer"
+  ).innerHTML = `FLAGL Will Restart in <strong>
   ${23 - new Date().getHours()}</strong> Hours<strong> ${
-  60 - new Date().getMinutes()
-}
+    60 - new Date().getMinutes()
+  }
   </strong> Minutes <strong>${60 - new Date().getSeconds()}</strong> Seconds`;
 };
 
 //run timer function every second so that it will count down
 setInterval(displayTimer, 1000);
-
-
 
 //if score wrong, reset.
 //score and turns should never be over five. If this happens set back to first turn / score as a safety measure.
@@ -480,7 +476,7 @@ function formatFlagNameToCompare() {
 function practiceQuizItem() {
   console.log("practiceQuizItem function running");
   //empties array of countries selected for predictive text
-  countryMatchingPredText = [];
+  countryMatchingPredTextEmpty()
   // localStorage.setItem("countrySelected", JSON.stringify(false));
   getPracticeFlagName();
   //formats flag name to lower case removes underscores for comparison
@@ -494,7 +490,7 @@ function practiceQuizItem() {
 function newQuizItem() {
   hideShareButtons();
   console.log("next quiz item running");
-  countryMatchingPredText = [];
+  countryMatchingPredTextEmpty()
   //resets quiz item
   if (JSON.parse(localStorage.getItem("gameComplete")) === true) {
     localStorage.setItem("countrySelected", JSON.stringify(false));
@@ -555,102 +551,14 @@ function displayFlag() {
     console.log("displayFlag running");
     localStorage.setItem("countrySelected", JSON.stringify(false));
   }
-  // preventScoreUpdate();}
-}
-function preventScoreUpdate() {
-  //Ensure scores not updated more than once
-  if (dailyMode === true) {
-    localStorage.setItem("scoresUpdated", JSON.stringify(false));
-  }
 }
 
-function predictiveText() {
-  //listener for when a user types a letter
-  answer.addEventListener("keyup", function (e) {
-    answer.value = answer.value[0].toUpperCase().concat(answer.value.slice(1));
 
-    console.log("answer displayed", answer.value[0].toUpperCase());
-    //ensures country buttons are displayed
-    countryOptionButtons.style["display"] = "inline";
-    //get input text in lower case
-    let lowerCasePredText = String(
-      document.querySelector(".answer").value
-    ).toLowerCase();
-    //If predictive text matches add country to  countryMatchingPredText array
-    ifPredTextMatchesCountryAddToArray(lowerCasePredText);
-    //if input text is equal to those letters in a country return that country in next filter function
-    countryMatchingPredText = countryMatchingPredText.filter((item) =>
-      matchLowerCasePredTextToCountryInArray(item, lowerCasePredText)
-    );
-    console.log("countryMatchingPredText: " + countryMatchingPredText);
-    defineButtonText();
-  });
-}
-//checks if text typed matches country for filtering
-function matchLowerCasePredTextToCountryInArray(
-  predictedCountry,
-  lowerCasePredText
-) {
-  if (
-    lowerCasePredText ===
-    String(predictedCountry.slice(0, lowerCasePredText.length)).toLowerCase()
-  ) {
-    return predictedCountry;
-  }
-}
-
-function ifPredTextMatchesCountryAddToArray(lowerCasePredText) {
-  //flagsCopy used to ensure all answer options stay(no flag was removed from list).
-  //To avoid duplicates a country is removed from array "flags" after displayed.
-  console.log(
-    "lowerCasePredText).toLowerCase() ",
-    lowerCasePredText.toLowerCase()
-  );
-  for (let i = 0; i < flagsCopy.length; i++) {
-    if (
-      //if predictive text is typed equals the beginning of a country
-      //slice used to ensure equal number of characters are compared
-      String(lowerCasePredText).length > 0 &&
-      String(lowerCasePredText) ===
-        String(flagsCopy[i].slice(0, lowerCasePredText.length)).toLowerCase()
-    ) {
-      //First check that country isn't already included in the array from which predictive text is generated
-      if (!countryMatchingPredText.includes(flagsCopy[i])) {
-        //push countries that share letters into the array
-        console.log("flag to be inserted in matching countries", flagsCopy[i]);
-        countryMatchingPredText.push(flagsCopy[i]);
-        console.log("countryMatchingPredText", countryMatchingPredText);
-      }
-    }
-  }
-}
 
 //event listener for country button clicked
 submitValue();
 
-function defineButtonText() {
-  //for each predictive text button listen if pressed
-  for (
-    let buttonNum = 0;
-    buttonNum < countryButtonClasses.length;
-    buttonNum++
-  ) {
-    //button element is each of the button classes
-    const buttonElement = document.querySelector(
-      countryButtonClasses[buttonNum]
-    );
-    if (buttonElement) {
-      buttonElement.style["visibility"] = "visible";
-      //if a country matching the input text exists populate the country name on the button
-      if (countryMatchingPredText[buttonNum]) {
-        buttonElement.innerHTML = `${countryMatchingPredText[buttonNum]}`;
-        buttonElement.style["display"] = "inline-block";
-      } else {
-        buttonElement.style["display"] = "none";
-      }
-    }
-  }
-}
+
 
 //event listener for the country button that is clicked
 //passes the button numebr that is clicked to the next function
@@ -684,7 +592,7 @@ function resetQuizParameters(countrySelectedName) {
   countrySelectedName = "";
   document.querySelector(countryButtonClasses[buttonClicked]).innerHTML == "";
   //empty array of countries that match predictive text
-  countryMatchingPredText = [];
+  countryMatchingPredTextEmpty()
 }
 
 function feedbackScreenLayout() {
@@ -703,9 +611,9 @@ function whichFeedbackScreen(feedback) {
   let answerResult;
   //if input matches the right answer
   console.log("countrySelectedLow, flagLow", countrySelectedLow, flagLow);
-  countrySelectedLow === String(flagLow)?answerResult= "right":"wrong";
-    feedbackScreenProcessAnswer(answerResult);
-    if (JSON.parse(localStorage.getItem("dailyMode")) === true) {
+  countrySelectedLow === String(flagLow) ? (answerResult = "right") : "wrong";
+  feedbackScreenProcessAnswer(answerResult);
+  if (JSON.parse(localStorage.getItem("dailyMode")) === true) {
     handleNextScreenBasedOnTurn();
   } else {
     console.log("as practice mode going straight to first4Turns");
@@ -713,19 +621,22 @@ function whichFeedbackScreen(feedback) {
   }
 }
 
-function feedbackScreenProcessAnswer(feedback){
-  feedback==="right"?
-  console.log(
-    "countrySelected matches flagLow",
-    countrySelectedLow === String(flagLow)
-  ): console.log("wrong answer in which FeedbackScreen");
+function feedbackScreenProcessAnswer(feedback) {
+  feedback === "right"
+    ? console.log(
+        "countrySelected matches flagLow",
+        countrySelectedLow === String(flagLow)
+      )
+    : console.log("wrong answer in which FeedbackScreen");
   if (
     JSON.parse(localStorage.getItem("dailyMode")) == true &&
     JSON.parse(localStorage.getItem("gameComplete")) === false
   ) {
-    feedback==="right"?localStorage.setItem("isCorrect", JSON.stringify(true)):localStorage.setItem("isCorrect", JSON.stringify(false));
+    feedback === "right"
+      ? localStorage.setItem("isCorrect", JSON.stringify(true))
+      : localStorage.setItem("isCorrect", JSON.stringify(false));
   } else if (JSON.parse(localStorage.getItem("dailyMode")) == false) {
-    feedback==="right"?isCorrect = true:isCorrect = false;
+    feedback === "right" ? (isCorrect = true) : (isCorrect = false);
     console.log("isCorrect in practice mode", isCorrect);
     console.log(
       "daily mode is true",
@@ -733,46 +644,48 @@ function feedbackScreenProcessAnswer(feedback){
     );
   }
   resetInputParameters();
-let resultStatus;
-if(feedback==="right"){
-  resultStatus = "correct";
-  if (JSON.parse(localStorage.getItem("dailyMode")) === true) {
-    incrementScore();
-    starFill();
+  let resultStatus;
+  if (feedback === "right") {
+    resultStatus = "correct";
+    if (JSON.parse(localStorage.getItem("dailyMode")) === true) {
+      incrementScore();
+      starFill();
     }
-  }else{resultStatus = "notCorrect";}
+  } else {
+    resultStatus = "notCorrect";
+  }
   shareResultsArrayChanges(resultStatus);
 }
 
-  function shareResultsArrayChanges(symbol){
-    let pic;
-    symbol =="correct"?pic=flagImage:pic=crossImage;
-    if (JSON.parse(localStorage.getItem("dailyMode")) == true) {
-      if (!localStorage.getItem("shareResultsArray")) {
-        console.log("no shareresultsarray found");
-        // Initialize localStorage with an array containing "flag"
-        localStorage.setItem("shareResultsArray", JSON.stringify([pic]));
-      } else {
-        console.log(
-          "getShareResultsArrayinElse Incorrect answer",
-          JSON.parse(localStorage.getItem("shareResultsArray"))
-        );
-        let updateShareResultsArray = JSON.parse(
-          localStorage.getItem("shareResultsArray")
-        ).concat(pic);
-        console.log("updateShareResultsArray", updateShareResultsArray);
-        localStorage.setItem(
-          "shareResultsArray",
-          JSON.stringify(updateShareResultsArray)
-        );
-        updateShareResultsArray = "";
-      }
+function shareResultsArrayChanges(symbol) {
+  let pic;
+  symbol == "correct" ? (pic = flagImage) : (pic = crossImage);
+  if (JSON.parse(localStorage.getItem("dailyMode")) == true) {
+    if (!localStorage.getItem("shareResultsArray")) {
+      console.log("no shareresultsarray found");
+      // Initialize localStorage with an array containing "flag"
+      localStorage.setItem("shareResultsArray", JSON.stringify([pic]));
+    } else {
+      console.log(
+        "getShareResultsArrayinElse Incorrect answer",
+        JSON.parse(localStorage.getItem("shareResultsArray"))
+      );
+      let updateShareResultsArray = JSON.parse(
+        localStorage.getItem("shareResultsArray")
+      ).concat(pic);
+      console.log("updateShareResultsArray", updateShareResultsArray);
+      localStorage.setItem(
+        "shareResultsArray",
+        JSON.stringify(updateShareResultsArray)
+      );
+      updateShareResultsArray = "";
     }
-    console.log(
-      "shareResultsArray",
-      JSON.parse(localStorage.getItem("shareResultsArray"))
-    );
   }
+  console.log(
+    "shareResultsArray",
+    JSON.parse(localStorage.getItem("shareResultsArray"))
+  );
+}
 
 //determines screen based on the turn
 function handleNextScreenBasedOnTurn() {
@@ -897,5 +810,8 @@ export {
   newGameDisplayChanges,
   practiceQuizItem,
   scrollToTop,
-  getAnswerFeedback,
+  getAnswerFeedback, 
+  countryOptionButtons,
+  flagsCopy, 
+  countryButtonClasses
 };
