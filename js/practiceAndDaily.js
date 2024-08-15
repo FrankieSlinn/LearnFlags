@@ -5,18 +5,16 @@ import { displayPopup, hidePopup } from "./displayHidePopups.js";
 import { starFill } from "./starFillFunctions.js";
 import { murmurHash3, generateRandomNumber } from "./randomNumberFromSeed.js";
 import { placeFlagNameIntoflagsDisplayedInRound } from "./flagNames.js";
-import  {predictiveText, countryMatchingPredTextEmpty}
-from "./predictiveTextFunctions.js";
 import {
-  numGamesCalc,
-  calcAverageScoreMultiValues,
+  predictiveText,
+  countryMatchingPredTextEmpty,
+} from "./predictiveTextFunctions.js";
+import {
   defineAverageScore,
   calculateGameScore,
   updateGameStats,
-  defineAndSaveLongGameScore,
   incrementScore,
   gameStatsDisplay,
-  statistics,
 } from "./scoreStatistics.js";
 import {
   practiceModeAfterClick,
@@ -37,7 +35,6 @@ let countryButtonClasses = [
   ".fifthLabel",
 ];
 let buttonClicked = 0;
-let lowerCasePredText = "";
 let turns = 0;
 let flagsDisplayedInRound = [];
 let flag = "";
@@ -46,7 +43,6 @@ let correctAnswer = "Congratulations, That Was Correct";
 let incorrectAnswer = "Unlucky, That Was Not Correct";
 let resetButton = document.querySelector(".reset");
 let countrySelectedLow = "";
-let dailyMode = true;
 let arrayDailyFlags = [];
 let rightFlag = "";
 const container = document.querySelector(".container");
@@ -67,7 +63,6 @@ const shareResults = document.querySelector(".shareResults");
 const dailyGameButton = document.querySelector(".dailyGameButton");
 let flagImage = "../Images/flagImageBackground.png";
 let crossImage = "../Images/crossImageBackground.png";
-
 let fullDate = new Date();
 //Today's date split into three values
 let year = String(fullDate.getFullYear());
@@ -237,7 +232,6 @@ defineAverageScore();
 //Populate stats message at beginning of game
 gameStatsDisplay();
 
-
 //localStorage.setItem("random_number", JSON.stringify(random_number())); //may not be needed?
 
 /*****Timer Function*****/
@@ -299,7 +293,7 @@ function hideShareButtons() {
 function practiceQuizItem() {
   console.log("practiceQuizItem function running");
   //empties array of countries selected for predictive text
-  countryMatchingPredTextEmpty()
+  countryMatchingPredTextEmpty();
   // localStorage.setItem("countrySelected", JSON.stringify(false));
   getPracticeFlagName();
   //formats flag name to lower case removes underscores for comparison
@@ -313,7 +307,7 @@ function practiceQuizItem() {
 function newQuizItem() {
   hideShareButtons();
   console.log("next quiz item running");
-  countryMatchingPredTextEmpty()
+  countryMatchingPredTextEmpty();
   //resets quiz item
   if (JSON.parse(localStorage.getItem("gameComplete")) === true) {
     localStorage.setItem("countrySelected", JSON.stringify(false));
@@ -361,7 +355,7 @@ function first4Turns() {
 //ensure completedFlagsRound messages show up at the end
 const fourTurnsCompleted = JSON.parse(localStorage.getItem("turns")) >= 4;
 const guessSubmitted = JSON.parse(localStorage.getItem("countrySelected"));
-  //check fifth turn completed
+//check fifth turn completed
 if (
   fourTurnsCompleted &&
   guessSubmitted === true &&
@@ -400,14 +394,13 @@ if (
 }
 
 //If countrySelected is true, won't go to end screen. Done every second ot ensure current.
-function checkNoPrematureFinish(){
-if (JSON.parse(localStorage.getItem("turns") < 4)) {
-  localStorage.setItem("countrySelected", JSON.stringify(true));
-}
+function checkNoPrematureFinish() {
+  if (JSON.parse(localStorage.getItem("turns") < 4)) {
+    localStorage.setItem("countrySelected", JSON.stringify(true));
+  }
 }
 
-
-//Where the number of turns is under 4 add a turn 
+//Where the number of turns is under 4 add a turn
 function increaseTurns() {
   console.log("function increase turns running");
   let turns = JSON.parse(localStorage.getItem("turns"));
@@ -429,9 +422,10 @@ function displayChangesAfterTurn() {
   intro.style["display"] = "none";
   answer.style["display"] = "none";
   answer.value = "";
-  getAnswerFeedback();}
+  getAnswerFeedback();
+}
 
-  /**Submission Flow**/
+/**Submission Flow**/
 
 //event listener for country button clicked
 submitValue();
@@ -468,10 +462,10 @@ function resetQuizParameters(countrySelectedName) {
   countrySelectedName = "";
   document.querySelector(countryButtonClasses[buttonClicked]).innerHTML == "";
   //empty array of countries that match predictive text
-  countryMatchingPredTextEmpty()
+  countryMatchingPredTextEmpty();
 }
 
-  /*****Flag Functions*****/
+/*****Flag Functions*****/
 
 //listener for display new flag
 resetButton.addEventListener("click", function () {
@@ -554,8 +548,7 @@ function getCountryForFeedbackDisplay() {
   );
   //get flag to be displayed from the number of turns. Using that number to retrieve the flag from the array
   if (JSON.parse(localStorage.getItem("dailyMode")) === true) {
-    rightFlag =
-          JSON.parse(localStorage.getItem("flag")) 
+    rightFlag = JSON.parse(localStorage.getItem("flag"));
   } else {
     rightFlag = JSON.parse(localStorage.getItem("flag"));
     console.log("rightFlag in function", rightFlag);
@@ -738,7 +731,7 @@ function completedFlagsRound() {
   console.log("completedFlagsRound started");
   localStorage.setItem("countrySelected", JSON.stringify(true));
   localStorage.setItem("gameComplete", JSON.stringify(true));
-getCountryForFeedbackDisplay();
+  getCountryForFeedbackDisplay();
   completedFlagsRoundDisplayChanges();
   getAnswerFeedback();
   getFinishGameMessage();
@@ -802,9 +795,9 @@ export {
   newGameDisplayChanges,
   practiceQuizItem,
   scrollToTop,
-  getAnswerFeedback, 
+  getAnswerFeedback,
   countryOptionButtons,
-  flagsCopy, 
-  countryButtonClasses, 
-  flagsDisplayedInRound
+  flagsCopy,
+  countryButtonClasses,
+  flagsDisplayedInRound,
 };
