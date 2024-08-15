@@ -74,7 +74,6 @@ let month = String(fullDate.getMonth() + 1);
 let day = String(fullDate.getDate());
 //number based on current date which is used as dateInputForSeed
 let dateNumberSeed = day + month + year;
-
 console.log("dateNumberSeed now", dateNumberSeed);
 let generate_seed = murmurHash3(dateNumberSeed);
 let random_number = generateRandomNumber(generate_seed(), generate_seed());
@@ -93,6 +92,10 @@ Sort out same flags not being shown if played before - Possbly Done
 -check if using shareResults button changes flag display - Done
 -Make sure feedback message correct if switch from practice to daily
 */
+
+
+
+/*****New Game Activity*****/
 
 //Make sure FLAGL Opens with top displayed
 function scrollToTop() {
@@ -119,41 +122,10 @@ document.addEventListener("DOMContentLoaded", function () {
   dailyModeChanges();
 });
 
-function setTurnstoZero() {
-  if (!JSON.parse(localStorage.getItem("turns"))) {
-    console.log("turns set to zero as they were indicated as null");
-    localStorage.setItem("turns", JSON.stringify(0));
-    console.log("turns after reset", JSON.parse(localStorage.getItem("turns")));
-  }
-}
-
-//Practice if the user selects practice mode
-
-//switch to daily game mode
-document.querySelector(".dailyGameButton").addEventListener("click", () => {
-  console.log("dailyG game mode button clicked");
-  dailyModeChanges();
-});
-
-//switch to practice mode
-
-practice.forEach((button) =>
-  button.addEventListener("click", () => {
-    practiceModeAfterClick();
-  })
-);
-
-defineAverageScore();
-//Populate stats message at beginning of game
-gameStatsDisplay();
-
-//generates 5 random numbers for each day based on UK Julien Date
-
-localStorage.setItem("random_number", JSON.stringify(random_number())); //may not be needed?
-
 //if new day for English Time handle new game
 function automaticNewGame() {
   console.log("automaticNewGame running");
+  //Check if the day is different to the day last played or if the user is playing the game for the first time
   if (
     (JSON.parse(localStorage.getItem("dailyMode")) === true &&
       String(dateNumberSeed) !==
@@ -168,6 +140,7 @@ function automaticNewGame() {
       "Strings for dates are not the same",
       String(JSON.parse(localStorage.getItem("dateNumberSeed")))
     );
+    //Trigger a new daily game
     localStorage.setItem("gameComplete", JSON.stringify(false));
     localStorage.setItem("scoresUpdated", JSON.stringify(false));
     localStorage.setItem("dateNumberSeed", dateNumberSeed);
@@ -179,6 +152,7 @@ function automaticNewGame() {
 
 automaticNewGame();
 
+//Generates random numbers that can be used in practice mode
 function randomNumberPractice() {
   return Math.abs(Math.floor(Math.random() * flags.length - 1));
 }
@@ -194,10 +168,6 @@ function populateArrayDailyFlags() {
       arrayDailyFlags.push(Math.abs(Math.floor(random_number() * 225)));
       localStorage.setItem("arrayDailyFlags", JSON.stringify(arrayDailyFlags));
     }
-    console.log(
-      "arrayDailyFlags after population",
-      JSON.parse(localStorage.getItem("arrayDailyFlags"))
-    );
   }
   console.log(
     "array daily flags",
@@ -224,17 +194,65 @@ function setNewGameParameters() {
   }
 }
 
+//Makes sure if the user has never played the game the turns will start as zero
+function setTurnstoZero() {
+  if (!JSON.parse(localStorage.getItem("turns"))) {
+    console.log("turns set to zero as they were indicated as null");
+    localStorage.setItem("turns", JSON.stringify(0));
+    console.log("turns after reset", JSON.parse(localStorage.getItem("turns")));
+  }
+}
+
+/*****Mode Switches*****/
+
+//switch to daily game mode
+document.querySelector(".dailyGameButton").addEventListener("click", () => {
+  console.log("dailyG game mode button clicked");
+  dailyModeChanges();
+});
+
+//switch to practice mode
+
+practice.forEach((button) =>
+  button.addEventListener("click", () => {
+    practiceModeAfterClick();
+  })
+);
+
+/*****Stats Functions*****/
+
+//if score wrong, reset.
+//score and turns should never be over five. If this happens set back to first turn / score as a safety measure.
+if (
+  JSON.parse(localStorage.getItem("score") > 5) ||
+  JSON.parse(localStorage.getItem("turns") > 5)
+) {
+  console.log("socres / turns above 5");
+  localStorage.setItem("score", JSON.stringify(0));
+  localStorage.setItem("turns", JSON.stringify(0));
+  console.log(JSON.parse(localStorage.getItem("turns")));
+}
+
+defineAverageScore();
+//Populate stats message at beginning of game
+gameStatsDisplay();
+
+
+//localStorage.setItem("random_number", JSON.stringify(random_number())); //may not be needed?
+
+/*****Game Flow*****/
+
 //ensure completedFlagsRound messages show up at the end
 const fourTurnsCompleted = JSON.parse(localStorage.getItem("turns")) >= 4;
 const guessSubmitted = JSON.parse(localStorage.getItem("countrySelected"));
-
+  //check fifth turn completed
 if (
-  //fifth turn completed
   fourTurnsCompleted &&
   guessSubmitted === true &&
   JSON.parse(localStorage.getItem("dailyMode")) === true &&
   JSON.parse(localStorage.getItem("gameComplete")) == false
 ) {
+  //if turns is 4 and game complete go to game completion actions
   console.log(
     "fifth turn completed, turns is 4",
     fourTurnsCompleted,
@@ -245,7 +263,7 @@ if (
   starFill();
   completedFlagsRound();
 } else if (
-  //fifth turn pending
+  //if iturns is 4 but game incomplete start the fifth turn
   fourTurnsCompleted &&
   !guessSubmitted === true
 ) {
@@ -253,21 +271,28 @@ if (
   //start the fifth turn
   newQuizItem();
 }
+
 //populate stars
 starFill();
 
-//ensure that the correct screen is shown with the right score
+//ensure that the correct screen is shown if turns fewer than or equal to three
 if (
   JSON.parse(localStorage.getItem("turns")) <= "3" &&
   JSON.parse(localStorage.getItem("dailyMode")) === true
 ) {
   newQuizItem();
 }
+
+//If countrySelected is true, won't go to end screen. Done every second ot ensure current.
+function checkNoPrematureFinish(){
+if (JSON.parse(localStorage.getItem("turns") < 4)) {
+  localStorage.setItem("countrySelected", JSON.stringify(true));
+}
+}
+
 //display Timer
 const displayTimer = function () {
-  if (JSON.parse(localStorage.getItem("turns") < 4)) {
-    localStorage.setItem("countrySelected", JSON.stringify(true));
-  }
+  checkNoPrematureFinish();
   //date is current date
   let date = new Date();
   //showTimer
@@ -285,17 +310,7 @@ const displayTimer = function () {
 //run timer function every second so that it will count down
 setInterval(displayTimer, 1000);
 
-//if score wrong, reset.
-//score and turns should never be over five. If this happens set back to first turn / score as a safety measure.
-if (
-  JSON.parse(localStorage.getItem("score") > 5) ||
-  JSON.parse(localStorage.getItem("turns") > 5)
-) {
-  console.log("socres / turns above 5");
-  localStorage.setItem("score", JSON.stringify(0));
-  localStorage.setItem("turns", JSON.stringify(0));
-  console.log(JSON.parse(localStorage.getItem("turns")));
-}
+
 
 //handle changes after first four turns
 function first4Turns() {
@@ -307,6 +322,7 @@ function first4Turns() {
   }
 }
 
+//The name of the correct flag will appear in the feedback message
 function getCountryForFeedbackDisplay() {
   console.log("getCountryForFeedbackDisplay running");
   console.log(
@@ -317,20 +333,21 @@ function getCountryForFeedbackDisplay() {
 
   if (JSON.parse(localStorage.getItem("dailyMode")) === true) {
     rightFlag =
-      flags[
-        JSON.parse(
-          JSON.parse(localStorage.getItem("arrayDailyFlags"))[
-            JSON.parse(localStorage.getItem("turns"))
-          ]
-        )
-      ];
+
+          JSON.parse(localStorage.getItem("flag"))
+          
+        
+      
   } else {
     rightFlag = JSON.parse(localStorage.getItem("flag"));
     console.log("rightFlag in function", rightFlag);
   }
   console.log("rightFlag", rightFlag);
   flagName.innerHTML = `The Answer Is <strong>${rightFlag}</strong>`;
+  flagName.style["display"] = "inline-block";
 }
+
+//Display if the answer is correct or not in feedback message
 function getAnswerFeedback() {
   if (
     (JSON.parse(localStorage.getItem("isCorrect")) === true &&
@@ -350,12 +367,13 @@ function getAnswerFeedback() {
     console.log("answer is incorrect");
   }
 }
+
+//Where the number of turns is under 4 add a turn 
 function increaseTurns() {
   console.log("function increase turns running");
   let turns = JSON.parse(localStorage.getItem("turns"));
   if (turns < 4) {
     let turns1 = (turns += 1);
-
     console.log("turns after turn", turns1);
     //set incremented number of turns
     localStorage.setItem("turns", JSON.stringify(turns1));
@@ -375,6 +393,7 @@ function displayChangesAfterTurn() {
   getAnswerFeedback();
 }
 
+//Messages on score after the user has completed the game.
 function getFinishGameMessage() {
   if (JSON.parse(localStorage.getItem("score")) === 5) {
     finishGameMessage.innerHTML = "Congratulations, Your FLAGL Score Is 100%!";
@@ -388,12 +407,13 @@ function getFinishGameMessage() {
   finishGameMessage.style["display"] = "inline-block";
 }
 
+/*
 function getFlagName() {
   flagName.innerHTML = `The answer is <strong>${JSON.parse(
     localStorage.getItem("flag")
   )}</strong>`;
   flagName.style["display"] = "inline-block";
-}
+}*/
 
 function completedFlagsRoundDisplayChanges() {
   document.querySelectorAll(".share").forEach((item) => {
@@ -415,8 +435,7 @@ function completedFlagsRound() {
   console.log("completedFlagsRound started");
   localStorage.setItem("countrySelected", JSON.stringify(true));
   localStorage.setItem("gameComplete", JSON.stringify(true));
-
-  getFlagName();
+getCountryForFeedbackDisplay();
   completedFlagsRoundDisplayChanges();
   getAnswerFeedback();
   getFinishGameMessage();
