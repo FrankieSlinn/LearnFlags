@@ -8,7 +8,7 @@
     font-size: 1.25rem;
     background-color: white;
     font-family: Arial;
-    color: #242424;
+    color: #353839;
     letter-spacing: -0.005rem;
   }
   
@@ -60,11 +60,14 @@
     font-size: 2rem;
     text-decoration: strong;
     letter-spacing: 0.5rem;
+    text-shadow: 
+    2px 2px 3px #cccccc;
+  
   }
   
   h1,
   h2 {
-    color: #242424;
+    color: #353839;
   }
   h2 {
     font-size: 1.5rem;
@@ -72,7 +75,7 @@
   .introduction {
     margin-top: -1.5rem;
     margin-bottom: 1rem;
-    color: #242424;
+    color: #353839;
   
     font-size: 1.25rem;
     width: auto;
