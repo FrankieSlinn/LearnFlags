@@ -21,10 +21,11 @@
   
   nav {
     display: flex;
-    justify-content: center;
-    gap: 3rem;
+    justify-content: space-evenly;
+    /*gap: 3rem;*/
     margin-top: 0.5rem;
-    padding: 2rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
   }
   
 
@@ -34,15 +35,16 @@
   
   .nav-link {
     display: inline-block;
-    width: 35px;
-    height: 35px;
+    min-width: 35px;
+    min-height: 35px;
+    /*margin-left: 3rem;
+    margin-right:3rem;*/
   }
   .star {
     display: inline-block;
     width: 35px;
     height: 35px;
     fill: none;
-    margin-top: 0rem;
   }
   
   .container {
@@ -52,10 +54,12 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    margin-top: -2rem;
+    margin-top: -3rem;
   }
   
   h1 {
+    margin-left: 2rem;
+    margin-right: 2rem;
     text-transform: uppercase;
     font-size: 2rem;
     text-decoration: strong;
@@ -87,10 +91,11 @@
     font-weight: 700;
   }
   .instruction {
-    padding-top: 3.5rem;
-    margin-bottom: 0rem;
     margin-left: 2rem;
     margin-right: 2rem;
+  }
+  .instruction, .feedback{
+    padding-top: 2.5rem;
   }
   
   .message {
@@ -111,32 +116,31 @@
     font-size: 1.25rem;
     margin-top: -1rem;
   }
+  .feedback{
+    margin-bottom: -1rem;
+  }
+
 
   .flagName {
     margin-bottom: 3.5rem;
   }
   @-moz-document url-prefix() {
     .flagName {
-      margin-bottom: 2rem;
+      margin-bottom: 1.75rem;
     }
   }
-  .feedback {
-    margin-top: 2.5rem;
-  }
+
   .intro {
     margin-top: -0.5rem;
   }
   .showFlag {
-    margin-top: -1.5rem;
+    margin-top: -2.15rem;
     margin-left: 2rem;
     margin-right: 2rem;
   }
-  
-  .newFlag {
-    margin-top: 1rem;
-  }
+
   .reset {
-    margin-top: -2rem;
+    margin-top: -6.5rem;
   }
   
   @-moz-document url-prefix() {
@@ -158,7 +162,7 @@
     margin-top: -2.5rem;
     margin-bottom: 2rem;
     padding: 0.5rem;
-    
+    border-radius: 5px;
   }
   @-moz-document url-prefix() {
     .answer {
@@ -191,13 +195,14 @@
   
   .labelTimer {
     font-size: 1.25rem;
-    margin-top: 0rem;
+    margin-top: 0.25rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
     padding: 1.5rem;
     border-radius: 0.5rem;
   
-    border: solid #242424 0.5px;
-    margin-left: 2rem;
-    margin-right: 2rem;
+    border: solid #242424 3px;
+
   }
   
   .practiceMode {
@@ -208,8 +213,8 @@
     text-align: center;
     font-size: 1.5rem;
     font-weight: 700;
-    margin-top: -5rem;
-    padding-bottom: 0rem;
+    margin-top: -6.5rem;
+    margin-bottom: 0.5rem;
     color: #242424;
   }
   
@@ -221,7 +226,7 @@
   }
   
   .practiceAtResults{
-    margin-top: 3rem;
+    margin-top: 1.5rem;
   }
   
   .startNewGame {
@@ -276,21 +281,27 @@
     min-height: 15rem;
   }
   .statsText {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0rem;
+    line-height: 1.15rem; 
   }
-  .helpText,
-  .statsText {
-    margin-top: -2rem;
-  }
+
   
   .statsText,
   .helpText {
     text-align: center;
+    margin-top: -2rem;
     margin-right: 3rem;
     margin-left: 3rem;
     padding: 0.5rem;
   }
-  .shareResults {
+
+  .share1{
+
+    margin-top: -4rem;
+   margin-bottom: 2rem;
+
+  }
+  .share2 {
 
     margin-top: -2rem;
   }
@@ -333,22 +344,41 @@
   
   button {
     color: #ffffff;
-    background-color: #1f5124;
+    background-color:#353839;
+    box-shadow: 
+    3px 3px 3px #cccccc;
     cursor: pointer;
     border-color: #1f5124;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     font-size: 1rem;
     margin-top: 1rem;
+    
   }
   
   button:hover,
   button:active {
     color: #ffffff !important;
-    background-color: #2e7b36;
-    border-color: #2e7b36;
+    box-shadow: 
+    5px 5px 5px #cccccc;
+    background-color: #4A4D4F;
+    border-color: #004170;
     cursor: pointer;
+    /*transform: translateY(-2px);*/
+    
   }
+  /* Keyframes for moving up then down */
+@keyframes moveUpDown {
+  0% {
+      transform: translateY(0); /* Starting position */
+  }
+  50% {
+      transform: translateY(-2px); /* Moves up by 10px */
+  }
+  100% {
+      transform: translateY(0); /* Returns to original position */
+  }
+}
   .copyright {
     text-align: center;
     margin-top: 1rem;
@@ -357,7 +387,19 @@
   .option {
     visibility: hidden;
     padding: 0.5rem;
+    transition: transform 0.3s ease;
+    
   }
+
+  .option:hover{
+    animation: moveUpDown 0.6s ease-in-out;
+  }
+
+  .countryOptionButtons{
+    margin-top: -0.75rem;
+  }
+
+
   .countryButtonClasses {
     margin-top: 0.5rem;
   }

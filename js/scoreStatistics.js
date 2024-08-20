@@ -95,7 +95,7 @@ function defineAndSaveLongGameScore(gameScore) {
 
 function gameStatsDisplay() {
   if (JSON.parse(localStorage.getItem("dailyMode")) === true) {
-    statistics.innerHTML = `Last FLAGL Score: <strong>${gameScore}</strong><br><br>Games: <strong>${gamesPlayed}</strong><br><br>Average Score: <strong>${averageScore}</strong>`;
+    statistics.innerHTML = `Last FLAGL Score: <strong>${gameScore}</strong><br><br>Games Played: <strong>${gamesPlayed}</strong><br><br>Average Score: <strong>${averageScore}</strong>`;
   }
 }
 
