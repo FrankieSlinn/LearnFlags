@@ -76,18 +76,29 @@ let random_number = generateRandomNumber(generate_seed(), generate_seed());
 
 //Changes
 /*
--double refresh - Done
--first letter big- Done
--score updates - Done
--Share Result - Done
--Share Result 2 buttons - Done
--Delete console items showing flag name
+-Firefox display
+-Mobile display
+-Practice display(chrome, Firefox, mobile)
+-Make stats(with / without sharebutton adaptive)
+-Check popup display
+
+Testing
+-Make sure to test after delete history
+-Ensure switch between practice and daily
+
+
 -advert - Done
--checklayout
 -After finish game resets before it's meant to - Done
 Sort out same flags not being shown if played before - Possbly Done
--check if using shareResults button changes flag display - Done
--Make sure feedback message correct if switch from practice to  - Done
+
+Before Live
+-Delete console items showing flag name
+-Set FLAGL Day to one
+
+
+-User Testing
+
+
 */
 
 /*****New Game Activity*****/

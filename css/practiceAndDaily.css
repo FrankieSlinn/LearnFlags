@@ -22,7 +22,6 @@
   nav {
     display: flex;
     justify-content: space-evenly;
-    /*gap: 3rem;*/
     margin-top: 0.5rem;
     padding-top: 2rem;
     padding-bottom: 2rem;
@@ -37,8 +36,6 @@
     display: inline-block;
     min-width: 35px;
     min-height: 35px;
-    /*margin-left: 3rem;
-    margin-right:3rem;*/
   }
   .star {
     display: inline-block;
@@ -119,6 +116,11 @@
   .feedback{
     margin-bottom: -1rem;
   }
+  @-moz-document url-prefix() {
+  .feedback{
+    margin-bottom: 0.75rem;
+  }
+}
 
 
   .flagName {
@@ -201,7 +203,7 @@
     padding: 1.5rem;
     border-radius: 0.5rem;
   
-    border: solid #242424 3px;
+    border: solid #555 3px;
 
   }
   
@@ -221,7 +223,7 @@
   @-moz-document url-prefix() {
     .finishGameMessage {
       margin-top: 0rem;
-      margin-bottom: 0rem;
+      margin-bottom: -0.25rem;
     }
   }
   
@@ -246,11 +248,7 @@
     text-align: center;
   }
   
-  .helpContent,
-  .statsContent {
-    margin: 0rem 5rem;
-    text-align: center;
-  }
+
   .how-to:hover,
   .stat-icon:hover {
     cursor: pointer;
@@ -274,9 +272,14 @@
     height: auto;
     width: 50%;
     background-color: #eae6e6;
-    border: 2px solid #242424;
+    /*border: 3px solid #242424;*/
+    border: 3px solid #555;
     border-radius: 5px;
+    margin: 0rem 5rem;
+    text-align: center;
   }
+
+
   .statsContent {
     min-height: 15rem;
   }
