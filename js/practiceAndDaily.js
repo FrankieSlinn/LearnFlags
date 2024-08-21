@@ -151,25 +151,38 @@ automaticNewGame();
 function randomNumberPractice() {
   return Math.abs(Math.floor(Math.random() * flags.length - 1));
 }
-
 //adds flags to the array of 5 flags for that day via random number and set to local storage
 function populateArrayDailyFlags() {
+  console.log("populateArrayDailyFlags running")
   arrayDailyFlags = [];
   console.log("arrayDailyFlags", arrayDailyFlags);
   while (arrayDailyFlags.length < 5) {
     //random_number needs to be a function to generate number
-    let newFlagItem = Math.abs(Math.floor(random_number() * 225));
-    if (!arrayDailyFlags.includes(newFlagItem)) {
-      arrayDailyFlags.push(Math.abs(Math.floor(random_number() * 225)));
-      localStorage.setItem("arrayDailyFlags", JSON.stringify(arrayDailyFlags));
+generateNewFlagsToPopulateArrayDailyFlags();
+if(arrayDailyFlags.length===4){
+  newFlagItem = null;
+  generateNewFlagsToPopulateArrayDailyFlags();
+
     }
   }
   console.log(
-    "array daily flags",
+    "array daily flags after generated in populateArrayDailyFlags",
     JSON.parse(localStorage.getItem("arrayDailyFlags")).forEach(
       (flag) => flags[flag]
     )
   );
+}
+
+function generateNewFlagsToPopulateArrayDailyFlags(){
+  while (arrayDailyFlags.length < 5) {
+  let newFlagItem = Math.abs(Math.floor(random_number() * 225));
+  console.log("newFlagItem", newFlagItem);
+    if (!arrayDailyFlags.includes(newFlagItem)) {
+      console.log("not duplicate item")
+      arrayDailyFlags.push(newFlagItem);
+      localStorage.setItem("arrayDailyFlags", JSON.stringify(arrayDailyFlags));
+    }
+  }
 }
 //set up parameters for new game to local storage
 function setNewGameParameters() {
