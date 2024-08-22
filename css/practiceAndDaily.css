@@ -114,7 +114,7 @@
     margin-top: -1rem;
   }
   .feedback{
-    margin-bottom: -1rem;
+    margin-bottom: -1.25rem;
   }
   @-moz-document url-prefix() {
   .feedback{
@@ -124,7 +124,7 @@
 
 
   .flagName {
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
   }
   @-moz-document url-prefix() {
     .flagName {
@@ -217,7 +217,7 @@
     font-size: 1.5rem;
     font-weight: 700;
     margin-top: -6.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 3rem;
     color: #242424;
   }
   
@@ -270,7 +270,7 @@
   
   .statsContent,
   .helpContent {
-    height: auto;
+    /*height: auto;*/
     width: 50%;
     background-color: #eae6e6;
     /*border: 3px solid #242424;*/
@@ -282,7 +282,7 @@
 
 
   .statsContent {
-    min-height: 15rem;
+ 
   }
   .statsText {
     margin-bottom: 0rem;
