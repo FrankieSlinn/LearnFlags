@@ -281,9 +281,6 @@
   }
 
 
-  .statsContent {
- 
-  }
   .statsText {
     margin-bottom: 0rem;
     line-height: 1.15rem; 
@@ -318,7 +315,8 @@
 
   .dailyGameButton{
     display: none;
-    margin-top: -4rem;
+    margin-top: 0rem;
+    margin-bottom: 2rem;
   }
   .close {
     text-align: right;

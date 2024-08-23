@@ -27,7 +27,7 @@ function handlePracticeMode() {
 
 function practiceModeDisplayChanges() {
   hidePopup("helpContent");
-  statistics.innerHTML = `You are in Practice Mode. To play the Daily FLAGL Game with statistics select the button below`;
+  statistics.innerHTML = `You are in Practice Mode. <br><br>To play the Daily FLAGL Game with statistics select the button below`;
   dailyGameButton.style["display"] = "inline-block";
   shareResults.style["display"] = "none";
   stars.forEach((star) => (star.style["display"] = "none"));
