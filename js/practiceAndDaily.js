@@ -79,7 +79,7 @@ let random_number = generateRandomNumber(generate_seed(), generate_seed());
 -Firefox display - Done
 -Mobile display - Done
 -Practice display(chrome, Firefox, mobile) - Done
--Make stats(with / without sharebutton adaptive)
+-Make stats(with / without sharebutton adaptive) - Done
 -Check popup display - Done
 
 Testing
@@ -550,7 +550,7 @@ function getPracticeFlagName() {
 
 function formatFlagNameToCompare() {
   flagLow = JSON.parse(localStorage.getItem("flag")).toLowerCase();
-  console.log("flagLow", flagLow);
+  //console.log("flagLow", flagLow);
   let flagWithUnderscore = JSON.parse(localStorage.getItem("flag")).replaceAll(
     " ",
     "_"
@@ -575,9 +575,9 @@ function getCountryForFeedbackDisplay() {
     rightFlag = JSON.parse(localStorage.getItem("flag"));
   } else {
     rightFlag = JSON.parse(localStorage.getItem("flag"));
-    console.log("rightFlag in function", rightFlag);
+    //console.log("rightFlag in function", rightFlag);
   }
-  console.log("rightFlag", rightFlag);
+  //console.log("rightFlag", rightFlag);
   flagName.innerHTML = `The Answer Is <strong>${rightFlag}</strong>`;
   flagName.style["display"] = "inline-block";
 }

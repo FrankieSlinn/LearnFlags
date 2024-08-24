@@ -68,14 +68,15 @@ function dailyStyleChanges() {
 }
 
 function dailyArrayChanges() {
-  console.log(
+  /*console.log(
     "Arraydaioyflags",
     JSON.parse(localStorage.getItem("arrayDailyFlags"))
-  );
+  );*/
   let dailyFlagArrayDisplay = JSON.parse(
     localStorage.getItem("arrayDailyFlags")
   );
-  dailyFlagArrayDisplay.forEach((flag) => console.log(flags[flag]));
+  /*
+  dailyFlagArrayDisplay.forEach((flag) => console.log(flags[flag]));*/
   localStorage.setItem("dailyMode", JSON.stringify(true));
   let turnsDaily = JSON.parse(localStorage.getItem("turns"));
   localStorage.setItem(
