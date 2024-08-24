@@ -9,6 +9,7 @@ import { gameStatsDisplay, statistics} from "./scoreStatistics.js";
 const modeButton = document.querySelector(".mode-button");
 const stars = document.querySelectorAll(".star");
 const statsText = document.querySelector(".statsText");
+const gameModeParagraph = document.querySelector(".game-mode-paragraph");
 
 function practiceModeAfterClick() {
   localStorage.setItem("dailyMode", JSON.stringify(false));
@@ -30,6 +31,7 @@ function practiceModeDisplayChanges() {
   statistics.innerHTML = `You are in Practice Mode. <br>To play the Daily FLAGL Game with statistics select the button below.`;
   statistics.classList.add("practiceStatistics");
   dailyGameButton.style["display"] = "inline-block";
+  gameModeParagraph.style["display"] = "none";
   shareResults.style["display"] = "none";
   stars.forEach((star) => (star.style["display"] = "none"));
   container.style["margin-top"] = "-2rem";
@@ -57,6 +59,7 @@ function dailyStyleChanges() {
   modeButton.style["display"] = "inline-block";
   shareResults.style["display"] = "inline-block";
   answer.style["display"] = "inline-block";
+  gameModeParagraph.style["display"] = "inline-block";
   feedback.style["display"] = "none";
   flagName.style["display"] = "none";
   hideShareButtons();

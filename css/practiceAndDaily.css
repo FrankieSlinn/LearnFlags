@@ -308,7 +308,7 @@
 
   .share1{
 
-    margin-top: -4rem;
+    margin-top: 1rem;
    margin-bottom: 2rem;
 
   }
@@ -491,6 +491,9 @@
     }
     .popupHeading{
       font-size: 1.25rem;
+
+
+      }
   }
 
   @media (max-width: 400px) {
@@ -498,17 +501,22 @@
       width: 320px;
       height: 200px;
     }
+    .helpContent{
+      margin: 0 0.5rem;
+    }
+
 
 
   }
 
   @media (max-width: 350px) {
- 
 
-
+    .statsContent{
+      line-height: 1.25rem;
+    }
   }
 
-}
+
 
   @media (max-width: 330px) {
     .stats{

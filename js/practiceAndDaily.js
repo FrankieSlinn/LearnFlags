@@ -76,15 +76,15 @@ let random_number = generateRandomNumber(generate_seed(), generate_seed());
 
 //Changes
 /*
--Firefox display
--Mobile display
--Practice display(chrome, Firefox, mobile)
+-Firefox display - Done
+-Mobile display - Done
+-Practice display(chrome, Firefox, mobile) - Done
 -Make stats(with / without sharebutton adaptive)
--Check popup display
+-Check popup display - Done
 
 Testing
 -Make sure to test after delete history
--Ensure switch between practice and daily
+-Ensure switch between practice and daily - Done
 
 
 -advert - Done
