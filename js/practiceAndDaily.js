@@ -510,9 +510,9 @@ function displayFlag() {
     //changes for screen when new flag displayed
     displayFlagScreen();
     let imageHTML =
-      "<img src = ../Images/" +
-      JSON.parse(localStorage.getItem("flagWithUnderscore")) +
-      '.png  style="width:400px;height:250px;">';
+      "<img src='../Images/" +
+  JSON.parse(localStorage.getItem("flagWithUnderscore")) +
+  ".png' class='displayedFlagImage' ;'>";
     showFlag.innerHTML = imageHTML;
     showFlag.style["display"] = "inline-block";
     console.log("displayFlag running");

@@ -132,6 +132,11 @@
     }
   }
 
+  .displayedFlagImage{
+    width: 400px;
+    height: 250px;
+  }
+
   .intro {
     margin-top: -0.5rem;
   }
@@ -452,5 +457,14 @@
       width: 95%;
       margin: 0 1rem;
     }
+  }
+
+  @media (max-width: 400px) {
+    .displayedFlagImage{
+      width: 320px;
+      height: 200px;
+    }
+
+
   }
   
