@@ -85,7 +85,7 @@ let clipboard = function(){
                 // Draw the title and daysElapsed onto the canvas
                 ctx.font = 'bold 30px Arial';
                 ctx.textAlign = 'center';
-                ctx.fillStyle = '#353839'; // Set text color to #353839
+                ctx.fillStyle = '#353839'; // Set text color to 
                 ctx.fillText(`FLAGL ${daysElapsed}`, canvasWidth / 2, 40);
     
                 // Draw images onto the canvas

@@ -81,6 +81,7 @@ let random_number = generateRandomNumber(generate_seed(), generate_seed());
 -Practice display(chrome, Firefox, mobile) - Done
 -Make stats(with / without sharebutton adaptive) - Done
 -Check popup display - Done
+-mobile make sure after load goes to top
 
 Testing
 -Make sure to test after delete history
@@ -92,11 +93,11 @@ Testing
 Sort out same flags not being shown if played before - Possbly Done
 
 Before Live
--Delete console items showing flag name
+-Delete console items showing flag name - Done
 -Set FLAGL Day to one
 
 
--User Testing
+-User Testing - Done
 
 
 */

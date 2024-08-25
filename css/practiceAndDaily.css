@@ -473,6 +473,11 @@
       margin-left:2rem;
       margin-right:2rem;
     }
+    .finishGameMessage{
+      margin-left: 1rem;
+      margin-right: 1rem;
+      line-height: 1.75rem;
+    }
   }
   @media(max-width: 500px){
     .stats{
