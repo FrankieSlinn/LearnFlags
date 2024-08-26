@@ -79,8 +79,12 @@ let random_number = generateRandomNumber(generate_seed(), generate_seed());
 
 Sort Out
 
--Get rid of extra character in mobile
--Make sure results can be copied in mobile
+-Get rid of extra character in mobile - Done
+-Make sure results can be copied in mobile - Done
+-Ensure image quality is good - Done
+-Make sure elapsed Days right - done
+
+
 
 -Firefox display - Done
 -Mobile display - Done

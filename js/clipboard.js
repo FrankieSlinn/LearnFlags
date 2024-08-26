@@ -73,6 +73,7 @@ async function createCombinedImageBlob(shareResultsArray) {
     const padding = 10; // Padding between images
     const titleHeight = 50; // Height of the title area
     const footerHeight = 25; // Height of the footer area
+    const scaleFactor = 2; // Increase this factor to improve resolution
 
     for (const src of shareResultsArray) {
         try {
@@ -96,8 +97,13 @@ async function createCombinedImageBlob(shareResultsArray) {
 
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
+
+    // Adjust canvas dimensions based on scale factor for higher resolution
+    canvas.width = canvasWidth * scaleFactor;
+    canvas.height = canvasHeight * scaleFactor;
+
+    // Scale everything up based on the scale factor
+    ctx.scale(scaleFactor, scaleFactor);
 
     ctx.fillStyle = '#ffffff'; // White background
     ctx.fillRect(0, 0, canvas.width, canvas.height); // Fill the entire canvas with white
@@ -122,6 +128,7 @@ async function createCombinedImageBlob(shareResultsArray) {
     ctx.font = '15px Arial';
     ctx.fillText('flagl.net', canvasWidth / 2, canvasHeight - 10);
 
+    // Convert the canvas content to a Blob with better quality
     return await new Promise((resolve) => canvas.toBlob(resolve, 'image/png', 1.0));
 }
 
@@ -135,8 +142,6 @@ async function copyImageToClipboard(imageBlob) {
         alert("Failed to copy images to clipboard");
     }
 }
-
-
 
 
 export{
