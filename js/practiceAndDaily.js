@@ -76,6 +76,12 @@ let random_number = generateRandomNumber(generate_seed(), generate_seed());
 
 //Changes
 /*
+
+Sort Out
+
+-Get rid of extra character in mobile
+-Make sure results can be copied in mobile
+
 -Firefox display - Done
 -Mobile display - Done
 -Practice display(chrome, Firefox, mobile) - Done
@@ -802,6 +808,7 @@ document
 //funciton in clipboard.js folder
 
 clipboard();
+
 
 /*****Exports*****/
 

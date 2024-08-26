@@ -17,7 +17,7 @@ function getDaysElapsed(startDate, endDate) {
   }
 
   // Example start date
-const startDate = '2024-09-15';
+const startDate = '2024-08-25';
 // Using today's date as the end date
 const endDate = new Date(); // Today's date
 
